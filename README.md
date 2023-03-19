@@ -72,6 +72,10 @@
 
 ![class_diagram](./img/F12.png)
 
+## Commit Rule
+
+### Commit Message Structure
+
 ```
 type: subject
 
