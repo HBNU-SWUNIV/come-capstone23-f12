@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.util.StringUtils;
+
 import io.f12.notionlinkedblog.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,5 +48,32 @@ public class User extends BaseTimeEntity {
 		this.blogTitle = blogTitle;
 		this.githubLink = githubLink;
 		this.instagramLink = instagramLink;
+	}
+
+	public void editProfile(User user) {
+		if (StringUtils.hasText(user.getUsername())) {
+			this.username = user.getUsername();
+		}
+		if (StringUtils.hasText(user.getEmail())) {
+			this.email = user.getEmail();
+		}
+		if (StringUtils.hasText(user.getPassword())) {
+			this.password = user.getPassword();
+		}
+		if (StringUtils.hasText(user.getProfile())) {
+			this.profile = user.getProfile();
+		}
+		if (StringUtils.hasText(user.getBlogTitle())) {
+			this.blogTitle = user.getBlogTitle();
+		}
+		if (StringUtils.hasText(user.getGithubLink())) {
+			this.githubLink = user.getGithubLink();
+		}
+		if (StringUtils.hasText(user.getInstagramLink())) {
+			this.instagramLink = user.getInstagramLink();
+		}
+		if (StringUtils.hasText(user.getIntroduction())) {
+			this.introduction = user.getIntroduction();
+		}
 	}
 }

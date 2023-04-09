@@ -13,10 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +30,9 @@ class UserServiceTests extends DummyObject {
 
 	@Mock
 	private UserRepository userRepository;
+
+	@Mock
+	private UserDataRepository userDataRepository;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -91,5 +97,94 @@ class UserServiceTests extends DummyObject {
 					IllegalArgumentException.class);
 			}
 		}
+	}
+
+	@DisplayName("유저 변경, 조회 및 삭제")
+	@Nested
+	class UserInfoTest {
+
+		@DisplayName("유저 조회 테스트")
+		@Nested
+		class UserCheckTest {
+			@Test
+			@DisplayName("정보 가져오기")
+			void getUserInfoTest() {
+				User userA = User.builder()
+					.email("test1@gmail.com")
+					.username("username1")
+					.password("password1")
+					.build();
+				User userB = User.builder()
+					.email("test2@gmail.com")
+					.username("username2")
+					.password("password2")
+					.build();
+				Long fakeIdForA = 1L;
+				Long fakeIdForB = 2L;
+
+				ReflectionTestUtils.setField(userA, "id", fakeIdForA);
+				ReflectionTestUtils.setField(userB, "id", fakeIdForB);
+				//Mock
+				UserSearchDto mockUserSearchDtoA = UserSearchDto.builder()
+					.id(fakeIdForA)
+					.email("test1@gmail.com")
+					.username("username1")
+					.build();
+				UserSearchDto mockUserSearchDtoB = UserSearchDto.builder()
+					.id(fakeIdForB)
+					.email("test2@gmail.com")
+					.username("username2")
+					.build();
+				given(userDataRepository.findUserByDto(fakeIdForA))
+					.willReturn(Optional.ofNullable(mockUserSearchDtoA));
+				given(userDataRepository.findUserByDto(fakeIdForB))
+					.willReturn(Optional.ofNullable(mockUserSearchDtoB));
+			}
+
+		}
+
+		@DisplayName("유저 변경 테스트")
+		@Nested
+		class UserEditTest {
+			@Test
+			@DisplayName("유저 정보 변경")
+			void editUserInfoTest() {
+				User userA = User.builder()
+					.email("test1@gmail.com")
+					.username("username1")
+					.password("password1")
+					.build();
+				User editedUser = User.builder()
+					.email("changed@gmail.com")
+					.username("changedUsername")
+					.password("changedPassword")
+					.build();
+				Long fakeIdForA = 1L;
+
+				ReflectionTestUtils.setField(userA, "id", fakeIdForA);
+				ReflectionTestUtils.setField(editedUser, "id", fakeIdForA);
+				given(userDataRepository.findById(fakeIdForA))
+					.willReturn(Optional.of(userA));
+
+				String returnValue = userService.editUserInfo(editedUser);
+				assertThat(returnValue).isSameAs("success");
+			}
+
+			@Test
+			@DisplayName("유저 정보 변경 실패 - 해당 유저가 존재하지 않을때")
+			void editUnUnifiedUserInfoTest() {
+				User editedUser = User.builder()
+					.email("changed@gmail.com")
+					.username("changedUsername")
+					.password("changedPassword")
+					.build();
+				Long fakeIdForA = 1L;
+				ReflectionTestUtils.setField(editedUser, "id", fakeIdForA);
+
+				String returnValue = userService.editUserInfo(editedUser);
+				assertThat(returnValue).isEqualTo("error");
+			}
+		}
+
 	}
 }

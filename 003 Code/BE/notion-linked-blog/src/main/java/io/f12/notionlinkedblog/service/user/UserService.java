@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final UserDataRepository userDataRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	public Long signupByEmail(UserSignupRequestDto requestDto) {
@@ -25,6 +28,26 @@ public class UserService {
 		User savedUser = userRepository.save(newUser);
 
 		return savedUser.getId();
+	}
+
+	@Transactional(readOnly = true)
+	public UserSearchDto getUserInfo(Long id) {
+		return userDataRepository.findUserByDto(id).orElse(new UserSearchDto());
+	}
+
+	public String editUserInfo(User user) {
+		User findUser = userDataRepository.findById(user.getId()).orElse(null);
+		if (findUser == null) {
+			return "error";
+		} else {
+			findUser.editProfile(user);
+			return "success";
+		}
+	}
+
+	public String removeUser(Long id) {
+		userDataRepository.deleteById(id);
+		return "success";
 	}
 
 	private void checkEmailIsDuplicated(final String email) {
