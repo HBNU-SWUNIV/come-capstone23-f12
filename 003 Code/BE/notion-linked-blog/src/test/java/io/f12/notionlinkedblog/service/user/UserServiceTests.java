@@ -139,6 +139,15 @@ class UserServiceTests extends DummyObject {
 					.willReturn(Optional.ofNullable(mockUserSearchDtoA));
 				given(userDataRepository.findUserByDto(fakeIdForB))
 					.willReturn(Optional.ofNullable(mockUserSearchDtoB));
+
+				UserSearchDto userInfoA = userService.getUserInfo(fakeIdForA);
+				UserSearchDto userInfoB = userService.getUserInfo(fakeIdForB);
+
+				assertThat(userInfoA).extracting("email").isEqualTo(userA.getEmail());
+				assertThat(userInfoA).extracting("username").isEqualTo(userA.getUsername());
+				assertThat(userInfoB).extracting("email").isEqualTo(userB.getEmail());
+				assertThat(userInfoB).extracting("username").isEqualTo(userB.getUsername());
+
 			}
 
 		}
