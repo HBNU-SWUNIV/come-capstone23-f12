@@ -35,12 +35,16 @@ public class UserService {
 		return userDataRepository.findUserByDto(id).orElse(new UserSearchDto());
 	}
 
-	public String editUserInfo(User user) {
-		User findUser = userDataRepository.findById(user.getId()).orElse(null);
+	public String editUserInfo(Long id, String username, String email, String password,
+		String profile, String blogTitle, String githubLink,
+		String instagramLink, String introduction) {
+
+		User findUser = userDataRepository.findById(id).orElse(null);
 		if (findUser == null) {
 			return "error";
 		} else {
-			findUser.editProfile(user);
+			findUser.editProfile(username, email, password, profile,
+				blogTitle, githubLink, instagramLink, introduction);
 			return "success";
 		}
 	}

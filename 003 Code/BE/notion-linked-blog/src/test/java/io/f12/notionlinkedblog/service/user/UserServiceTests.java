@@ -166,7 +166,9 @@ class UserServiceTests extends DummyObject {
 				given(userDataRepository.findById(fakeIdForA))
 					.willReturn(Optional.of(userA));
 
-				String returnValue = userService.editUserInfo(editedUser);
+				String returnValue = userService.editUserInfo(editedUser.getId(), editedUser.getUsername(),
+					editedUser.getEmail(), editedUser.getPassword(), editedUser.getProfile(), editedUser.getBlogTitle(),
+					editedUser.getGithubLink(), editedUser.getInstagramLink(), editedUser.getIntroduction());
 				assertThat(returnValue).isSameAs("success");
 			}
 
@@ -181,7 +183,9 @@ class UserServiceTests extends DummyObject {
 				Long fakeIdForA = 1L;
 				ReflectionTestUtils.setField(editedUser, "id", fakeIdForA);
 
-				String returnValue = userService.editUserInfo(editedUser);
+				String returnValue = userService.editUserInfo(editedUser.getId(), editedUser.getUsername(),
+					editedUser.getEmail(), editedUser.getPassword(), editedUser.getProfile(), editedUser.getBlogTitle(),
+					editedUser.getGithubLink(), editedUser.getInstagramLink(), editedUser.getIntroduction());
 				assertThat(returnValue).isEqualTo("error");
 			}
 		}

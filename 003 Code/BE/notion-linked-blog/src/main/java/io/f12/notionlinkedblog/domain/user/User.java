@@ -50,30 +50,32 @@ public class User extends BaseTimeEntity {
 		this.instagramLink = instagramLink;
 	}
 
-	public void editProfile(User user) {
-		if (StringUtils.hasText(user.getUsername())) {
-			this.username = user.getUsername();
+	public void editProfile(String username, String email, String password, String profile, String blogTitle,
+		String githubLink, String instagramLink, String introduction) {
+
+		if (StringUtils.hasText(username)) {
+			this.username = username;
 		}
-		if (StringUtils.hasText(user.getEmail())) {
-			this.email = user.getEmail();
+		if (StringUtils.hasText(email)) {
+			this.email = email;
 		}
-		if (StringUtils.hasText(user.getPassword())) {
-			this.password = user.getPassword();
+		if (StringUtils.hasText(password)) {
+			this.password = password;
 		}
-		if (StringUtils.hasText(user.getProfile())) {
-			this.profile = user.getProfile();
+		if (StringUtils.hasText(profile)) {
+			this.profile = profile;
 		}
-		if (StringUtils.hasText(user.getBlogTitle())) {
-			this.blogTitle = user.getBlogTitle();
+		if (StringUtils.hasText(blogTitle)) {
+			this.blogTitle = blogTitle;
 		}
-		if (StringUtils.hasText(user.getGithubLink())) {
-			this.githubLink = user.getGithubLink();
+		if (StringUtils.hasText(githubLink)) {
+			this.githubLink = githubLink;
 		}
-		if (StringUtils.hasText(user.getInstagramLink())) {
-			this.instagramLink = user.getInstagramLink();
+		if (StringUtils.hasText(instagramLink)) {
+			this.instagramLink = instagramLink;
 		}
-		if (StringUtils.hasText(user.getIntroduction())) {
-			this.introduction = user.getIntroduction();
+		if (StringUtils.hasText(introduction)) {
+			this.introduction = introduction;
 		}
 	}
 }
