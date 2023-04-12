@@ -32,26 +32,24 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public UserSearchDto getUserInfo(Long id) {
-		return userDataRepository.findUserByDto(id).orElse(new UserSearchDto());
+		return userDataRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException("회원ID가 존재하지 않습니다."));
 	}
 
-	public String editUserInfo(Long id, String username, String email, String password,
+	public Long editUserInfo(Long id, String username, String email, String password,
 		String profile, String blogTitle, String githubLink,
 		String instagramLink, String introduction) {
+		User findUser = userDataRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원ID가 존재하지 않습니다."));
 
-		User findUser = userDataRepository.findById(id).orElse(null);
-		if (findUser == null) {
-			return "error";
-		} else {
-			findUser.editProfile(username, email, password, profile,
-				blogTitle, githubLink, instagramLink, introduction);
-			return "success";
-		}
+		findUser.editProfile(username, email, password, profile,
+			blogTitle, githubLink, instagramLink, introduction);
+		return id;
 	}
 
-	public String removeUser(Long id) {
+	public void removeUser(Long id) {
+		userDataRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("회원ID가 존재하지 않습니다."));
 		userDataRepository.deleteById(id);
-		return "success";
 	}
 
 	private void checkEmailIsDuplicated(final String email) {
