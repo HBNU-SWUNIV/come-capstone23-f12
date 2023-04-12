@@ -96,10 +96,10 @@ public class UserApiController {
 
 	private void checkSession(Optional<UserSearchDto> sessionUser, Long id) {
 		if (sessionUser.isEmpty()) {
-			throw new IllegalStateException("로그인 되어있지않습니다.");
+			throw new IllegalStateException("로그인 되어있지 않습니다.");
 		}
 		if (!sessionUser.get().getId().equals(id)) {
-			throw new IllegalArgumentException("동일 회원이 아닙니다");
+			throw new IllegalArgumentException("동일 회원이 아닙니다.");
 		}
 	}
 
