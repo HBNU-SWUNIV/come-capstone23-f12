@@ -16,5 +16,5 @@ public interface UserDataRepository extends JpaRepository<User, Long> {
 			+ "u.username,u.email,u.profile,u.introduction,u.blogTitle,u.githubLink,u.instagramLink) "
 			+ "from User u "
 			+ "where u.id = :id")
-	Optional<UserSearchDto> findUserByDto(@Param("id") Long id);
+	Optional<UserSearchDto> findUserById(@Param("id") Long id);
 }
