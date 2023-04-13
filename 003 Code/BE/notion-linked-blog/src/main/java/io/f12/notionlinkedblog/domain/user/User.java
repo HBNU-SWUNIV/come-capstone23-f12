@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.domain.user;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -78,4 +80,10 @@ public class User extends BaseTimeEntity {
 			this.introduction = introduction;
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, username, email);
+	}
+
 }

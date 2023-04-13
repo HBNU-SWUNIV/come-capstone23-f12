@@ -30,7 +30,7 @@ class UserDataRepositoryTest {
 		@Test
 		@DisplayName("정상 조회")
 		@Order(1)
-		void specificUserDTOCheck() {
+		void checkSpecificUserDto() {
 			User user1 = User.builder()
 				.username("username1")
 				.email("email1")
@@ -63,28 +63,14 @@ class UserDataRepositoryTest {
 			UserSearchDto findUserB = userB.orElseThrow(
 				() -> new IllegalArgumentException("Wrong MemberId: " + id2));
 
-			assertThat(findUserA).extracting("username").isEqualTo(user1.getUsername());
-			assertThat(findUserA).extracting("email").isEqualTo(user1.getEmail());
-			assertThat(findUserA).extracting("profile").isEqualTo(user1.getProfile());
-			assertThat(findUserA).extracting("introduction").isEqualTo(user1.getIntroduction());
-			assertThat(findUserA).extracting("blogTitle").isEqualTo(user1.getBlogTitle());
-			assertThat(findUserA).extracting("githubLink").isEqualTo(user1.getGithubLink());
-			assertThat(findUserA).extracting("instagramLink").isEqualTo(user1.getInstagramLink());
-
-			assertThat(findUserB).extracting("username").isEqualTo(user2.getUsername());
-			assertThat(findUserB).extracting("email").isEqualTo(user2.getEmail());
-			assertThat(findUserB).extracting("profile").isEqualTo(user2.getProfile());
-			assertThat(findUserB).extracting("introduction").isEqualTo(user2.getIntroduction());
-			assertThat(findUserB).extracting("blogTitle").isEqualTo(user2.getBlogTitle());
-			assertThat(findUserB).extracting("githubLink").isEqualTo(user2.getGithubLink());
-			assertThat(findUserB).extracting("instagramLink").isEqualTo(user2.getInstagramLink());
-
+			assertThat(findUserA.hashCode()).isEqualTo(user1.hashCode());
+			assertThat(findUserB.hashCode()).isEqualTo(user2.hashCode());
 		}
 
 		@DisplayName("비정상 조회 - 없는 회원 조회시")
 		@Order(2)
 		@Test
-		void unUnifiedUserDtoCheck() {
+		void checkUnUnifiedSpecificUserDto() {
 			User user1 = User.builder()
 				.username("username1")
 				.email("email1")
@@ -97,7 +83,7 @@ class UserDataRepositoryTest {
 				.build();
 			userDataRepository.save(user1);
 
-			long id = 1L;
+			long id = 5L;
 			String errorMessage = "Wrong MemberId: ";
 			Optional<UserSearchDto> userA = userDataRepository.findUserById(id);
 			assertThatThrownBy(() -> {

@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.domain.user.dto.info;
 
+import java.util.Objects;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,11 @@ public class UserSearchDto {
 		this.blogTitle = blogTitle;
 		this.githubLink = githubLink;
 		this.instagramLink = instagramLink;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, username, email);
 	}
 
 }
