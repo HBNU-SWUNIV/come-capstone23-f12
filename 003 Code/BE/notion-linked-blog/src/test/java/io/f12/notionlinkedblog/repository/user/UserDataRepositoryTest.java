@@ -4,12 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -24,13 +22,16 @@ class UserDataRepositoryTest {
 
 	@DisplayName("유저 조회 테스트")
 	@Nested
-	@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-	class UserSelectingTests {
+	class SelectingUserTests {
+		@AfterEach
+		void clear() {
+			userDataRepository.deleteAll();
+		}
 
-		@Test
 		@DisplayName("정상 조회")
-		@Order(1)
+		@Test
 		void checkSpecificUserDto() {
+			//given
 			User user1 = User.builder()
 				.username("username1")
 				.email("email1")
@@ -53,7 +54,7 @@ class UserDataRepositoryTest {
 				.build();
 			userDataRepository.save(user1);
 			userDataRepository.save(user2);
-
+			//when
 			long id1 = 1L;
 			Optional<UserSearchDto> userA = userDataRepository.findUserById(id1);
 			UserSearchDto findUserA = userA.orElseThrow(
@@ -62,15 +63,15 @@ class UserDataRepositoryTest {
 			Optional<UserSearchDto> userB = userDataRepository.findUserById(id2);
 			UserSearchDto findUserB = userB.orElseThrow(
 				() -> new IllegalArgumentException("Wrong MemberId: " + id2));
-
+			//then
 			assertThat(findUserA.hashCode()).isEqualTo(user1.hashCode());
 			assertThat(findUserB.hashCode()).isEqualTo(user2.hashCode());
 		}
 
 		@DisplayName("비정상 조회 - 없는 회원 조회시")
-		@Order(2)
 		@Test
 		void checkUnUnifiedSpecificUserDto() {
+			//given
 			User user1 = User.builder()
 				.username("username1")
 				.email("email1")
@@ -82,9 +83,9 @@ class UserDataRepositoryTest {
 				.instagramLink("insta1")
 				.build();
 			userDataRepository.save(user1);
-
 			long id = 5L;
 			String errorMessage = "Wrong MemberId: ";
+			//when, then
 			Optional<UserSearchDto> userA = userDataRepository.findUserById(id);
 			assertThatThrownBy(() -> {
 				userA.orElseThrow(() -> new IllegalArgumentException(errorMessage + id));

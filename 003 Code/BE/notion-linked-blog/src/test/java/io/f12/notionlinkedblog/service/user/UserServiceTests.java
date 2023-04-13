@@ -105,13 +105,14 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 조회 테스트")
 		@Nested
-		class UserCheckTest {
+		class CheckUserTest {
 			@DisplayName("정상 케이스")
 			@Nested
 			class SuccessCase {
 				@Test
 				@DisplayName("id로 조회 케이스")
 				void getUserInfoTest() {
+					//given
 					User userA = User.builder()
 						.email("test1@gmail.com")
 						.username("username1")
@@ -142,10 +143,10 @@ class UserServiceTests extends DummyObject {
 						.willReturn(Optional.ofNullable(mockUserSearchDtoA));
 					given(userDataRepository.findUserById(fakeIdForB))
 						.willReturn(Optional.ofNullable(mockUserSearchDtoB));
-
+					//when
 					UserSearchDto userInfoA = userService.getUserInfo(fakeIdForA);
 					UserSearchDto userInfoB = userService.getUserInfo(fakeIdForB);
-
+					//then
 					assertThat(userInfoA).extracting("email").isEqualTo(userA.getEmail());
 					assertThat(userInfoA).extracting("username").isEqualTo(userA.getUsername());
 					assertThat(userInfoB).extracting("email").isEqualTo(userB.getEmail());
@@ -160,10 +161,12 @@ class UserServiceTests extends DummyObject {
 				@Test
 				@DisplayName("존재하지 않는 회원")
 				void getUnUnifiedUserInfoTest() {
+					//given
 					Long fakeId = 1L;
+					//mock
 					given(userDataRepository.findUserById(fakeId))
 						.willReturn(Optional.empty());
-
+					//when, then
 					assertThatThrownBy(() -> userService.getUserInfo(fakeId)).isInstanceOf(
 						IllegalArgumentException.class);
 				}
@@ -172,13 +175,14 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 변경 테스트")
 		@Nested
-		class UserEditTest {
+		class EditUserTest {
 			@DisplayName("정상 케이스")
 			@Nested
 			class SuccessCase {
 				@Test
 				@DisplayName("유저 정보 변경")
 				void editUserInfoTest() {
+					//given
 					User userA = User.builder()
 						.email("test1@gmail.com")
 						.username("username1")
@@ -190,17 +194,18 @@ class UserServiceTests extends DummyObject {
 						.password("changedPassword")
 						.build();
 					Long fakeIdForA = 1L;
-
 					ReflectionTestUtils.setField(userA, "id", fakeIdForA);
 					ReflectionTestUtils.setField(editedUserInfo, "id", fakeIdForA);
+					//mock
 					given(userDataRepository.findById(fakeIdForA))
 						.willReturn(Optional.of(userA));
-
+					//when
 					Long returnId = userService.editUserInfo(editedUserInfo.getId(), editedUserInfo.getUsername(),
 						editedUserInfo.getEmail(), editedUserInfo.getPassword(), editedUserInfo.getProfile(),
 						editedUserInfo.getBlogTitle(),
 						editedUserInfo.getGithubLink(), editedUserInfo.getInstagramLink(),
 						editedUserInfo.getIntroduction());
+					//then
 					assertThat(returnId).isSameAs(fakeIdForA);
 				}
 			}
@@ -211,6 +216,7 @@ class UserServiceTests extends DummyObject {
 				@Test
 				@DisplayName("해당 유저가 존재하지 않을때")
 				void editUnUnifiedUserInfoTest() {
+					//given
 					User editedUser = User.builder()
 						.email("changed@gmail.com")
 						.username("changedUsername")
@@ -218,9 +224,10 @@ class UserServiceTests extends DummyObject {
 						.build();
 					Long fakeIdForA = 1L;
 					ReflectionTestUtils.setField(editedUser, "id", fakeIdForA);
+					//mock
 					given(userDataRepository.findById(fakeIdForA))
 						.willReturn(Optional.empty());
-
+					//when, then
 					assertThatThrownBy(() -> userService
 						.editUserInfo(editedUser.getId(), editedUser.getUsername(),
 							editedUser.getEmail(), editedUser.getPassword(), editedUser.getProfile(),
@@ -237,13 +244,14 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 삭제 테스트")
 		@Nested
-		class UserRemoveTest {
+		class DeleteUserTest {
 			@DisplayName("성공케이스")
 			@Nested
 			class SuccessCase {
 				@DisplayName("유저 삭제")
 				@Test
-				void removeUserTest() {
+				void deleteUserTest() {
+					//given
 					User removedUser = User.builder()
 						.email("changed@gmail.com")
 						.username("changedUsername")
@@ -251,9 +259,10 @@ class UserServiceTests extends DummyObject {
 						.build();
 					Long removedUserId = 1L;
 					ReflectionTestUtils.setField(removedUser, "id", removedUserId);
+					//mock
 					given(userDataRepository.findById(removedUserId))
 						.willReturn(Optional.of(removedUser));
-
+					//when
 					userService.removeUser(removedUserId);
 				}
 
@@ -265,9 +274,10 @@ class UserServiceTests extends DummyObject {
 
 				@DisplayName("해당유저가 존재하지 않을때")
 				@Test
-				void removeUnUnifiedUserTest() {
+				void deleteUnUnifiedUserTest() {
+					//given
 					Long removedUserId = 1L;
-
+					//when, then
 					assertThatThrownBy(() -> userService.removeUser(removedUserId)).isInstanceOf(
 						IllegalArgumentException.class);
 
