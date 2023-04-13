@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
@@ -83,11 +84,11 @@ public class UserApiController {
 	}
 
 	@DeleteMapping("/{id}")
-	public String deleteUserInfo(@PathVariable Long id, HttpSession session) {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUserInfo(@PathVariable Long id, HttpSession session) {
 		Optional<UserSearchDto> sessionUser = getSessionUser(session);
 		checkSession(sessionUser, id);
 		userService.removeUser(id);
-		return "done";
 	}
 
 	private Optional<UserSearchDto> getSessionUser(HttpSession session) {
@@ -109,10 +110,10 @@ public class UserApiController {
 	 */
 
 	@GetMapping("/getSession/{id}")
-	private String getSessionForTest(HttpSession session, @PathVariable Long id) {
+	@ResponseStatus(HttpStatus.CREATED)
+	private void getSessionForTest(HttpSession session, @PathVariable Long id) {
 		UserSearchDto userInfo = userService.getUserInfo(id);
 		String sessionId = session.getId();
 		session.setAttribute(sessionId, userInfo);
-		return sessionId;
 	}
 }
