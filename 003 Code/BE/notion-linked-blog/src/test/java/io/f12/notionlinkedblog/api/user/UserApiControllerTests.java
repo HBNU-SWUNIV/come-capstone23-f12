@@ -128,7 +128,6 @@ class UserApiControllerTests {
 					.email("changed@test.com")
 					.build();
 				ReflectionTestUtils.setField(beforeUser, "id", fakeUserId);
-				ReflectionTestUtils.setField(changedDto, "id", fakeUserId);
 
 				MockHttpSession mockHttpSession = new MockHttpSession();
 				mockHttpSession.setAttribute(mockHttpSession.getId(), beforeUser);
@@ -173,7 +172,6 @@ class UserApiControllerTests {
 					.build();
 
 				ReflectionTestUtils.setField(beforeUser, "id", fakeUserId);
-				ReflectionTestUtils.setField(changedDto, "id", fakeUserId);
 
 				String requestBody = om.writeValueAsString(changedDto);
 				MockHttpSession mockHttpSession = new MockHttpSession();
@@ -205,7 +203,6 @@ class UserApiControllerTests {
 					.build();
 
 				ReflectionTestUtils.setField(beforeUser, "id", fakeUserId);
-				ReflectionTestUtils.setField(changedDto, "id", fakeUserId);
 				MockHttpSession mockHttpSession = new MockHttpSession();
 				mockHttpSession.setAttribute(mockHttpSession.getId(), beforeUser);
 
