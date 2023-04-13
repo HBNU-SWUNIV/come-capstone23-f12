@@ -12,9 +12,9 @@ import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 public interface UserDataRepository extends JpaRepository<User, Long> {
 
 	@Query(
-		"select new io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto(u.id,"
+		"SELECT new io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto(u.id,"
 			+ "u.username,u.email,u.profile,u.introduction,u.blogTitle,u.githubLink,u.instagramLink) "
-			+ "from User u "
-			+ "where u.id = :id")
+			+ "FROM User u "
+			+ "WHERE u.id = :id")
 	Optional<UserSearchDto> findUserById(@Param("id") Long id);
 }
