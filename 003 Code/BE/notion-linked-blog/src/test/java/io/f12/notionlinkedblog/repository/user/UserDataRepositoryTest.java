@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
+import javax.persistence.EntityManager;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,13 +21,16 @@ class UserDataRepositoryTest {
 
 	@Autowired
 	private UserDataRepository userDataRepository;
+	@Autowired
+	private EntityManager entityManager;
 
 	@DisplayName("유저 조회 테스트")
 	@Nested
 	class SelectingUserTests {
-		@AfterEach
+		@BeforeEach
 		void clear() {
 			userDataRepository.deleteAll();
+			entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
 		}
 
 		@DisplayName("정상 조회")
@@ -83,7 +88,7 @@ class UserDataRepositoryTest {
 				.instagramLink("insta1")
 				.build();
 			userDataRepository.save(user1);
-			long id = 5L;
+			long id = 3L;
 			String errorMessage = "Wrong MemberId: ";
 			//when, then
 			Optional<UserSearchDto> userA = userDataRepository.findUserById(id);

@@ -5,7 +5,9 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.util.StringUtils;
@@ -20,10 +22,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(name = "users")
+@SequenceGenerator(
+	name = "user_seq_generator",
+	sequenceName = "user_seq",
+	allocationSize = 1
+)
 public class User extends BaseTimeEntity {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
 	private Long id;
 
 	@Column(nullable = false)
