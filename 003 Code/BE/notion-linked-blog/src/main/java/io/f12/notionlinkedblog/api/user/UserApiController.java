@@ -74,8 +74,8 @@ public class UserApiController {
 		@RequestParam(value = "instagramLink", required = false) String instagramLink,
 		@RequestParam(value = "introduction", required = false) String introduction
 	) {
-		Optional<UserSearchDto> sessionUser = getSessionUser(session);
-		checkSession(sessionUser, id);
+		Optional<UserSearchDto> sessionUser = getUserSession(session);
+		checkValidSession(sessionUser, id);
 		userService.editUserInfo(id, username, email, password, profile, blogTitle,
 			githubLink, instagramLink, introduction);
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -85,17 +85,17 @@ public class UserApiController {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteUserInfo(@PathVariable Long id, HttpSession session) {
-		Optional<UserSearchDto> sessionUser = getSessionUser(session);
-		checkSession(sessionUser, id);
+	public void deleteUser(@PathVariable Long id, HttpSession session) {
+		Optional<UserSearchDto> sessionUser = getUserSession(session);
+		checkValidSession(sessionUser, id);
 		userService.removeUser(id);
 	}
 
-	private Optional<UserSearchDto> getSessionUser(HttpSession session) {
+	private Optional<UserSearchDto> getUserSession(HttpSession session) {
 		return Optional.ofNullable((UserSearchDto)session.getAttribute(session.getId()));
 	}
 
-	private void checkSession(Optional<UserSearchDto> sessionUser, Long id) {
+	private void checkValidSession(Optional<UserSearchDto> sessionUser, Long id) {
 		if (sessionUser.isEmpty()) {
 			throw new IllegalStateException("로그인 되어있지 않습니다.");
 		}
