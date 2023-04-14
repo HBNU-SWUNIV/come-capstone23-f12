@@ -75,7 +75,7 @@ class UserApiControllerTests {
 
 	@DisplayName("유저정보 조회 api")
 	@Nested
-	class checkUserInfoApiTest {
+	class UserCheckingApiTest {
 		@DisplayName("정상 케이스")
 		@Nested
 		class SuccessCase {
@@ -104,14 +104,13 @@ class UserApiControllerTests {
 						jsonPath("$.username").value(returnDto.getUsername()),
 						jsonPath("$.email").value(returnDto.getEmail())
 					);
-
 			}
 		}
 	}
 
 	@DisplayName("유저정보 수정 api")
 	@Nested
-	class editUserInfoApiTest {
+	class UserInfoEditApiTest {
 
 		@DisplayName("정상 케이스")
 		@Nested
@@ -148,10 +147,9 @@ class UserApiControllerTests {
 					.andDo(print());
 				//then
 				resultActions.andExpectAll(
-					status().is3xxRedirection(),
+					status().isFound(),
 					redirectedUrl(url)
 				);
-
 			}
 		}
 
@@ -186,9 +184,7 @@ class UserApiControllerTests {
 					.andDo(print());
 				//then
 				assertThat(resultActions.andReturn().getResponse().getContentAsString()).isEqualTo("로그인 되어있지 않습니다.");
-				resultActions.andExpectAll(
-					status().is4xxClientError()
-				);
+				resultActions.andExpect(status().isBadRequest());
 			}
 
 			@DisplayName("로그인 유저와 변경유저 불일치")
@@ -220,23 +216,20 @@ class UserApiControllerTests {
 					.andDo(print());
 				//then
 				assertThat(resultActions.andReturn().getResponse().getContentAsString()).isEqualTo("동일 회원이 아닙니다.");
-				resultActions.andExpectAll(
-					status().is4xxClientError()
-				);
+				resultActions.andExpect(status().isBadRequest());
 			}
 		}
-
 	}
 
 	@DisplayName("유저정보 삭제 api")
 	@Nested
-	class deleteUserInfoApiTest {
+	class UserDeleteApiTest {
 		@DisplayName("정상 케이스")
 		@Nested
 		class SuccessCase {
 			@DisplayName("유저 정보 삭제")
 			@Test
-			void deleteUserInfoTest() throws Exception {
+			void deleteUserTest() throws Exception {
 				//given
 				final Long fakeUserId = 1L;
 				final String url = "/api/users/1";
@@ -255,7 +248,7 @@ class UserApiControllerTests {
 							.session(mockHttpSession))
 					.andDo(print());
 				//then
-				resultActions.andExpect(status().is2xxSuccessful());
+				resultActions.andExpect(status().isOk());
 			}
 		}
 
@@ -276,9 +269,7 @@ class UserApiControllerTests {
 							.session(mockHttpSession))
 					.andDo(print());
 				//then
-				resultActions.andExpectAll(
-					status().is4xxClientError()
-				);
+				resultActions.andExpect(status().isBadRequest());
 			}
 
 			@DisplayName("로그인 유저와 변경유저 불일치")
@@ -302,9 +293,7 @@ class UserApiControllerTests {
 							.session(mockHttpSession))
 					.andDo(print());
 				//then
-				resultActions.andExpectAll(
-					status().is4xxClientError()
-				);
+				resultActions.andExpect(status().is4xxClientError());
 			}
 		}
 	}

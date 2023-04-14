@@ -105,12 +105,12 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 조회 테스트")
 		@Nested
-		class CheckUserTest {
+		class UserCheckTest {
 			@DisplayName("정상 케이스")
 			@Nested
 			class SuccessCase {
-				@Test
 				@DisplayName("id로 조회 케이스")
+				@Test
 				void getUserInfoTest() {
 					//given
 					User userA = User.builder()
@@ -158,8 +158,8 @@ class UserServiceTests extends DummyObject {
 			@DisplayName("실패 케이스")
 			@Nested
 			class FailureCase {
-				@Test
 				@DisplayName("존재하지 않는 회원")
+				@Test
 				void getUnUnifiedUserInfoTest() {
 					//given
 					Long fakeId = 1L;
@@ -175,12 +175,12 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 변경 테스트")
 		@Nested
-		class EditUserTest {
+		class UserEditTest {
 			@DisplayName("정상 케이스")
 			@Nested
 			class SuccessCase {
-				@Test
 				@DisplayName("유저 정보 변경")
+				@Test
 				void editUserInfoTest() {
 					//given
 					User userA = User.builder()
@@ -213,8 +213,8 @@ class UserServiceTests extends DummyObject {
 			@DisplayName("실패 케이스")
 			@Nested
 			class FailureCase {
-				@Test
 				@DisplayName("해당 유저가 존재하지 않을때")
+				@Test
 				void editUnUnifiedUserInfoTest() {
 					//given
 					User editedUser = User.builder()
@@ -244,7 +244,7 @@ class UserServiceTests extends DummyObject {
 
 		@DisplayName("유저 삭제 테스트")
 		@Nested
-		class DeleteUserTest {
+		class UserDeleteTest {
 			@DisplayName("성공케이스")
 			@Nested
 			class SuccessCase {

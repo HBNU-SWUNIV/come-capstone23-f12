@@ -26,7 +26,7 @@ class UserDataRepositoryTest {
 
 	@DisplayName("유저 조회 테스트")
 	@Nested
-	class SelectingUserTests {
+	class UserCheckTest {
 		@BeforeEach
 		void clear() {
 			userDataRepository.deleteAll();
