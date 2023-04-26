@@ -2,6 +2,8 @@ package io.f12.notionlinkedblog.domain.post;
 
 import static javax.persistence.FetchType.*;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,36 +15,35 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.domain.PostTimeEntity;
-import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
+@Getter
 @Table(name = "posts")
 public class Post extends PostTimeEntity {
+
 	@Id
 	@GeneratedValue
 	private Long id;
-
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	@NotNull
 	private User user;
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "series_id")
-	private Series seriesId;
 	private String title;
 	private String content;
 	private String thumbnail;
 	private Long viewCount;
 
 	@Builder
-	public Post(User user, Series seriesId, String title, String content, String thumbnail, Long viewCount) {
+	public Post(User user, String title, String content, String thumbnail, Long viewCount) {
 		this.user = user;
-		this.seriesId = seriesId;
 		this.title = title;
 		this.content = content;
 		this.thumbnail = thumbnail;
@@ -61,4 +62,7 @@ public class Post extends PostTimeEntity {
 		}
 	}
 
+	public boolean sameUser(Long userId) {
+		return Objects.equals(user.getId(), userId);
+	}
 }
