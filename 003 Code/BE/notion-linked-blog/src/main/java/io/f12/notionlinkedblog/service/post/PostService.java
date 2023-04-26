@@ -36,9 +36,12 @@ public class PostService {
 		return postRepository.save(post);
 	}
 
-	//TODO: 현재는 특정 파라미터가 제목에 있는지만 확인 추후 내용, 해쉬태그 등 확인 필요
-	public List<PostSearchDto> getPostsByParam(String searchParam) {
-		return postRepository.findPostByName(searchParam);
+	public List<PostSearchDto> getPostsByTitle(String searchParam) {
+		return postRepository.findPostByTitle(searchParam);
+	}
+
+	public List<PostSearchDto> getPostByContent(String searchParam) {
+		return postRepository.findPostByContent(searchParam);
 	}
 
 	public PostSearchDto getPostDtoById(Long id) {
@@ -55,11 +58,14 @@ public class PostService {
 		postRepository.removePostByIdAndUserId(postId, userId);
 	}
 
-	public void editPost(Long postId, String title, String content, String thumbnail) {
+	public void editPost(Long postId, Long userId, String title, String content, String thumbnail) {
 		Post changedPost = postRepository.findPostById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
-
+		if (!changedPost.sameUser(userId)) {
+			throw new IllegalStateException("글 작성자와 일치하지 않는 사용자입니다.");
+		}
 		changedPost.editPost(title, content, thumbnail);
 	}
 	//TODO: editSeries, 시리즈만 편집기능 필요
+
 }
