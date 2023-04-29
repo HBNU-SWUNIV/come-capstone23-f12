@@ -6,9 +6,11 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -27,10 +29,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "posts")
+@SequenceGenerator(
+	name = "post_seq_generator",
+	sequenceName = "post_seq",
+	allocationSize = 1
+)
 public class Post extends PostTimeEntity {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq_generator")
 	private Long id;
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
