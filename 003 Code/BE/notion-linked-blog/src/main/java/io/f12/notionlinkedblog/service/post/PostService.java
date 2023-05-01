@@ -55,6 +55,8 @@ public class PostService {
 	}
 
 	public void removePost(Long postId, Long userId) {
+		postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
 		postRepository.removePostByIdAndUserId(postId, userId);
 	}
 

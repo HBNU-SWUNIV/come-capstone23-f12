@@ -43,7 +43,9 @@ public class Post extends PostTimeEntity {
 	@JoinColumn(name = "user_id")
 	@NotNull
 	private User user;
+	@NotNull
 	private String title;
+	@NotNull
 	private String content;
 	private String thumbnail;
 	private Long viewCount;
