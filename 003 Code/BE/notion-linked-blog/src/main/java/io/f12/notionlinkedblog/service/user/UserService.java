@@ -9,7 +9,6 @@ import io.f12.notionlinkedblog.domain.user.dto.info.UserEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
 	private final UserDataRepository userDataRepository;
 	private final PasswordEncoder passwordEncoder;
 
@@ -26,7 +24,7 @@ public class UserService {
 
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 		User newUser = requestDto.toEntity();
-		User savedUser = userRepository.save(newUser);
+		User savedUser = userDataRepository.save(newUser);
 
 		return savedUser.getId();
 	}
@@ -52,7 +50,7 @@ public class UserService {
 	}
 
 	private void checkEmailIsDuplicated(final String email) {
-		boolean isPresent = userRepository.findByEmail(email).isPresent();
+		boolean isPresent = userDataRepository.findByEmail(email).isPresent();
 		if (isPresent) {
 			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
 		}

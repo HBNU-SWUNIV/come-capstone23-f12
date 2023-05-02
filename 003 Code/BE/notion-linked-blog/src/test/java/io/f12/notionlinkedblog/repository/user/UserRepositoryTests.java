@@ -18,7 +18,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 class UserRepositoryTests {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserDataRepository userDataRepository;
 
 	@DisplayName("유저 조회 API")
 	@Nested
@@ -33,7 +33,7 @@ class UserRepositoryTests {
 				User testUser = User.builder().email("test@gmail.com").username("test").password("password").build();
 
 				//when
-				Optional<User> foundUser = userRepository.findByEmail(testUser.getEmail());
+				Optional<User> foundUser = userDataRepository.findByEmail(testUser.getEmail());
 
 				//then
 				assertThat(foundUser.isEmpty()).isTrue();
@@ -48,12 +48,12 @@ class UserRepositoryTests {
 			void findByEmail() {
 				//given
 				User existUser = User.builder().email("test@gmail.com").username("test").password("password").build();
-				userRepository.save(existUser);
+				userDataRepository.save(existUser);
 
 				User newUser = User.builder().email("test@gmail.com").username("test").password("password").build();
 
 				//when
-				Optional<User> foundUser = userRepository.findByEmail(newUser.getEmail());
+				Optional<User> foundUser = userDataRepository.findByEmail(newUser.getEmail());
 
 				//then
 				assertThat(foundUser.isPresent()).isTrue();

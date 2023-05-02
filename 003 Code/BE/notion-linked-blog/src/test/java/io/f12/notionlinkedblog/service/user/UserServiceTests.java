@@ -21,20 +21,14 @@ import io.f12.notionlinkedblog.domain.user.dto.info.UserEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTests extends DummyObject {
 
 	@InjectMocks
 	private UserService userService;
-
-	@Mock
-	private UserRepository userRepository;
-
 	@Mock
 	private UserDataRepository userDataRepository;
-
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
@@ -57,10 +51,10 @@ class UserServiceTests extends DummyObject {
 				User mockUser = newMockUser(1L, "test", "test@gmail.com");
 
 				// stub 1
-				given(userRepository.findByEmail(any())).willReturn(Optional.empty());
+				given(userDataRepository.findByEmail(any())).willReturn(Optional.empty());
 
 				// stub 2
-				given(userRepository.save(any())).willReturn(mockUser);
+				given(userDataRepository.save(any())).willReturn(mockUser);
 
 				//when
 				Long id = userService.signupByEmail(newUserDto);
@@ -83,7 +77,7 @@ class UserServiceTests extends DummyObject {
 					.password("password")
 					.build();
 				User existUser = existUserDto.toEntity();
-				userRepository.save(existUser);
+				userDataRepository.save(existUser);
 
 				UserSignupRequestDto newUserDto = UserSignupRequestDto.builder()
 					.email("test@gmail.com")
@@ -91,7 +85,7 @@ class UserServiceTests extends DummyObject {
 					.password("password")
 					.build();
 				User newUser = newUserDto.toEntity();
-				given(userRepository.findByEmail(newUser.getEmail())).willReturn(Optional.of(existUser));
+				given(userDataRepository.findByEmail(newUser.getEmail())).willReturn(Optional.of(existUser));
 
 				//then
 				assertThatThrownBy(() -> userService.signupByEmail(newUserDto)).isInstanceOf(

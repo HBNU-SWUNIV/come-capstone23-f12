@@ -32,7 +32,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.repository.user.UserRepository;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.service.user.UserService;
 
 @AutoConfigureMockMvc
@@ -46,7 +46,7 @@ class UserApiControllerTests {
 	@Autowired
 	private ObjectMapper om;
 	@Autowired
-	private UserRepository userJpaRepository;
+	private UserDataRepository userDataRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -54,7 +54,7 @@ class UserApiControllerTests {
 
 	@BeforeEach
 	void setup() {
-		testUser = userJpaRepository.save(User.builder()
+		testUser = userDataRepository.save(User.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
@@ -64,7 +64,7 @@ class UserApiControllerTests {
 
 	@AfterEach
 	void teardown() {
-		userJpaRepository.deleteAll();
+		userDataRepository.deleteAll();
 	}
 
 	@DisplayName("이메일 기반 회원가입")
@@ -202,7 +202,6 @@ class UserApiControllerTests {
 			@Test
 			void deleteUserTest() throws Exception {
 				//given
-				final Long fakeUserId = 1L;
 				final String url = Endpoint.Api.USER + "/" + testUser.getId();
 				UserSearchDto beforeUser = UserSearchDto.builder()
 					.username("user1")

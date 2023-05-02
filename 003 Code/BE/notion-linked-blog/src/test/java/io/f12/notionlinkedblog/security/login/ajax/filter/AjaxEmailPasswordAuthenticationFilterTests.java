@@ -22,7 +22,7 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.login.email.EmailLoginUserRequestDto;
-import io.f12.notionlinkedblog.repository.user.UserRepository;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -34,14 +34,14 @@ class AjaxEmailPasswordAuthenticationFilterTests extends DummyObject {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
-	private UserRepository userJpaRepository;
+	private UserDataRepository userDataRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@BeforeEach
 	void setup() {
-		userJpaRepository.deleteAll();
-		userJpaRepository.save(User.builder()
+		userDataRepository.deleteAll();
+		userDataRepository.save(User.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234")).build());
