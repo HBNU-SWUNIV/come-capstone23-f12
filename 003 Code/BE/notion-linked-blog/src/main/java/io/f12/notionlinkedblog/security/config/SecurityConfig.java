@@ -68,7 +68,7 @@ public class SecurityConfig {
 
 	public AccessDeniedHandler accessDeniedHandler() {
 		return (request, response, accessDeniedException) ->
-			response.sendError(HttpStatus.FORBIDDEN.value(), "권한 없음");
+			response.sendError(HttpStatus.NOT_FOUND.value(), accessDeniedException.getMessage());
 	}
 
 	public AjaxLoginConfigurer<HttpSecurity> ajaxLoginConfigurer() {
