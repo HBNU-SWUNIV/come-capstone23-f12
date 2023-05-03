@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.api.post;
 
+import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -80,7 +81,7 @@ class PostApiControllerTest {
 			//given
 			final String url = Endpoint.Api.POST;
 			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 			PostCreateDto body = PostCreateDto.builder()
 				.title("testTitle")
@@ -250,7 +251,7 @@ class PostApiControllerTest {
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
 
 			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다"));
+				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 			PostEditDto body = PostEditDto.builder()
 				.title("testTitle")
@@ -313,7 +314,7 @@ class PostApiControllerTest {
 			//given
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
 			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다"));
+				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();
 			mockHttpSession.setAttribute(mockHttpSession.getId(), user);

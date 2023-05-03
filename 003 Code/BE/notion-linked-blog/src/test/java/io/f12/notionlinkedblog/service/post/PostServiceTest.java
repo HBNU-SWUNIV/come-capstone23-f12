@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.service.post;
 
+import static io.f12.notionlinkedblog.error.Error.PostExceptions.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -267,7 +268,7 @@ class PostServiceTest {
 				assertThatThrownBy(() -> {
 					postService.getPostDtoById(fakeId);
 				}).isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining("존재하지 않는 포스트입니다.");
+					.hasMessageContaining(POST_NOT_EXIST);
 			}
 		}
 	}
@@ -310,7 +311,7 @@ class PostServiceTest {
 			assertThatThrownBy(() -> {
 				postService.removePost(fakePostId, fakeUserId);
 			}).isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("존재하지 않는 포스트입니다.");
+				.hasMessageContaining(POST_NOT_EXIST);
 
 		}
 
@@ -376,7 +377,7 @@ class PostServiceTest {
 				assertThatThrownBy(() -> {
 					postService.editPost(fakePostId, fakeUserId, editTitle, editContent, editThumbnail);
 				}).isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining("존재하지 않는 포스트입니다.");
+					.hasMessageContaining(POST_NOT_EXIST);
 
 			}
 
@@ -414,7 +415,7 @@ class PostServiceTest {
 				assertThatThrownBy(() -> {
 					postService.editPost(fakePostId, illegalEditorId, editTitle, editContent, editThumbnail);
 				}).isInstanceOf(IllegalStateException.class)
-					.hasMessageContaining("글 작성자와 일치하지 않는 사용자입니다.");
+					.hasMessageContaining(WRITER_USER_NOT_MATCH);
 
 			}
 

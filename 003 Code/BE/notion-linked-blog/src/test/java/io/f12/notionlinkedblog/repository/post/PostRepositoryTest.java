@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.repository.post;
 
+import static io.f12.notionlinkedblog.error.Error.PostExceptions.*;
+import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -76,9 +78,9 @@ class PostRepositoryTest {
 					//given
 					//when
 					userDataRepository.findById(1L)
-						.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+						.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 					PostSearchDto searchPost = postRepository.findPostDtoById(1L)
-						.orElseThrow(() -> new IllegalArgumentException("error"));
+						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 					//then
 					assertThat(searchPost).extracting(PostSearchDto::getTitle).isEqualTo(title);
@@ -92,13 +94,12 @@ class PostRepositoryTest {
 					@Test
 					void searchUnavailablePost() {
 						//given
-						String errorMessage = "WrongSearchId: ";
 						String title = "testTitle";
 						String content = "testContent";
 
 						//when
 						User savedUser = userDataRepository.findById(1L)
-							.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						Post post = Post.builder()
 							.title(title)
@@ -111,10 +112,9 @@ class PostRepositoryTest {
 						//then
 						Optional<PostSearchDto> postDtoById = postRepository.findPostDtoById(searchId);
 						assertThatThrownBy(() -> {
-							postDtoById.orElseThrow(() -> new IllegalArgumentException(errorMessage + searchId));
+							postDtoById.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 						}).isInstanceOf(IllegalArgumentException.class)
-							.hasMessageContaining(errorMessage)
-							.hasMessageContaining(String.valueOf(searchId));
+							.hasMessageContaining(POST_NOT_EXIST);
 
 					}
 				}
@@ -130,7 +130,7 @@ class PostRepositoryTest {
 					//given
 					//when
 					Post searchPostById = postRepository.findPostById(1L)
-						.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 					//then
 					assertThat(searchPostById).extracting(Post::getTitle).isEqualTo(title);
 					assertThat(searchPostById).extracting(Post::getContent).isEqualTo(content);
@@ -145,16 +145,14 @@ class PostRepositoryTest {
 					@Test
 					void searchUnavailablePost() {
 						//given
-						String errorMessage = "WrongSearchId: ";
 						Long postId = 2L;
 						//when
 						//then
 						assertThatThrownBy(() -> {
 							postRepository.findPostById(postId)
-								.orElseThrow(() -> new IllegalArgumentException(errorMessage + postId));
+								.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 						}).isInstanceOf(IllegalArgumentException.class)
-							.hasMessageContaining(errorMessage)
-							.hasMessageContaining(String.valueOf(postId));
+							.hasMessageContaining(POST_NOT_EXIST);
 					}
 
 				}
@@ -202,7 +200,7 @@ class PostRepositoryTest {
 					void successfulCase_MultiData() {
 						//given
 						User savedUser = userDataRepository.findById(1L)
-							.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						Post post = Post.builder()
 							.title(title + 2)
@@ -261,7 +259,7 @@ class PostRepositoryTest {
 					void successfulCase_MultiData() {
 						//given
 						User savedUser = userDataRepository.findById(1L)
-							.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						Post post = Post.builder()
 							.title(title + 2)
@@ -301,12 +299,12 @@ class PostRepositoryTest {
 				String changedThumbnailDetail = "changedThumbnailURL";
 				//when
 				Post editPost = postRepository.findPostById(1L)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost("", null, changedThumbnailDetail);
 
 				Post editedPost = postRepository.findPostById(1L)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(title);
 				assertThat(editedPost).extracting("content").isEqualTo(content);
@@ -323,12 +321,12 @@ class PostRepositoryTest {
 				String changedContent = "changedContent";
 				//when
 				Post editPost = postRepository.findPostById(1L)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost(changedTitle, changedContent, changedThumbnailDetail);
 
 				Post editedPost = postRepository.findPostById(1L)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(changedTitle);
 				assertThat(editedPost).extracting("content").isEqualTo(changedContent);
@@ -349,16 +347,15 @@ class PostRepositoryTest {
 			@Test
 			void normalRemove() {
 				//given
-				String errorMassage = "존재하지 않는 포스트";
 				//when
 				postRepository.removePostByIdAndUserId(1L, 1L);
 				//then
 				assertThatThrownBy(() -> {
 					postRepository.findPostById(1L)
-						.orElseThrow(() -> new IllegalArgumentException(errorMassage));
+						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				})
 					.isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining(errorMassage);
+					.hasMessageContaining(POST_NOT_EXIST);
 
 			}
 
@@ -376,7 +373,7 @@ class PostRepositoryTest {
 				postRepository.removePostByIdAndUserId(1L, savedNewUser.getId());
 
 				Post post = postRepository.findPostById(1L)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트"));
+					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(post).extracting("title").isEqualTo(title);
 				assertThat(post).extracting("content").isEqualTo(content);
