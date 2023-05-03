@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.http.Cookie;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,15 +15,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
+import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
+import io.f12.notionlinkedblog.repository.post.PostRepository;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -31,19 +40,47 @@ class PostApiControllerTest {
 	private MockMvc mockMvc;
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private UserDataRepository userDataRepository;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	private User testUser;
+	private Post testPost;
+
+	@BeforeEach
+	void init() {
+		testUser = userDataRepository.save(User.builder()
+			.email("test@gmail.com")
+			.username("test")
+			.password(passwordEncoder.encode("1234"))
+			.build()
+		);
+		testPost = postRepository.save(Post.builder()
+			.user(testUser)
+			.title("testTitle")
+			.content("testContent").build());
+	}
+
+	@AfterEach
+	void clear() {
+		postRepository.deleteAll();
+		userDataRepository.deleteAll();
+	}
 
 	@DisplayName("포스트 생성")
 	@Nested
 	class createPost {
 		@DisplayName("성공 케이스")
+		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
 		void successCase() throws Exception {
 			//given
-			final String url = "/api/post";
-			UserSearchDto user = UserSearchDto.builder()
-				.username("tester")
-				.email("test@test.com")
-				.build();
+			final String url = Endpoint.Api.POST;
+			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
 
 			PostCreateDto body = PostCreateDto.builder()
 				.title("testTitle")
@@ -51,7 +88,6 @@ class PostApiControllerTest {
 				.thumbnail("testThumbnail")
 				.build();
 			String requestBody = objectMapper.writeValueAsString(body);
-			ReflectionTestUtils.setField(user, "id", 1L);
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();
 			mockHttpSession.setAttribute(mockHttpSession.getId(), user);
@@ -75,7 +111,7 @@ class PostApiControllerTest {
 			@Test
 			void unLogin() throws Exception {
 				//given
-				final String url = "/api/post";
+				final String url = Endpoint.Api.POST;
 				PostCreateDto body = PostCreateDto.builder()
 					.title("testTitle")
 					.content("testContent")
@@ -115,7 +151,7 @@ class PostApiControllerTest {
 				@Test
 				void successCase() throws Exception {
 					//given
-					String url = "/api/post/1";
+					String url = Endpoint.Api.POST + "/" + testPost.getId();
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
@@ -137,7 +173,7 @@ class PostApiControllerTest {
 				@Test
 				void successCase() throws Exception {
 					//given
-					String url = "/api/post/get/title";
+					String url = Endpoint.Api.POST + "/get/title";
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
@@ -154,7 +190,7 @@ class PostApiControllerTest {
 					@Test
 					void noParam() throws Exception {
 						//given
-						String url = "/api/post/get/title";
+						String url = Endpoint.Api.POST + "/get/title";
 						//when
 						ResultActions resultActions = mockMvc.perform(
 							get(url)
@@ -172,7 +208,7 @@ class PostApiControllerTest {
 				@Test
 				void successCase() throws Exception {
 					//given
-					String url = "/api/post/get/content";
+					String url = Endpoint.Api.POST + "/get/content";
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
@@ -189,7 +225,7 @@ class PostApiControllerTest {
 					@Test
 					void noParam() throws Exception {
 						//given
-						String url = "/api/post/get/content";
+						String url = Endpoint.Api.POST + "/get/content";
 						//when
 						ResultActions resultActions = mockMvc.perform(
 							get(url)
@@ -211,12 +247,10 @@ class PostApiControllerTest {
 		@Test
 		void successCase() throws Exception {
 			//given
-			String url = "/api/post/1";
+			String url = Endpoint.Api.POST + "/" + testPost.getId();
 
-			UserSearchDto user = UserSearchDto.builder()
-				.username("tester")
-				.email("test@test.com")
-				.build();
+			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다"));
 
 			PostEditDto body = PostEditDto.builder()
 				.title("testTitle")
@@ -225,7 +259,6 @@ class PostApiControllerTest {
 				.build();
 
 			String requestBody = objectMapper.writeValueAsString(body);
-			ReflectionTestUtils.setField(user, "id", 1L);
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();
 			mockHttpSession.setAttribute(mockHttpSession.getId(), user);
@@ -250,12 +283,7 @@ class PostApiControllerTest {
 			@Test
 			void sessionUnavailable() throws Exception {
 				//given
-				String url = "/api/post/1";
-
-				UserSearchDto user = UserSearchDto.builder()
-					.username("tester")
-					.email("test@test.com")
-					.build();
+				String url = Endpoint.Api.POST + "/" + testPost.getId();
 
 				PostEditDto body = PostEditDto.builder()
 					.title("testTitle")
@@ -264,7 +292,6 @@ class PostApiControllerTest {
 					.build();
 
 				String requestBody = objectMapper.writeValueAsString(body);
-				ReflectionTestUtils.setField(user, "id", 1L);
 				//when
 				ResultActions resultActions = mockMvc.perform(
 					put(url)
@@ -284,12 +311,9 @@ class PostApiControllerTest {
 		@Test
 		void successCase() throws Exception {
 			//given
-			String url = "/api/post/1";
-			UserSearchDto user = UserSearchDto.builder()
-				.username("tester")
-				.email("test@test.com")
-				.build();
-			ReflectionTestUtils.setField(user, "id", 1L);
+			String url = Endpoint.Api.POST + "/" + testPost.getId();
+			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다"));
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();
 			mockHttpSession.setAttribute(mockHttpSession.getId(), user);
@@ -309,7 +333,7 @@ class PostApiControllerTest {
 			@Test
 			void sessionUnavailable() throws Exception {
 				//given
-				String url = "/api/post/1";
+				String url = Endpoint.Api.POST + "/" + testUser.getId();
 				//mock
 
 				//when
