@@ -1,5 +1,8 @@
 package io.f12.notionlinkedblog.service.post;
 
+import static io.f12.notionlinkedblog.error.Error.PostExceptions.*;
+import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,7 +26,7 @@ public class PostService {
 	public Post createPost(Long userId, String title, String content, String thumbnail) {
 
 		User findUser = userDataRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		Post post = Post.builder()
 			.user(findUser)
@@ -46,25 +49,25 @@ public class PostService {
 
 	public PostSearchDto getPostDtoById(Long id) {
 		return postRepository.findPostDtoById(id)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 	}
 
 	public Post getRawPostById(Long id) {
 		return postRepository.findPostById(id)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 	}
 
 	public void removePost(Long postId, Long userId) {
 		postRepository.findById(postId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		postRepository.removePostByIdAndUserId(postId, userId);
 	}
 
 	public void editPost(Long postId, Long userId, String title, String content, String thumbnail) {
 		Post changedPost = postRepository.findPostById(postId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스트입니다."));
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (!changedPost.sameUser(userId)) {
-			throw new IllegalStateException("글 작성자와 일치하지 않는 사용자입니다.");
+			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(title, content, thumbnail);
 	}
