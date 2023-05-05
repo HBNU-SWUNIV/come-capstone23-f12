@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.util.StringUtils;
@@ -43,9 +44,9 @@ public class Post extends PostTimeEntity {
 	@JoinColumn(name = "user_id")
 	@NotNull
 	private User user;
-	@NotNull
+	@NotBlank
 	private String title;
-	@NotNull
+	@NotBlank
 	private String content;
 	private String thumbnail;
 	private Long viewCount;
@@ -59,7 +60,7 @@ public class Post extends PostTimeEntity {
 		this.viewCount = viewCount;
 	}
 
-	public void editPost(String title, String content, String thumbnail) {
+	public void editPost(String title, String content, String thumbnail) { // 비어있는 데이터는 예외처리
 		if (StringUtils.hasText(title)) {
 			this.title = title;
 		}
@@ -71,7 +72,7 @@ public class Post extends PostTimeEntity {
 		}
 	}
 
-	public boolean sameUser(Long userId) {
+	public boolean isSameUser(Long userId) {
 		return Objects.equals(user.getId(), userId);
 	}
 }

@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.service.user;
 
-import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
