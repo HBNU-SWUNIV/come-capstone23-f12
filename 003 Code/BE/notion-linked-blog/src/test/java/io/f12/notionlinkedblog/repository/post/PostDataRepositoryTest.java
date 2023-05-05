@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.repository.post;
 
-import static io.f12.notionlinkedblog.error.Error.PostExceptions.*;
-import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.PostExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -23,38 +23,41 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
 @DataJpaTest
-class PostRepositoryTest {
+class PostDataRepositoryTest {
 
 	@Autowired
-	private PostRepository postRepository;
+	private PostDataRepository postDataRepository;
 	@Autowired
 	private UserDataRepository userDataRepository;
 	@Autowired
 	private EntityManager entityManager;
+
+	private User user;
+	private Post post;
 
 	String title = "testTitle";
 	String content = "testContent";
 
 	@BeforeEach
 	void init() {
-		User user = User.builder()
+		user = User.builder()
 			.username("tester")
 			.email("test@test.com")
 			.password("nope")
 			.build();
 		User savedUser = userDataRepository.save(user);
 
-		Post post = Post.builder()
+		post = Post.builder()
 			.title(title)
 			.content(content)
 			.user(savedUser)
 			.build();
-		postRepository.save(post);
+		postDataRepository.save(post);
 	}
 
 	@AfterEach
 	void clear() {
-		postRepository.deleteAll();
+		postDataRepository.deleteAll();
 		userDataRepository.deleteAll();
 		entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
 		entityManager.createNativeQuery("ALTER SEQUENCE post_seq RESTART WITH 1").executeUpdate();
@@ -77,9 +80,9 @@ class PostRepositoryTest {
 				void successCase() {
 					//given
 					//when
-					userDataRepository.findById(1L)
+					userDataRepository.findById(user.getId())
 						.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-					PostSearchDto searchPost = postRepository.findPostDtoById(1L)
+					PostSearchDto searchPost = postDataRepository.findDtoById(post.getId())
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 					//then
@@ -98,7 +101,7 @@ class PostRepositoryTest {
 						String content = "testContent";
 
 						//when
-						User savedUser = userDataRepository.findById(1L)
+						User savedUser = userDataRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						Post post = Post.builder()
@@ -106,11 +109,11 @@ class PostRepositoryTest {
 							.content(content)
 							.user(savedUser)
 							.build();
-						Post save = postRepository.save(post);
+						Post save = postDataRepository.save(post);
 						long searchId = save.getId() + 1;
 
 						//then
-						Optional<PostSearchDto> postDtoById = postRepository.findPostDtoById(searchId);
+						Optional<PostSearchDto> postDtoById = postDataRepository.findDtoById(searchId);
 						assertThatThrownBy(() -> {
 							postDtoById.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 						}).isInstanceOf(IllegalArgumentException.class)
@@ -129,7 +132,7 @@ class PostRepositoryTest {
 				void successfulCase() {
 					//given
 					//when
-					Post searchPostById = postRepository.findPostById(1L)
+					Post searchPostById = postDataRepository.findById(1L)
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 					//then
 					assertThat(searchPostById).extracting(Post::getTitle).isEqualTo(title);
@@ -145,11 +148,11 @@ class PostRepositoryTest {
 					@Test
 					void searchUnavailablePost() {
 						//given
-						Long postId = 2L;
+						Long postId = post.getId() + 1L;
 						//when
 						//then
 						assertThatThrownBy(() -> {
-							postRepository.findPostById(postId)
+							postDataRepository.findById(postId)
 								.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 						}).isInstanceOf(IllegalArgumentException.class)
 							.hasMessageContaining(POST_NOT_EXIST);
@@ -176,7 +179,7 @@ class PostRepositoryTest {
 						//given
 						String example = "NoData";
 						//when
-						List<PostSearchDto> postByTitle = postRepository.findPostByTitle(example);
+						List<PostSearchDto> postByTitle = postDataRepository.findByTitle(example);
 						//then
 						assertThat(postByTitle).isEmpty();
 					}
@@ -186,7 +189,7 @@ class PostRepositoryTest {
 					void successfulCase_SingleData() {
 						//given
 						//when
-						List<PostSearchDto> postByTitle = postRepository.findPostByTitle(title);
+						List<PostSearchDto> postByTitle = postDataRepository.findByTitle(title);
 						PostSearchDto postSearchDto = postByTitle.get(0);
 						//then
 						assertThat(postByTitle).size().isEqualTo(1);
@@ -207,9 +210,9 @@ class PostRepositoryTest {
 							.content(content + 2)
 							.user(savedUser)
 							.build();
-						postRepository.save(post);
+						postDataRepository.save(post);
 						//when
-						List<PostSearchDto> postByTitle = postRepository.findPostByTitle(title);
+						List<PostSearchDto> postByTitle = postDataRepository.findByTitle(title);
 						PostSearchDto post1 = postByTitle.get(0);
 						PostSearchDto post2 = postByTitle.get(1);
 						//then
@@ -235,7 +238,7 @@ class PostRepositoryTest {
 						//given
 						String example = "NoData";
 						//when
-						List<PostSearchDto> postByContent = postRepository.findPostByContent(example);
+						List<PostSearchDto> postByContent = postDataRepository.findByContent(example);
 						//then
 						assertThat(postByContent).isEmpty();
 					}
@@ -245,7 +248,7 @@ class PostRepositoryTest {
 					void successfulCase_SingleData() {
 						//given
 						//when
-						List<PostSearchDto> postByContent = postRepository.findPostByContent(content);
+						List<PostSearchDto> postByContent = postDataRepository.findByContent(content);
 						PostSearchDto postSearchDto = postByContent.get(0);
 						//then
 						assertThat(postByContent).size().isEqualTo(1);
@@ -266,9 +269,9 @@ class PostRepositoryTest {
 							.content(content + 2)
 							.user(savedUser)
 							.build();
-						postRepository.save(post);
+						postDataRepository.save(post);
 						//when
-						List<PostSearchDto> postByContent = postRepository.findPostByContent(content);
+						List<PostSearchDto> postByContent = postDataRepository.findByContent(content);
 						PostSearchDto post1 = postByContent.get(0);
 						PostSearchDto post2 = postByContent.get(1);
 						//then
@@ -298,12 +301,12 @@ class PostRepositoryTest {
 				//given
 				String changedThumbnailDetail = "changedThumbnailURL";
 				//when
-				Post editPost = postRepository.findPostById(1L)
+				Post editPost = postDataRepository.findById(1L)
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost("", null, changedThumbnailDetail);
 
-				Post editedPost = postRepository.findPostById(1L)
+				Post editedPost = postDataRepository.findById(1L)
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(title);
@@ -320,12 +323,12 @@ class PostRepositoryTest {
 				String changedTitle = "changedTitle";
 				String changedContent = "changedContent";
 				//when
-				Post editPost = postRepository.findPostById(1L)
+				Post editPost = postDataRepository.findById(1L)
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost(changedTitle, changedContent, changedThumbnailDetail);
 
-				Post editedPost = postRepository.findPostById(1L)
+				Post editedPost = postDataRepository.findById(1L)
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(changedTitle);
@@ -348,13 +351,13 @@ class PostRepositoryTest {
 			void normalRemove() {
 				//given
 				//when
-				postRepository.removePostByIdAndUserId(1L, 1L);
+				postDataRepository.removeByIdAndUserId(post.getId(), user.getId());
+				entityManager.clear();
 				//then
 				assertThatThrownBy(() -> {
-					postRepository.findPostById(1L)
+					Post post = postDataRepository.findById(1L)
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-				})
-					.isInstanceOf(IllegalArgumentException.class)
+				}).isInstanceOf(IllegalArgumentException.class)
 					.hasMessageContaining(POST_NOT_EXIST);
 
 			}
@@ -370,9 +373,9 @@ class PostRepositoryTest {
 					.build();
 				User savedNewUser = userDataRepository.save(user2);
 				//when
-				postRepository.removePostByIdAndUserId(1L, savedNewUser.getId());
+				postDataRepository.removeByIdAndUserId(1L, savedNewUser.getId());
 
-				Post post = postRepository.findPostById(1L)
+				Post post = postDataRepository.findById(1L)
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(post).extracting("title").isEqualTo(title);

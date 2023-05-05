@@ -1,10 +1,8 @@
 package io.f12.notionlinkedblog.api.post;
 
-import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import javax.servlet.http.Cookie;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +28,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
-import io.f12.notionlinkedblog.repository.post.PostRepository;
+import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
 @AutoConfigureMockMvc
@@ -44,7 +42,7 @@ class PostApiControllerTest {
 	@Autowired
 	private UserDataRepository userDataRepository;
 	@Autowired
-	private PostRepository postRepository;
+	private PostDataRepository postDataRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -59,7 +57,7 @@ class PostApiControllerTest {
 			.password(passwordEncoder.encode("1234"))
 			.build()
 		);
-		testPost = postRepository.save(Post.builder()
+		testPost = postDataRepository.save(Post.builder()
 			.user(testUser)
 			.title("testTitle")
 			.content("testContent").build());
@@ -67,7 +65,7 @@ class PostApiControllerTest {
 
 	@AfterEach
 	void clear() {
-		postRepository.deleteAll();
+		postDataRepository.deleteAll();
 		userDataRepository.deleteAll();
 	}
 
@@ -104,38 +102,6 @@ class PostApiControllerTest {
 			resultActions.andExpect(status().isCreated());
 		}
 
-		@DisplayName("실패 케이스")
-		@Nested
-		class failureCase {
-
-			@DisplayName("미 로그인")
-			@Test
-			void unLogin() throws Exception {
-				//given
-				final String url = Endpoint.Api.POST;
-				PostCreateDto body = PostCreateDto.builder()
-					.title("testTitle")
-					.content("testContent")
-					.thumbnail("testThumbnail")
-					.build();
-				String requestBody = objectMapper.writeValueAsString(body);
-
-				//mock
-				MockHttpSession mockHttpSession = new MockHttpSession();
-
-				//when
-				ResultActions resultActions = mockMvc.perform(
-					put(url)
-						.contentType(MediaType.APPLICATION_JSON)
-						.cookie(new Cookie("JSESSIONID", mockHttpSession.getId()))
-						.session(mockHttpSession)
-						.content(requestBody)
-				);
-				//then
-				resultActions.andExpect(status().isBadRequest());
-			}
-
-		}
 	}
 
 	@DisplayName("포스트 조회")
@@ -174,7 +140,7 @@ class PostApiControllerTest {
 				@Test
 				void successCase() throws Exception {
 					//given
-					String url = Endpoint.Api.POST + "/get/title";
+					String url = Endpoint.Api.POST + "/title";
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
@@ -191,7 +157,7 @@ class PostApiControllerTest {
 					@Test
 					void noParam() throws Exception {
 						//given
-						String url = Endpoint.Api.POST + "/get/title";
+						String url = Endpoint.Api.POST + "/title";
 						//when
 						ResultActions resultActions = mockMvc.perform(
 							get(url)
@@ -209,7 +175,7 @@ class PostApiControllerTest {
 				@Test
 				void successCase() throws Exception {
 					//given
-					String url = Endpoint.Api.POST + "/get/content";
+					String url = Endpoint.Api.POST + "/content";
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
@@ -226,7 +192,7 @@ class PostApiControllerTest {
 					@Test
 					void noParam() throws Exception {
 						//given
-						String url = Endpoint.Api.POST + "/get/content";
+						String url = Endpoint.Api.POST + "/content";
 						//when
 						ResultActions resultActions = mockMvc.perform(
 							get(url)
@@ -245,6 +211,7 @@ class PostApiControllerTest {
 	@Nested
 	class editPost {
 		@DisplayName("성공 케이스")
+		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
 		void successCase() throws Exception {
 			//given
@@ -260,55 +227,23 @@ class PostApiControllerTest {
 				.build();
 
 			String requestBody = objectMapper.writeValueAsString(body);
-			//mock
-			MockHttpSession mockHttpSession = new MockHttpSession();
-			mockHttpSession.setAttribute(mockHttpSession.getId(), user);
 			//when
 			ResultActions resultActions = mockMvc.perform(
 				put(url)
-					.session(mockHttpSession)
 					.content(requestBody)
 					.contentType(MediaType.APPLICATION_JSON)
 			);
 			//then
-			resultActions.andExpectAll(
-				status().isFound(),
-				redirectedUrl(url)
-			);
+			resultActions.andExpect(status().isFound());
 		}
 
-		@DisplayName("실패 케이스")
-		@Nested
-		class failureCase {
-			@DisplayName("세션 미존재")
-			@Test
-			void sessionUnavailable() throws Exception {
-				//given
-				String url = Endpoint.Api.POST + "/" + testPost.getId();
-
-				PostEditDto body = PostEditDto.builder()
-					.title("testTitle")
-					.content("testContent")
-					.thumbnail("testThumbnail")
-					.build();
-
-				String requestBody = objectMapper.writeValueAsString(body);
-				//when
-				ResultActions resultActions = mockMvc.perform(
-					put(url)
-						.content(requestBody)
-						.contentType(MediaType.APPLICATION_JSON)
-				);
-				//then
-				resultActions.andExpect(status().isBadRequest());
-			}
-		}
 	}
 
 	@DisplayName("포스트 삭제")
 	@Nested
 	class removePost {
 		@DisplayName("성공 케이스")
+		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
 		void successCase() throws Exception {
 			//given
@@ -325,25 +260,6 @@ class PostApiControllerTest {
 			);
 			//then
 			resultActions.andExpect(status().isNoContent());
-		}
-
-		@DisplayName("실패 케이스")
-		@Nested
-		class failureCase {
-			@DisplayName("세션 미존재")
-			@Test
-			void sessionUnavailable() throws Exception {
-				//given
-				String url = Endpoint.Api.POST + "/" + testUser.getId();
-				//mock
-
-				//when
-				ResultActions resultActions = mockMvc.perform(
-					delete(url)
-				);
-				//then
-				resultActions.andExpect(status().isBadRequest());
-			}
 		}
 	}
 

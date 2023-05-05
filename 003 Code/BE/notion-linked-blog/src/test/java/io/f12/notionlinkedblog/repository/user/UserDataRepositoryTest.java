@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.repository.user;
 
-import static io.f12.notionlinkedblog.error.Error.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;

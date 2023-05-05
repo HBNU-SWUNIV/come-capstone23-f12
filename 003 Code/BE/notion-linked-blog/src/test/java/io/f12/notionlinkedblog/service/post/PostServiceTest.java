@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.service.post;
 
-import static io.f12.notionlinkedblog.error.Error.PostExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.Exceptions.PostExceptions.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -18,9 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
+import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.post.PostRepository;
+import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +32,7 @@ class PostServiceTest {
 	PostService postService;
 
 	@Mock
-	PostRepository postRepository;
+	PostDataRepository postDataRepository;
 
 	@Mock
 	UserDataRepository userDataRepository;
@@ -57,6 +59,12 @@ class PostServiceTest {
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
 
+				PostCreateDto postDto = PostCreateDto.builder()
+					.title(title)
+					.content(content)
+					.thumbnail(thumbnail)
+					.build();
+
 				Post returnPost = Post.builder()
 					.user(user)
 					.title(title)
@@ -68,11 +76,11 @@ class PostServiceTest {
 				//Mock
 				given(userDataRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postRepository.save(any(Post.class)))
+				given(postDataRepository.save(any(Post.class)))
 					.willReturn(returnPost);
 
 				//when
-				Post createdPost = postService.createPost(fakeId, title, content, thumbnail);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto);
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
 				assertThat(createdPost).extracting("content").isEqualTo(content);
@@ -92,6 +100,10 @@ class PostServiceTest {
 
 				String title = "testTitle";
 				String content = "testContent";
+				PostCreateDto postDto = PostCreateDto.builder()
+					.title(title)
+					.content(content)
+					.build();
 
 				Post returnPost = Post.builder()
 					.user(user)
@@ -103,11 +115,11 @@ class PostServiceTest {
 				//Mock
 				given(userDataRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postRepository.save(any(Post.class)))
+				given(postDataRepository.save(any(Post.class)))
 					.willReturn(returnPost);
 
 				//when
-				Post createdPost = postService.createPost(fakeId, title, content, null);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto);
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
 				assertThat(createdPost).extracting("content").isEqualTo(content);
@@ -126,6 +138,11 @@ class PostServiceTest {
 				String title = "testTitle";
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
+				PostCreateDto postDto = PostCreateDto.builder()
+					.title(title)
+					.content(content)
+					.thumbnail(thumbnail)
+					.build();
 				Long fakeId = 1L;
 
 				//Mock
@@ -135,7 +152,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.createPost(fakeId, title, content, thumbnail);
+					postService.createPost(fakeId, postDto);
 				}).isInstanceOf(NullPointerException.class);
 
 			}
@@ -172,7 +189,7 @@ class PostServiceTest {
 				list.add(returnPostDto);
 
 				//Mock
-				given(postRepository.findPostByTitle(title))
+				given(postDataRepository.findByTitle(title))
 					.willReturn(list);
 				//when
 				List<PostSearchDto> posts = postService.getPostsByTitle(title);
@@ -209,7 +226,7 @@ class PostServiceTest {
 				list.add(returnPostDto);
 
 				//Mock
-				given(postRepository.findPostByContent(content))
+				given(postDataRepository.findByContent(content))
 					.willReturn(list);
 				//when
 				List<PostSearchDto> posts = postService.getPostByContent(content);
@@ -243,7 +260,7 @@ class PostServiceTest {
 					.viewCount(10L)
 					.build();
 				//Mock
-				given(postRepository.findPostDtoById(fakeId))
+				given(postDataRepository.findDtoById(fakeId))
 					.willReturn(Optional.ofNullable(returnPostDto));
 				//when
 				PostSearchDto post = postService.getPostDtoById(fakeId);
@@ -261,7 +278,7 @@ class PostServiceTest {
 				Long fakeId = 1L;
 
 				//Mock
-				given(postRepository.findPostDtoById(fakeId))
+				given(postDataRepository.findDtoById(fakeId))
 					.willReturn(Optional.empty());
 				//when
 				//then
@@ -290,7 +307,7 @@ class PostServiceTest {
 				.build();
 
 			//Mock
-			given(postRepository.findById(fakePostId))
+			given(postDataRepository.findById(fakePostId))
 				.willReturn(Optional.ofNullable(returnPost));
 			//when
 			postService.removePost(fakePostId, fakeUserId);
@@ -304,7 +321,7 @@ class PostServiceTest {
 			Long fakePostId = 1L;
 
 			//Mock
-			given(postRepository.findById(fakePostId))
+			given(postDataRepository.findById(fakePostId))
 				.willReturn(Optional.empty());
 			//when
 			//then
@@ -334,6 +351,12 @@ class PostServiceTest {
 				String editContent = "editedContent";
 				String editThumbnail = "editedThumbnail";
 
+				PostEditDto editDto = PostEditDto.builder()
+					.title(editTitle)
+					.content(editContent)
+					.thumbnail(editThumbnail)
+					.build();
+
 				User user = User.builder()
 					.username("tester")
 					.email("test@test.com")
@@ -348,10 +371,10 @@ class PostServiceTest {
 					.build();
 
 				//Mock
-				given(postRepository.findPostById(fakePostId))
+				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
-				postService.editPost(fakePostId, fakeUserId, editTitle, editContent, editThumbnail);
+				postService.editPost(fakePostId, fakeUserId, editDto);
 
 			}
 		}
@@ -369,13 +392,18 @@ class PostServiceTest {
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
 				String editThumbnail = "editedThumbnail";
+				PostEditDto editDto = PostEditDto.builder()
+					.title(editTitle)
+					.content(editContent)
+					.thumbnail(editThumbnail)
+					.build();
 				//Mock
-				given(postRepository.findPostById(fakePostId))
+				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.empty());
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPost(fakePostId, fakeUserId, editTitle, editContent, editThumbnail);
+					postService.editPost(fakePostId, fakeUserId, editDto);
 				}).isInstanceOf(IllegalArgumentException.class)
 					.hasMessageContaining(POST_NOT_EXIST);
 
@@ -391,6 +419,12 @@ class PostServiceTest {
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
 				String editThumbnail = "editedThumbnail";
+
+				PostEditDto editDto = PostEditDto.builder()
+					.title(editTitle)
+					.content(editContent)
+					.thumbnail(editThumbnail)
+					.build();
 
 				User writer = User.builder()
 					.username("tester")
@@ -408,12 +442,12 @@ class PostServiceTest {
 					.build();
 
 				//Mock
-				given(postRepository.findPostById(fakePostId))
+				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPost(fakePostId, illegalEditorId, editTitle, editContent, editThumbnail);
+					postService.editPost(fakePostId, illegalEditorId, editDto);
 				}).isInstanceOf(IllegalStateException.class)
 					.hasMessageContaining(WRITER_USER_NOT_MATCH);
 
