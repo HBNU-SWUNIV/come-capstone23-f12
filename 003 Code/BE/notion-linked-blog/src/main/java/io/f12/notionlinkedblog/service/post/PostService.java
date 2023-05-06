@@ -1,8 +1,9 @@
 package io.f12.notionlinkedblog.service.post;
 
-import static io.f12.notionlinkedblog.exceptions.Exceptions.PostExceptions.*;
-import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -50,21 +51,25 @@ public class PostService {
 	}
 
 	public List<PostSearchDto> getPostsByTitle(String searchParam) {
-		return postDataRepository.findByTitle(searchParam);
+		List<Post> posts = postDataRepository.findByTitle(searchParam);
+		return postToPostDto(posts);
 	}
 
 	public List<PostSearchDto> getPostByContent(String searchParam) {
-		return postDataRepository.findByContent(searchParam);
+		List<Post> posts = postDataRepository.findByContent(searchParam);
+		return postToPostDto(posts);
 	}
 
 	public PostSearchDto getPostDtoById(Long id) {
-		return postDataRepository.findDtoById(id)
+		Post post = postDataRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-	}
-
-	public Post getPostById(Long id) {
-		return postDataRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
+		return PostSearchDto.builder()
+			.username(post.getUser().getUsername())
+			.title(post.getTitle())
+			.content(post.getContent())
+			.thumbnail(post.getThumbnail())
+			.viewCount(post.getViewCount())
+			.build();
 	}
 
 	public void removePost(Long postId, Long userId) {
@@ -82,5 +87,20 @@ public class PostService {
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent(), postEditDto.getThumbnail());
 	}
 	//TODO: editSeries, 시리즈만 편집기능 필요
+
+	private List<PostSearchDto> postToPostDto(List<Post> posts) {
+		List<PostSearchDto> returnPosts = new ArrayList<>();
+		posts.stream().iterator().forEachRemaining(post -> {
+			PostSearchDto dto = PostSearchDto.builder()
+				.username(post.getUser().getUsername())
+				.title(post.getTitle())
+				.content(post.getContent())
+				.thumbnail(post.getThumbnail())
+				.viewCount(post.getViewCount())
+				.build();
+			returnPosts.add(dto);
+		});
+		return returnPosts;
+	}
 
 }
