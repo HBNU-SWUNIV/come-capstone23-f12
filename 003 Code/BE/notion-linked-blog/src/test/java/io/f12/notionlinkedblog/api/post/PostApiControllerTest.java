@@ -26,6 +26,7 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
+import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
@@ -141,10 +142,14 @@ class PostApiControllerTest {
 				void successCase() throws Exception {
 					//given
 					String url = Endpoint.Api.POST + "/title";
+					SearchRequestDto requestDto = SearchRequestDto.builder()
+						.param("content")
+						.build();
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
-							.param("title", "test")
+							.content(objectMapper.writeValueAsString(requestDto))
+							.contentType(MediaType.APPLICATION_JSON)
 					);
 					//then
 					resultActions.andExpect(status().isOk());
@@ -176,11 +181,16 @@ class PostApiControllerTest {
 				void successCase() throws Exception {
 					//given
 					String url = Endpoint.Api.POST + "/content";
+					SearchRequestDto requestDto = SearchRequestDto.builder()
+						.param("content")
+						.build();
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
-							.param("content", "content")
+							.content(objectMapper.writeValueAsString(requestDto))
+							.contentType(MediaType.APPLICATION_JSON)
 					);
+
 					//then
 					resultActions.andExpect(status().isOk());
 				}
@@ -217,7 +227,7 @@ class PostApiControllerTest {
 			//given
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
 
-			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+			userDataRepository.findUserById(testUser.getId())
 				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 			PostEditDto body = PostEditDto.builder()
