@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api.post;
 
-import static io.f12.notionlinkedblog.exceptions.Exceptions.UserExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

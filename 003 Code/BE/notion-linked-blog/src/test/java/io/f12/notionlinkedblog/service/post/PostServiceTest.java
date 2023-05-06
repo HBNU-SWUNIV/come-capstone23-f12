@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.service.post;
 
-import static io.f12.notionlinkedblog.exceptions.Exceptions.PostExceptions.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostExceptionsMessages.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import io.f12.notionlinkedblog.domain.post.Post;
@@ -36,6 +37,9 @@ class PostServiceTest {
 
 	@Mock
 	UserDataRepository userDataRepository;
+
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
 	@DisplayName("포스트 생성")
 	@Nested
@@ -177,16 +181,22 @@ class PostServiceTest {
 				String thumbnail = "testThumbnail";
 				String username = "tester";
 
-				PostSearchDto returnPostDto = PostSearchDto.builder()
+				User user = User.builder()
 					.username(username)
+					.email("test@gamil.com")
+					.password(passwordEncoder.encode("1234"))
+					.build();
+
+				Post post = Post.builder()
+					.user(user)
 					.title(title)
 					.content(content)
 					.thumbnail(thumbnail)
 					.viewCount(10L)
 					.build();
 
-				List<PostSearchDto> list = new ArrayList<>();
-				list.add(returnPostDto);
+				List<Post> list = new ArrayList<>();
+				list.add(post);
 
 				//Mock
 				given(postDataRepository.findByTitle(title))
@@ -214,16 +224,22 @@ class PostServiceTest {
 				String thumbnail = "testThumbnail";
 				String username = "tester";
 
-				PostSearchDto returnPostDto = PostSearchDto.builder()
+				User user = User.builder()
 					.username(username)
+					.email("test@gamil.com")
+					.password(passwordEncoder.encode("1234"))
+					.build();
+
+				Post post = Post.builder()
+					.user(user)
 					.title(title)
 					.content(content)
 					.thumbnail(thumbnail)
 					.viewCount(10L)
 					.build();
 
-				List<PostSearchDto> list = new ArrayList<>();
-				list.add(returnPostDto);
+				List<Post> list = new ArrayList<>();
+				list.add(post);
 
 				//Mock
 				given(postDataRepository.findByContent(content))
@@ -252,22 +268,28 @@ class PostServiceTest {
 				String thumbnail = "testThumbnail";
 				String username = "tester";
 
-				PostSearchDto returnPostDto = PostSearchDto.builder()
+				User user = User.builder()
 					.username(username)
+					.email("test@gamil.com")
+					.password(passwordEncoder.encode("1234"))
+					.build();
+
+				Post testPost = Post.builder()
+					.user(user)
 					.title(title)
 					.content(content)
 					.thumbnail(thumbnail)
 					.viewCount(10L)
 					.build();
 				//Mock
-				given(postDataRepository.findDtoById(fakeId))
-					.willReturn(Optional.ofNullable(returnPostDto));
+				given(postDataRepository.findById(fakeId))
+					.willReturn(Optional.ofNullable(testPost));
 				//when
-				PostSearchDto post = postService.getPostDtoById(fakeId);
+				PostSearchDto postDto = postService.getPostDtoById(fakeId);
 
 				//then
-				assertThat(post).extracting("title").isEqualTo(title);
-				assertThat(post).extracting("username").isEqualTo(username);
+				assertThat(postDto).extracting("title").isEqualTo(title);
+				assertThat(postDto).extracting("username").isEqualTo(username);
 
 			}
 
@@ -278,7 +300,7 @@ class PostServiceTest {
 				Long fakeId = 1L;
 
 				//Mock
-				given(postDataRepository.findDtoById(fakeId))
+				given(postDataRepository.findById(fakeId))
 					.willReturn(Optional.empty());
 				//when
 				//then
