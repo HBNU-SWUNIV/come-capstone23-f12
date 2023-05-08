@@ -58,7 +58,7 @@ public class EmailApiController {
 			.httpOnly(true)
 			.maxAge(300L)
 			.build();
-		
+
 		return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
 	}
 
