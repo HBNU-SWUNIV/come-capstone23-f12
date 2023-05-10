@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@babel/eslint-parser": "^7.21.3",
     "@reduxjs/toolkit": "^1.9.3",
     "antd": "^5.4.0",
