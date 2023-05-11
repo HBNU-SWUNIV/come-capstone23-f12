@@ -115,6 +115,25 @@ class CommentsApiControllerTest {
 			//then
 			resultActions.andExpect(status().isCreated());
 		}
+
+		@DisplayName("실패 케이스")
+		@Nested
+		class failureCase {
+			@DisplayName("생성 데이터 없음")
+			@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+			@Test
+			void noCreateData() throws Exception {
+				//given
+				//mock
+				//when
+				ResultActions resultActions = mockMvc.perform(
+					post(Endpoint.Api.POST + "/" + testPost.getId() + Endpoint.Api.COMMENTS)
+
+				);
+				//then
+				resultActions.andExpect(status().isBadRequest());
+			}
+		}
 	}
 
 	@DisplayName("댓글 수정")
@@ -138,6 +157,24 @@ class CommentsApiControllerTest {
 			//then
 			resultActions.andExpect(status().isCreated());
 		}
+
+		@DisplayName("실패 케이스")
+		@Nested
+		class failureCase {
+			@DisplayName("생성 데이터 없음")
+			@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+			@Test
+			void noCreateData() throws Exception {
+				//given
+				//mock
+				//when
+				ResultActions resultActions = mockMvc.perform(
+					put(Endpoint.Api.POST + "/" + testComment.getId() + Endpoint.Api.COMMENTS)
+				);
+				//then
+				resultActions.andExpect(status().isBadRequest());
+			}
+		}
 	}
 
 	@DisplayName("댓글 삭제")
@@ -156,6 +193,7 @@ class CommentsApiControllerTest {
 			//then
 			resultActions.andExpect(status().isNoContent());
 		}
+
 	}
 
 }
