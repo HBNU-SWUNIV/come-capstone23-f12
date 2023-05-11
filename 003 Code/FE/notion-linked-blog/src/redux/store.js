@@ -1,4 +1,3 @@
-import counterReducer from "@/redux/counterSlice";
 import {configureStore} from "@reduxjs/toolkit";
 import userReducer from "@/redux/userSlice";
 
