@@ -84,10 +84,11 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
+			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
-				get(Endpoint.Api.POST + "/1" + Endpoint.Api.COMMENTS)
+				get(url)
 			);
 			//then
 			resultActions.andExpect(status().isOk());
@@ -104,11 +105,12 @@ class CommentsApiControllerTest {
 			//given
 			Map<String, String> editMap = new HashMap<>();
 			editMap.put("comments", "newComments");
+			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
 			//mock
 
 			//when
 			ResultActions resultActions = mockMvc.perform(
-				post(Endpoint.Api.POST + "/" + testPost.getId() + Endpoint.Api.COMMENTS)
+				post(url)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(editMap))
 			);
@@ -124,10 +126,11 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
+				final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
-					post(Endpoint.Api.POST + "/" + testPost.getId() + Endpoint.Api.COMMENTS)
+					post(url)
 
 				);
 				//then
@@ -146,11 +149,12 @@ class CommentsApiControllerTest {
 			//given
 			Map<String, String> editMap = new HashMap<>();
 			editMap.put("comments", "editedComments");
+			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
 			//mock
 
 			//when
 			ResultActions resultActions = mockMvc.perform(
-				put(Endpoint.Api.POST + "/" + testComment.getId() + Endpoint.Api.COMMENTS)
+				put(url)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(editMap))
 			);
@@ -166,10 +170,11 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
+				final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
-					put(Endpoint.Api.POST + "/" + testComment.getId() + Endpoint.Api.COMMENTS)
+					put(url)
 				);
 				//then
 				resultActions.andExpect(status().isBadRequest());
@@ -185,10 +190,11 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
+			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
-				delete(Endpoint.Api.POST + "/1" + Endpoint.Api.COMMENTS)
+				delete(url)
 			);
 			//then
 			resultActions.andExpect(status().isNoContent());
