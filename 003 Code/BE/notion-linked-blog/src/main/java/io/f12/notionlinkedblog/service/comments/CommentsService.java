@@ -58,7 +58,7 @@ public class CommentsService {
 
 		return CommentSearchDto.builder()
 			.username(user.getUsername())
-			.comments(comments.getContent())
+			.comments(savedComments.getContent())
 			.build();
 	}
 
@@ -77,8 +77,11 @@ public class CommentsService {
 	}
 
 	public void removeComment(Long commentId, Long userId) {
-		commentsDataRepository.findById(commentId)
+		Comments comments = commentsDataRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
+		if (!isSameUser(userId, comments.getUser().getId())) {
+			throw new IllegalStateException(NOT_COMMENT_OWNER);
+		}
 		commentsDataRepository.removeByIdAndUserId(commentId, userId);
 	}
 
