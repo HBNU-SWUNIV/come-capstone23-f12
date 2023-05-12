@@ -3,4 +3,4 @@ values (999999, 'test', 'test@gmail.com', '$2a$10$mLXRFrihpPDDc/iKr/Sqz.pcl6zqz4
 insert into posts(id, user_id, title, content)
 values (999999, 999999, 'testTitle', 'testContent');
 insert into comments(id, user_id, post_id, content)
-values (1, 999999, 999999, 'testComment')
+values (999999, 999999, 999999, 'testComment')

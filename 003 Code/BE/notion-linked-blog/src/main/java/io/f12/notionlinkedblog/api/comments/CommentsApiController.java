@@ -23,33 +23,32 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(Endpoint.Api.POST)
+@RequestMapping(Endpoint.Api.COMMENTS)
 public class CommentsApiController {
 
 	private final CommentsService commentsService;
-	private final String getParam = "/{id}";
 
-	@GetMapping(getParam + Endpoint.Api.COMMENTS)
+	@GetMapping
 	public List<CommentSearchDto> getComments(@PathVariable("id") Long postId) {
 		return commentsService.getCommentsByPostId(postId);
 	}
 
-	@PostMapping(getParam + Endpoint.Api.COMMENTS)
+	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CommentSearchDto createComments(@PathVariable("id") Long postId,
 		@AuthenticationPrincipal LoginUser loginUser, @RequestBody Map<String, String> editMap) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), editMap.get("comments"));
 	}
 
-	@PutMapping(getParam + Endpoint.Api.COMMENTS)
+	@PutMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CommentSearchDto editComments(@PathVariable("id") Long commentsId,
+	public CommentSearchDto editComments(@PathVariable("id") Long commentId,
 		@AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody Map<String, String> editMap) {
-		return commentsService.editComment(commentsId, loginUser.getUser().getId(), editMap.get("comments"));
+		return commentsService.editComment(commentId, loginUser.getUser().getId(), editMap.get("comments"));
 	}
 
-	@DeleteMapping(getParam + Endpoint.Api.COMMENTS)
+	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removeComments(@PathVariable("id") Long commentId, @AuthenticationPrincipal LoginUser loginUser) {
 		commentsService.removeComment(commentId, loginUser.getUser().getId());
