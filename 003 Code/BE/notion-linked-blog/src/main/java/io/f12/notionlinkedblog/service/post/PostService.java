@@ -6,14 +6,18 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserException
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,8 @@ public class PostService {
 
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
+	private final CommentsDataRepository commentsDataRepository;
+	private final EntityManager entityManager;
 
 	public PostSearchDto createPost(Long userId, PostCreateDto postCreateDto) {
 
@@ -73,21 +79,33 @@ public class PostService {
 	}
 
 	public void removePost(Long postId, Long userId) {
-		postDataRepository.findById(postId)
+		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
+		if (isSame(post.getUser().getId(), userId)) {
+			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
+		}
+
+		List<Comments> allComments = commentsDataRepository.findByPostId(post.getId());
+		for (Comments comment : allComments) {
+			commentsDataRepository.deleteById(comment.getId());
+		}
+
+		entityManager.flush();
+		entityManager.clear();
+
 		postDataRepository.removeByIdAndUserId(postId, userId);
 	}
 
 	public void editPost(Long postId, Long userId, PostEditDto postEditDto) {
 		Post changedPost = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-		if (!changedPost.isSameUser(userId)) {
+		if (isSame(changedPost.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent(), postEditDto.getThumbnail());
 	}
-	//TODO: editSeries, 시리즈만 편집기능 필요
 
+	//TODO: editSeries, 시리즈만 편집기능 필요
 	private List<PostSearchDto> postToPostDto(List<Post> posts) {
 		List<PostSearchDto> returnPosts = new ArrayList<>();
 		posts.stream().iterator().forEachRemaining(post -> {
@@ -101,6 +119,10 @@ public class PostService {
 			returnPosts.add(dto);
 		});
 		return returnPosts;
+	}
+
+	private boolean isSame(Long idA, Long idB) {
+		return !idA.equals(idB);
 	}
 
 }

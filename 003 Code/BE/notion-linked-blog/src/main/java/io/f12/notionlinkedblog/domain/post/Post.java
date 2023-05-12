@@ -4,9 +4,7 @@ import static javax.persistence.FetchType.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,7 +49,7 @@ public class Post extends PostTimeEntity {
 	@NotNull
 	private User user;
 
-	@OneToMany(mappedBy = "id", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "id")
 	private List<Comments> comments = new ArrayList<>();
 
 	@NotBlank
@@ -80,9 +78,5 @@ public class Post extends PostTimeEntity {
 		if (StringUtils.hasText(thumbnail)) {
 			this.thumbnail = thumbnail;
 		}
-	}
-
-	public boolean isSameUser(Long userId) {
-		return Objects.equals(user.getId(), userId);
 	}
 }

@@ -205,6 +205,7 @@ class CommentsServiceTest {
 			//given
 			Long fakeCommentId = 1L;
 			Long fakeUserId = 1L;
+			Long fakePostId = 1L;
 			User user = User.builder()
 				.username("tester")
 				.email("test@test.com")
@@ -222,6 +223,9 @@ class CommentsServiceTest {
 				.user(user)
 				.post(post)
 				.build();
+			ReflectionTestUtils.setField(user, "id", fakeUserId);
+			ReflectionTestUtils.setField(post, "id", fakePostId);
+			ReflectionTestUtils.setField(comments, "id", fakeCommentId);
 			//Mock
 			given(commentsDataRepository.findById(fakeCommentId))
 				.willReturn(Optional.ofNullable(comments));
