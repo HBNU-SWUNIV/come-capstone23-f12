@@ -68,6 +68,12 @@ class CommentsApiControllerTest {
 			.user(testUser)
 			.post(testPost)
 			.content("testComments").build());
+		userDataRepository.save(User.builder()
+			.email("test2@gmail.com")
+			.username("test")
+			.password(passwordEncoder.encode("1234"))
+			.build()
+		);
 	}
 
 	@AfterEach
@@ -180,6 +186,21 @@ class CommentsApiControllerTest {
 				resultActions.andExpect(status().isBadRequest());
 			}
 		}
+
+		@DisplayName("작성자 변경자 불일치")
+		@WithUserDetails(value = "test2@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+		@Test
+		void writerEditorNotMatch() throws Exception {
+			//given
+			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+			//mock
+			//when
+			ResultActions resultActions = mockMvc.perform(
+				put(url)
+			);
+			//then
+			resultActions.andExpect(status().isBadRequest());
+		}
 	}
 
 	@DisplayName("댓글 삭제")
@@ -202,4 +223,22 @@ class CommentsApiControllerTest {
 
 	}
 
+	@DisplayName("실패 케이스")
+	@Nested
+	class failureCase {
+		@DisplayName("작성자 변경자 불일치")
+		@WithUserDetails(value = "test2@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+		@Test
+		void writerEditorNotMatch() throws Exception {
+			//given
+			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+			//mock
+			//when
+			ResultActions resultActions = mockMvc.perform(
+				delete(url)
+			);
+			//then
+			resultActions.andExpect(status().isUnauthorized());
+		}
+	}
 }
