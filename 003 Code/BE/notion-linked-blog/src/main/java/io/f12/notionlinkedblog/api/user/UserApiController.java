@@ -27,8 +27,10 @@ import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupResponseDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.user.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "User", description = "사용자 API")
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.USER)
 @RestController

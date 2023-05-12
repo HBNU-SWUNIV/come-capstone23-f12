@@ -22,8 +22,10 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Post", description = "포스트 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.POST)

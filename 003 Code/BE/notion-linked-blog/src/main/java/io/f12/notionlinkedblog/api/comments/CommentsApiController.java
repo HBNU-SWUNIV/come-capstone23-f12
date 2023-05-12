@@ -19,8 +19,10 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Comments", description = "댓글 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.COMMENTS)
