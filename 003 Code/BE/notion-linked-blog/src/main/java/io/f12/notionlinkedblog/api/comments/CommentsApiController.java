@@ -19,6 +19,7 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -31,12 +32,14 @@ public class CommentsApiController {
 	private final CommentsService commentsService;
 
 	@GetMapping
+	@Operation(summary = "postId 로 댓글 조회", description = "postId 에 해당하는 댓글들 조회")
 	public List<CommentSearchDto> getComments(@PathVariable("id") Long postId) {
 		return commentsService.getCommentsByPostId(postId);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	public CommentSearchDto createComments(@PathVariable("id") Long postId,
 		@AuthenticationPrincipal LoginUser loginUser, @RequestBody Map<String, String> editMap) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), editMap.get("comments"));
@@ -44,6 +47,7 @@ public class CommentsApiController {
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	public CommentSearchDto editComments(@PathVariable("id") Long commentId,
 		@AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody Map<String, String> editMap) {
@@ -52,6 +56,7 @@ public class CommentsApiController {
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "댓글 삭제", description = "commentId에 해당하는 댓글 삭제")
 	public void removeComments(@PathVariable("id") Long commentId, @AuthenticationPrincipal LoginUser loginUser) {
 		commentsService.removeComment(commentId, loginUser.getUser().getId());
 	}

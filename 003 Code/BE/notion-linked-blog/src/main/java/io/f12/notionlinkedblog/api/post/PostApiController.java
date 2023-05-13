@@ -22,6 +22,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -36,28 +37,33 @@ public class PostApiController {
 	//TODO: 현재 Series 기능 미포함
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "포스트 생성", description = "포스트를 생성합니다.")
 	public PostSearchDto createPost(@AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody PostCreateDto postCreateDto) {
 		return postService.createPost(loginUser.getUser().getId(), postCreateDto);
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "포스트 id로 포스트 조회", description = "id에 해당하는 포스트를 하나 가져옵니다")
 	public PostSearchDto getPostsById(@PathVariable("id") Long id) {
 		return postService.getPostDtoById(id);
 	}
 
 	@GetMapping("/title")
+	@Operation(summary = "title 로 포스트 조회", description = "title 이 포함되어있는 포스트들을 가져옴")
 	public List<PostSearchDto> searchPostsByTitle(@RequestBody @Validated SearchRequestDto titleDto) {
 		return postService.getPostsByTitle(titleDto.getParam());
 	}
 
 	@GetMapping("/content")
+	@Operation(summary = "content 로 포스트 조회", description = "content 가 포함되어 있는 포스들을 가져옴")
 	public List<PostSearchDto> searchPostsByContent(@RequestBody @Validated SearchRequestDto contentDto) {
 		return postService.getPostByContent(contentDto.getParam());
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.FOUND)
+	@Operation(summary = "포스트 수정", description = "id 에 해당하는 포스트 수정")
 	public String editPost(@PathVariable("id") Long postId, @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody PostEditDto editInfo) {
 		postService.editPost(postId, loginUser.getUser().getId(), editInfo);
@@ -66,6 +72,7 @@ public class PostApiController {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "포스트 삭제", description = "id에 해당하는 포스트 삭제")
 	public void deletePost(@PathVariable("id") Long postId, @AuthenticationPrincipal LoginUser loginUser) {
 		postService.removePost(postId, loginUser.getUser().getId());
 	}
