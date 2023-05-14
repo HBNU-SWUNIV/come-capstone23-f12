@@ -28,6 +28,7 @@ import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupResponseDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +41,7 @@ public class UserApiController {
 	private final UserService userService;
 
 	@PostMapping("/email/signup")
+	@Operation(summary = "email 을 이용한 회원가입")
 	public ResponseEntity<UserSignupResponseDto> signupByEmail(
 		@RequestBody @Validated UserSignupRequestDto requestDto, BindingResult bindingResult, HttpSession httpSession) {
 		verifyEmailIsVerifiedElseThrowIllegalStateException(httpSession);
@@ -60,7 +62,6 @@ public class UserApiController {
 
 	@GetMapping(value = "/{id}")
 	@Operation(summary = "회원 정보 조회", description = "id에 해당하는 사용자의 정보를 조회합니다.")
-	// @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공", content = @Content(mediaType = "application/json", examples = @ExampleObject))
 	public UserSearchDto getUserInfo(@PathVariable Long id) {
 		return userService.getUserInfo(id);
 	}
@@ -68,18 +69,18 @@ public class UserApiController {
 	@PutMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "회원 정보 변경", description = "id에 해당하는 사용자의 정보를 변경합니다.")
-	// @ApiResponse(responseCode = "201", description = "회원 정보 수정 성공") //TODO: 추후 정보 수정 성공과 관련된 url 넘기기
-	public void editUserInfo(@PathVariable Long id, @AuthenticationPrincipal LoginUser loginUser,
+	public void editUserInfo(@PathVariable Long id,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated UserEditDto editDto) {
 		checkSameUser(id, loginUser);
 		userService.editUserInfo(id, editDto);
-	}
+	} //TODO: 추후 정보 수정 성공과 관련된 url 넘기기
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "회원 정보 삭제", description = "id에 해당하는 사용자의 정보를 삭제합니다.")
-	// @ApiResponse(responseCode = "204", description = "회원 정보 삭제 성공")
-	public void deleteUser(@PathVariable Long id, @AuthenticationPrincipal LoginUser loginUser) {
+	public void deleteUser(@PathVariable Long id,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		checkSameUser(id, loginUser);
 		userService.removeUser(id);
 	}

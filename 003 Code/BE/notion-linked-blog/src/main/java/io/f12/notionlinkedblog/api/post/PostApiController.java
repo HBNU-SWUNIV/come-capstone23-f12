@@ -23,6 +23,7 @@ import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,7 @@ public class PostApiController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "포스트 생성", description = "포스트를 생성합니다.")
-	public PostSearchDto createPost(@AuthenticationPrincipal LoginUser loginUser,
+	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody PostCreateDto postCreateDto) {
 		return postService.createPost(loginUser.getUser().getId(), postCreateDto);
 	}
@@ -64,7 +65,8 @@ public class PostApiController {
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.FOUND)
 	@Operation(summary = "포스트 수정", description = "id 에 해당하는 포스트 수정")
-	public String editPost(@PathVariable("id") Long postId, @AuthenticationPrincipal LoginUser loginUser,
+	public String editPost(@PathVariable("id") Long postId,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody PostEditDto editInfo) {
 		postService.editPost(postId, loginUser.getUser().getId(), editInfo);
 		return Endpoint.Api.POST + "/" + postId;
@@ -73,7 +75,8 @@ public class PostApiController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "포스트 삭제", description = "id에 해당하는 포스트 삭제")
-	public void deletePost(@PathVariable("id") Long postId, @AuthenticationPrincipal LoginUser loginUser) {
+	public void deletePost(@PathVariable("id") Long postId,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		postService.removePost(postId, loginUser.getUser().getId());
 	}
 }

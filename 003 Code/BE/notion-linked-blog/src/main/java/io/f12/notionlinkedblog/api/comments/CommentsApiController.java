@@ -1,7 +1,6 @@
 package io.f12.notionlinkedblog.api.comments;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
+import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -41,23 +42,25 @@ public class CommentsApiController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	public CommentSearchDto createComments(@PathVariable("id") Long postId,
-		@AuthenticationPrincipal LoginUser loginUser, @RequestBody Map<String, String> editMap) {
-		return commentsService.createComments(postId, loginUser.getUser().getId(), editMap.get("comments"));
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody EditCommentDto commentDto) {
+		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	public CommentSearchDto editComments(@PathVariable("id") Long commentId,
-		@AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody Map<String, String> editMap) {
-		return commentsService.editComment(commentId, loginUser.getUser().getId(), editMap.get("comments"));
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody EditCommentDto commentDto) {
+		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "댓글 삭제", description = "commentId에 해당하는 댓글 삭제")
-	public void removeComments(@PathVariable("id") Long commentId, @AuthenticationPrincipal LoginUser loginUser) {
+	public void removeComments(@PathVariable("id") Long commentId,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		commentsService.removeComment(commentId, loginUser.getUser().getId());
 	}
 
