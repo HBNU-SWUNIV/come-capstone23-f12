@@ -1,7 +1,5 @@
 package io.f12.notionlinkedblog.api.post;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +17,7 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
+import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
@@ -52,14 +51,14 @@ public class PostApiController {
 
 	@GetMapping("/title")
 	@Operation(summary = "title 로 포스트 조회", description = "title 이 포함되어있는 포스트들을 가져옴")
-	public List<PostSearchDto> searchPostsByTitle(@RequestBody @Validated SearchRequestDto titleDto) {
-		return postService.getPostsByTitle(titleDto.getParam());
+	public PostSearchResponseDto searchPostsByTitle(@RequestBody @Validated SearchRequestDto titleDto) {
+		return postService.getPostsByTitle(titleDto);
 	}
 
 	@GetMapping("/content")
 	@Operation(summary = "content 로 포스트 조회", description = "content 가 포함되어 있는 포스들을 가져옴")
-	public List<PostSearchDto> searchPostsByContent(@RequestBody @Validated SearchRequestDto contentDto) {
-		return postService.getPostByContent(contentDto.getParam());
+	public PostSearchResponseDto searchPostsByContent(@RequestBody @Validated SearchRequestDto contentDto) {
+		return postService.getPostByContent(contentDto);
 	}
 
 	@PutMapping("/{id}")

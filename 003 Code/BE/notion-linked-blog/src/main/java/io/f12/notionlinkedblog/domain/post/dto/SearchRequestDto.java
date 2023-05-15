@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class SearchRequestDto {
 	@NotEmpty
 	String param;
+	Integer pageNumber;
 }

@@ -6,6 +6,8 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserException
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,8 @@ import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
+import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
+import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
@@ -25,6 +29,7 @@ public class PostService {
 
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
+	private final int pageSize = 20;
 
 	public PostSearchDto createPost(Long userId, PostCreateDto postCreateDto) {
 
@@ -50,14 +55,30 @@ public class PostService {
 			.build();
 	}
 
-	public List<PostSearchDto> getPostsByTitle(String searchParam) {
-		List<Post> posts = postDataRepository.findByTitle(searchParam);
-		return postToPostDto(posts);
+	public PostSearchResponseDto getPostsByTitle(SearchRequestDto dto) {
+		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
+		Slice<Post> posts = postDataRepository.findByTitle(dto.getParam(), paging);
+
+		List<PostSearchDto> postSearchDtos = postToPostDto(posts);
+
+		return PostSearchResponseDto.builder()
+			.pageSize(posts.getSize())
+			.pageNow(posts.getNumber())
+			.posts(postSearchDtos)
+			.build();
 	}
 
-	public List<PostSearchDto> getPostByContent(String searchParam) {
-		List<Post> posts = postDataRepository.findByContent(searchParam);
-		return postToPostDto(posts);
+	public PostSearchResponseDto getPostByContent(SearchRequestDto dto) {
+		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
+		Slice<Post> posts = postDataRepository.findByContent(dto.getParam(), paging);
+
+		List<PostSearchDto> postSearchDtos = postToPostDto(posts);
+
+		return PostSearchResponseDto.builder()
+			.pageSize(posts.getSize())
+			.pageNow(posts.getNumber())
+			.posts(postSearchDtos)
+			.build();
 	}
 
 	public PostSearchDto getPostDtoById(Long id) {
@@ -91,8 +112,7 @@ public class PostService {
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent(), postEditDto.getThumbnail());
 	}
 
-	//TODO: editSeries, 시리즈만 편집기능 필요
-	private List<PostSearchDto> postToPostDto(List<Post> posts) {
+	private List<PostSearchDto> postToPostDto(Slice<Post> posts) {
 		List<PostSearchDto> returnPosts = new ArrayList<>();
 		posts.stream().iterator().forEachRemaining(post -> {
 			PostSearchDto dto = PostSearchDto.builder()
