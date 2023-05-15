@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
+import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.exceptions.ExceptionMessages;
@@ -33,33 +34,61 @@ public class CommentsService {
 		List<CommentSearchDto> returnDto = new ArrayList<>();
 
 		byPostId.stream().iterator().forEachRemaining(Comments -> {
-			CommentSearchDto buildDto = CommentSearchDto.builder()
-				.comments(Comments.getContent())
-				.username(Comments.getUser().getUsername())
-				.build();
-			returnDto.add(buildDto);
+			if (Comments.getParent() == null) {
+				CommentSearchDto buildDto = CommentSearchDto.builder()
+					.comments(Comments.getContent())
+					.username(Comments.getUser().getUsername())
+					.deep(Comments.getDeep())
+					.build();
+				returnDto.add(buildDto);
+			} else {
+				CommentSearchDto buildDto = CommentSearchDto.builder()
+					.comments(Comments.getContent())
+					.username(Comments.getUser().getUsername())
+					.deep(Comments.getDeep())
+					.parentCommentId(Comments.getParent().getId())
+					.build();
+				returnDto.add(buildDto);
+			}
 		});
 
 		return returnDto;
 	}
 
-	public CommentSearchDto createComments(Long postId, Long userId, String content) {
+	public CommentSearchDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		User user = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.USER_NOT_EXIST));
 
-		Comments comments = Comments.builder()
-			.post(post)
-			.content(content)
-			.user(user)
-			.build();
-		Comments savedComments = commentsDataRepository.save(comments);
+		Comments parentComment = null;
+		if (commentDto.getDeep().equals(1)) {
+			parentComment = commentsDataRepository.findById(commentDto.getParentCommentId())
+				.orElseThrow(() -> new IllegalArgumentException(
+					COMMENT_NOT_EXIST));
+		}
 
-		return CommentSearchDto.builder()
+		Comments builtComments = Comments.builder()
+			.post(post)
+			.content(commentDto.getComment())
+			.user(user)
+			.deep(commentDto.getDeep())
+			.parent(parentComment)
+			.build();
+
+		Comments savedComments = commentsDataRepository.save(builtComments);
+
+		CommentSearchDto builtReturnDto = CommentSearchDto.builder()
 			.username(user.getUsername())
 			.comments(savedComments.getContent())
+			.deep(savedComments.getDeep())
 			.build();
+
+		if (parentComment != null) {
+			parentComment.addChildren(savedComments);
+			builtReturnDto.setParentCommentId(savedComments.getParent().getId());
+		}
+		return builtReturnDto;
 	}
 
 	public CommentSearchDto editComment(Long commentId, Long userId, String contents) {
@@ -82,7 +111,7 @@ public class CommentsService {
 		if (!isSameUser(userId, comments.getUser().getId())) {
 			throw new IllegalStateException(NOT_COMMENT_OWNER);
 		}
-		commentsDataRepository.removeByIdAndUserId(commentId, userId);
+		commentsDataRepository.deleteById(commentId);
 	}
 
 	private boolean isSameUser(Long sessionUserId, Long databaseUserId) {

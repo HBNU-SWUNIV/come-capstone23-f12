@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
+import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
@@ -43,8 +44,8 @@ public class CommentsApiController {
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	public CommentSearchDto createComments(@PathVariable("id") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody EditCommentDto commentDto) {
-		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto.getComment());
+		@RequestBody CreateCommentDto commentDto) {
+		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
 	}
 
 	@PutMapping

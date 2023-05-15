@@ -1,5 +1,8 @@
 package io.f12.notionlinkedblog.domain.comments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -48,19 +52,22 @@ public class Comments extends PostTimeEntity {
 	@JoinColumn(name = "post_id")
 	@NotNull
 	private Post post;
-
 	private String content;
-
-	// TODO: 자가참조 필요(대댓글 기능)
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "comments_id")
-	// private Comments parentComment;
-	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentComment")
-	// private List<Comments> childComment;
+	@NotNull
+	private Integer deep; // 0 = parents, 1 = child
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
+	private Comments parent;
+	@OneToMany(mappedBy = "parent", orphanRemoval = true)
+	private List<Comments> children = new ArrayList<>();
 
 	public void editComments(String content) {
 		if (StringUtils.hasText(content)) {
 			this.content = content;
 		}
+	}
+
+	public void addChildren(Comments children) {
+		this.children.add(children);
 	}
 }

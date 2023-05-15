@@ -19,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
+import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
@@ -67,10 +68,12 @@ class CommentsServiceTest {
 					.content(content1)
 					.user(user)
 					.post(post)
+					.deep(0)
 					.build());
 				returnComments.add(Comments.builder()
 					.content(content2)
 					.user(user)
+					.deep(0)
 					.post(post)
 					.build());
 				//Mock
@@ -141,6 +144,11 @@ class CommentsServiceTest {
 				.content(content)
 				.user(user)
 				.post(post)
+				.deep(0)
+				.build();
+			CreateCommentDto createCommentDto = CreateCommentDto.builder()
+				.comment("testComment")
+				.deep(0)
 				.build();
 			//Mock
 			given(postDataRepository.findById(fakePostId))
@@ -150,7 +158,7 @@ class CommentsServiceTest {
 			given(commentsDataRepository.save(any(Comments.class)))
 				.willReturn(comments);
 			//when
-			CommentSearchDto commentDto = commentsService.createComments(fakePostId, fakeUserId, content);
+			CommentSearchDto commentDto = commentsService.createComments(fakePostId, fakeUserId, createCommentDto);
 			//then
 			assertThat(commentDto).extracting("comments").isEqualTo(content);
 			assertThat(commentDto).extracting("username").isEqualTo(user.getUsername());
@@ -183,6 +191,7 @@ class CommentsServiceTest {
 			Comments comments = Comments.builder()
 				.content(content)
 				.user(user)
+				.deep(0)
 				.post(post)
 				.build();
 			//Mock
@@ -221,6 +230,7 @@ class CommentsServiceTest {
 			Comments comments = Comments.builder()
 				.content(content)
 				.user(user)
+				.deep(0)
 				.post(post)
 				.build();
 			ReflectionTestUtils.setField(user, "id", fakeUserId);

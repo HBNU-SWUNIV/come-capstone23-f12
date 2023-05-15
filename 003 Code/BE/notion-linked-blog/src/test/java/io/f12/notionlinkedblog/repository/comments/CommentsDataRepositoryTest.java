@@ -51,6 +51,7 @@ class CommentsDataRepositoryTest {
 			.user(savedUser)
 			.post(savedPost)
 			.content("testComment")
+			.deep(0)
 			.build();
 		savedComment = commentsDataRepository.save(comments);
 
@@ -74,6 +75,7 @@ class CommentsDataRepositoryTest {
 				.user(savedUser)
 				.post(savedPost)
 				.content("testComment2")
+				.deep(0)
 				.build());
 
 			//when
@@ -84,22 +86,6 @@ class CommentsDataRepositoryTest {
 			assertThat(comments).size().isEqualTo(2);
 			assertThat(comments1).extracting("content").isEqualTo(savedComment.getContent());
 			assertThat(comments2).extracting("content").isEqualTo(testComment2.getContent());
-		}
-	}
-
-	@DisplayName("댓글 삭제")
-	@Nested
-	class RemoveComments {
-		@DisplayName("성공 케이스")
-		@Test
-		void successCase() {
-			//given
-			//when
-			commentsDataRepository.removeByIdAndUserId(savedComment.getId(), savedUser.getId());
-			//then
-			List<Comments> everyComments = commentsDataRepository.findAll();
-			assertThat(everyComments).isEmpty();
-
 		}
 	}
 

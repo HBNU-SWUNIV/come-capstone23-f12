@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
@@ -67,6 +68,7 @@ class CommentsApiControllerTest {
 		testComment = commentsDataRepository.save(Comments.builder()
 			.user(testUser)
 			.post(testPost)
+			.deep(0)
 			.content("testComments").build());
 		userDataRepository.save(User.builder()
 			.email("test2@gmail.com")
@@ -109,8 +111,10 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
-			Map<String, String> editMap = new HashMap<>();
-			editMap.put("comments", "newComments");
+			CreateCommentDto createDto = CreateCommentDto.builder()
+				.comment("testComment")
+				.deep(0)
+				.build();
 			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
 			//mock
 
@@ -118,7 +122,7 @@ class CommentsApiControllerTest {
 			ResultActions resultActions = mockMvc.perform(
 				post(url)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(editMap))
+					.content(objectMapper.writeValueAsString(createDto))
 			);
 			//then
 			resultActions.andExpect(status().isCreated());

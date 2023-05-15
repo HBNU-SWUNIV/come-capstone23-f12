@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class CommentSearchDto {
-
-	private String comments;
-	private String username;
+public class CreateCommentDto {
+	private String comment;
 	private Integer deep;
 	private Long parentCommentId;
-
 }
