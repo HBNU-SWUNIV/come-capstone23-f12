@@ -339,49 +339,4 @@ class PostDataRepositoryTest {
 
 	}
 
-	@DisplayName("포스트 삭제")
-	@Nested
-	class removePost {
-		@DisplayName("성공 케이스")
-		@Nested
-		class successfulCase {
-			@DisplayName("정상 삭제")
-			@Test
-			void normalRemove() {
-				//given
-				//when
-				postDataRepository.removeByIdAndUserId(post.getId(), user.getId());
-				entityManager.clear();
-				//then
-				assertThatThrownBy(() -> {
-					Post post = postDataRepository.findById(1L)
-						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-				}).isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining(POST_NOT_EXIST);
-
-			}
-
-			@DisplayName("비정상 삭제 - 유저와 포스트 작성자 다름")
-			@Test
-			void abnormalRemove() {
-				//given
-				User user2 = User.builder()
-					.username("user2")
-					.email("email2@test.com")
-					.password("tester1")
-					.build();
-				User savedNewUser = userDataRepository.save(user2);
-				//when
-				postDataRepository.removeByIdAndUserId(1L, savedNewUser.getId());
-
-				Post post = postDataRepository.findById(1L)
-					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-				//then
-				assertThat(post).extracting("title").isEqualTo(title);
-				assertThat(post).extracting("content").isEqualTo(content);
-
-			}
-		}
-	}
-
 }

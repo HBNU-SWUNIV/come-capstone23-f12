@@ -6,18 +6,14 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserException
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +25,6 @@ public class PostService {
 
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
-	private final CommentsDataRepository commentsDataRepository;
-	private final EntityManager entityManager;
 
 	public PostSearchDto createPost(Long userId, PostCreateDto postCreateDto) {
 
@@ -84,16 +78,8 @@ public class PostService {
 		if (isSame(post.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
+		postDataRepository.deleteById(postId);
 
-		List<Comments> allComments = commentsDataRepository.findByPostId(post.getId());
-		for (Comments comment : allComments) {
-			commentsDataRepository.deleteById(comment.getId());
-		}
-
-		entityManager.flush();
-		entityManager.clear();
-
-		postDataRepository.removeByIdAndUserId(postId, userId);
 	}
 
 	public void editPost(Long postId, Long userId, PostEditDto postEditDto) {

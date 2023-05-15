@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,7 +50,7 @@ public class Post extends PostTimeEntity {
 	@NotNull
 	private User user;
 
-	@OneToMany(mappedBy = "id")
+	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comments> comments = new ArrayList<>();
 
 	@NotBlank

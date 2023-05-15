@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,13 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
@@ -41,10 +37,6 @@ class PostServiceTest {
 
 	@Mock
 	UserDataRepository userDataRepository;
-	@Mock
-	CommentsDataRepository commentsDataRepository;
-	@Mock
-	EntityManager entityManager;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -341,14 +333,11 @@ class PostServiceTest {
 				.content("testContent")
 				.user(user)
 				.build();
-			List<Comments> commentsList = new ArrayList<>();
 			ReflectionTestUtils.setField(user, "id", fakeUserId);
 			ReflectionTestUtils.setField(returnPost, "id", fakePostId);
 			//Mock
 			given(postDataRepository.findById(fakePostId))
 				.willReturn(Optional.ofNullable(returnPost));
-			given(commentsDataRepository.findByPostId(fakePostId))
-				.willReturn(commentsList);
 			//when
 			postService.removePost(fakePostId, fakeUserId);
 		}
