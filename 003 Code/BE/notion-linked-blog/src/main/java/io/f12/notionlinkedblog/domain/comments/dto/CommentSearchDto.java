@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.domain.comments.dto;
 
+import io.f12.notionlinkedblog.domain.comments.Comments;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,20 @@ public class CommentSearchDto {
 	private Integer deep;
 	private Long parentCommentId;
 
+	public CommentSearchDto createParentComment(Comments comment) {
+		return CommentSearchDto.builder()
+			.comments(comment.getContent())
+			.username(comment.getUser().getUsername())
+			.deep(comment.getDeep())
+			.build();
+	}
+
+	public CommentSearchDto createChildComment(Comments comment) {
+		return CommentSearchDto.builder()
+			.comments(comment.getContent())
+			.username(comment.getUser().getUsername())
+			.deep(comment.getDeep())
+			.parentCommentId(comment.getParent().getId())
+			.build();
+	}
 }

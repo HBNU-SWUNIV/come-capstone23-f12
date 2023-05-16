@@ -2,9 +2,9 @@ package io.f12.notionlinkedblog.service.comments;
 
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.CommentExceptionsMessages.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,29 +30,13 @@ public class CommentsService {
 	private final UserDataRepository userDataRepository;
 
 	public List<CommentSearchDto> getCommentsByPostId(Long postId) {
-		List<Comments> byPostId = commentsDataRepository.findByPostId(postId);
-		List<CommentSearchDto> returnDto = new ArrayList<>();
+		List<Comments> comments = commentsDataRepository.findByPostId(postId);
+		CommentSearchDto commentSearchDto = new CommentSearchDto();
+		return comments.stream().map(c -> {
+			return c.getDeep().equals(0) ? commentSearchDto.createParentComment(c) :
+				commentSearchDto.createChildComment(c);
+		}).collect(Collectors.toList());
 
-		byPostId.stream().iterator().forEachRemaining(Comments -> {
-			if (Comments.getParent() == null) {
-				CommentSearchDto buildDto = CommentSearchDto.builder()
-					.comments(Comments.getContent())
-					.username(Comments.getUser().getUsername())
-					.deep(Comments.getDeep())
-					.build();
-				returnDto.add(buildDto);
-			} else {
-				CommentSearchDto buildDto = CommentSearchDto.builder()
-					.comments(Comments.getContent())
-					.username(Comments.getUser().getUsername())
-					.deep(Comments.getDeep())
-					.parentCommentId(Comments.getParent().getId())
-					.build();
-				returnDto.add(buildDto);
-			}
-		});
-
-		return returnDto;
 	}
 
 	public CommentSearchDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
