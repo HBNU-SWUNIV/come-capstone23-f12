@@ -7,8 +7,9 @@ import {useAppDispatch, useAppSelector} from "@/hooks/hooks";
 import {DownOutlined, UserOutlined} from "@ant-design/icons";
 import {logoutAPI} from "@/apis/user";
 import {logout} from "@/redux/userSlice";
+import PostCard from "@/components/post/PostCard";
 
-const {Header} = Layout;
+const {Header, Content} = Layout;
 
 const {Text} = Typography;
 
@@ -30,7 +31,36 @@ const StyledDownOutlined = styled(DownOutlined)`
   cursor: pointer;
 `;
 
-export default function AppLayout() {
+const StyledLayout = styled(Layout)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const StyledHeader = styled(Header)`
+  display: flex;
+  justify-content: center;
+  padding: 0
+`;
+
+const StyledHeaderRow = styled(Row)`
+  display: flex;
+  width: 100%;
+  max-width: 1728px;
+  justify-content: space-between;
+`;
+
+const StyledContent = styled(Content)`
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+`;
+
+const StyledContentRow = styled(Row)`
+  max-width: 1760px;
+`;
+
+export default function AppLayout({mainPosts}) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [existAccount, setExistAccount] = useState(true);
 	const {user} = useAppSelector(state => state.user);
@@ -65,9 +95,9 @@ export default function AppLayout() {
 	];
 
 	return (
-		<Layout>
-			<Header>
-				<Row justify="space-between">
+		<StyledLayout>
+			<StyledHeader>
+				<StyledHeaderRow>
 					<Col>
 						<StyledText>Logo</StyledText>
 					</Col>
@@ -83,11 +113,23 @@ export default function AppLayout() {
 								</Dropdown>
 							)}
 						<Modal title={existAccount ? "로그인" : "회원가입"} open={isModalOpen} footer={null} onCancel={handleCancel}>
-							{existAccount ? <LoginForm switchForm={switchForm} setIsModalOpen={setIsModalOpen}/> : <SignupForm switchForm={switchForm}/>}
+							{existAccount ?
+								<LoginForm switchForm={switchForm} setIsModalOpen={setIsModalOpen}/> :
+								<SignupForm switchForm={switchForm}/>
+							}
 						</Modal>
 					</Col>
-				</Row>
-			</Header>
-		</Layout>
+				</StyledHeaderRow>
+			</StyledHeader>
+			<StyledContent>
+				<StyledContentRow gutter={[32, 32]} justify="center">
+					{mainPosts.map(post => (
+						<Col key={post.id}>
+							<PostCard key={post.id} post={post}/>
+						</Col>
+					))}
+				</StyledContentRow>
+			</StyledContent>
+		</StyledLayout>
 	);
 }
