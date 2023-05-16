@@ -66,7 +66,7 @@ public class PostApiController {
 	@Operation(summary = "포스트 수정", description = "id 에 해당하는 포스트 수정")
 	public String editPost(@PathVariable("id") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody PostEditDto editInfo) {
+		@RequestBody @Validated PostEditDto editInfo) {
 		postService.editPost(postId, loginUser.getUser().getId(), editInfo);
 		return Endpoint.Api.POST + "/" + postId;
 	}
