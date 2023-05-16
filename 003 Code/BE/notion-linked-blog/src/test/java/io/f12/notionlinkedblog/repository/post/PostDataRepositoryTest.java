@@ -194,7 +194,7 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
 						Slice<Post> postByTitle = postDataRepository.findByTitle(title, paging);
-						List<PostSearchDto> postSearchDtos = covertPostToPostDto(postByTitle);
+						List<PostSearchDto> postSearchDtos = convertPostToPostDto(postByTitle);
 						PostSearchDto post = postSearchDtos.get(0);
 						//then
 						assertThat(postByTitle).size().isEqualTo(1);
@@ -219,7 +219,7 @@ class PostDataRepositoryTest {
 						postDataRepository.save(post);
 						//when
 						Slice<Post> postByTitle = postDataRepository.findByTitle(title, paging);
-						List<PostSearchDto> postSearchDtos = covertPostToPostDto(postByTitle);
+						List<PostSearchDto> postSearchDtos = convertPostToPostDto(postByTitle);
 						PostSearchDto post1 = postSearchDtos.get(0);
 						PostSearchDto post2 = postSearchDtos.get(1);
 						//then
@@ -258,7 +258,7 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
 						Slice<Post> postByContent = postDataRepository.findByContent(content, paging);
-						List<PostSearchDto> postSearchDtos = covertPostToPostDto(postByContent);
+						List<PostSearchDto> postSearchDtos = convertPostToPostDto(postByContent);
 						PostSearchDto post = postSearchDtos.get(0);
 						//then
 						assertThat(postByContent).size().isEqualTo(1);
@@ -281,7 +281,7 @@ class PostDataRepositoryTest {
 						postDataRepository.save(post);
 						//when
 						Slice<Post> postByContent = postDataRepository.findByContent(content, paging);
-						List<PostSearchDto> postSearchDtos = covertPostToPostDto(postByContent);
+						List<PostSearchDto> postSearchDtos = convertPostToPostDto(postByContent);
 						PostSearchDto post1 = postSearchDtos.get(0);
 						PostSearchDto post2 = postSearchDtos.get(1);
 						//then
@@ -350,7 +350,7 @@ class PostDataRepositoryTest {
 
 	}
 
-	private List<PostSearchDto> covertPostToPostDto(Slice<Post> posts) {
+	private List<PostSearchDto> convertPostToPostDto(Slice<Post> posts) {
 		Slice<PostSearchDto> mappedPosts = posts.map(p -> {
 			return PostSearchDto.builder()
 				.username(p.getUser().getUsername())
