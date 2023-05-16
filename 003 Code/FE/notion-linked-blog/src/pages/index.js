@@ -1,14 +1,16 @@
 import AppLayout from "@/components/AppLayout";
-import {Layout} from "antd";
 import Head from "next/head";
+import {useAppSelector} from "@/hooks/hooks";
 
 export default function Home() {
+	const {mainPosts} = useAppSelector(state => state.post);
+
 	return (
-		<Layout>
+		<>
 			<Head>
 				<title>노션 연동 블로그 서비스</title>
 			</Head>
-			<AppLayout/>
-		</Layout>
+			<AppLayout mainPosts={mainPosts}/>
+		</>
 	);
 }
