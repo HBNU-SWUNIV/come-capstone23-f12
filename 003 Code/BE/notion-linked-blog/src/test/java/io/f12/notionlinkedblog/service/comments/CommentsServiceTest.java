@@ -68,12 +68,12 @@ class CommentsServiceTest {
 					.content(content1)
 					.user(user)
 					.post(post)
-					.deep(0)
+					.depth(0)
 					.build());
 				returnComments.add(Comments.builder()
 					.content(content2)
 					.user(user)
-					.deep(0)
+					.depth(0)
 					.post(post)
 					.build());
 				//Mock
@@ -100,12 +100,6 @@ class CommentsServiceTest {
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
-					.build();
-				Post post = Post.builder()
-					.user(user)
-					.title("testTitle")
-					.content("testContent")
-					.thumbnail("testThumbnail")
 					.build();
 				//Mock
 				given(commentsDataRepository.findByPostId(fakePostId))
@@ -144,11 +138,11 @@ class CommentsServiceTest {
 				.content(content)
 				.user(user)
 				.post(post)
-				.deep(0)
+				.depth(0)
 				.build();
 			CreateCommentDto createCommentDto = CreateCommentDto.builder()
 				.comment("testComment")
-				.deep(0)
+				.depth(0)
 				.build();
 			//Mock
 			given(postDataRepository.findById(fakePostId))
@@ -191,7 +185,7 @@ class CommentsServiceTest {
 			Comments comments = Comments.builder()
 				.content(content)
 				.user(user)
-				.deep(0)
+				.depth(0)
 				.post(post)
 				.build();
 			//Mock
@@ -230,7 +224,7 @@ class CommentsServiceTest {
 			Comments comments = Comments.builder()
 				.content(content)
 				.user(user)
-				.deep(0)
+				.depth(0)
 				.post(post)
 				.build();
 			ReflectionTestUtils.setField(user, "id", fakeUserId);

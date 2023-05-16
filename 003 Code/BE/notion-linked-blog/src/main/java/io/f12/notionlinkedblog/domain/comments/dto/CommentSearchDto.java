@@ -14,14 +14,14 @@ public class CommentSearchDto {
 
 	private String comments;
 	private String username;
-	private Integer deep;
+	private Integer depth;
 	private Long parentCommentId;
 
 	public CommentSearchDto createParentComment(Comments comment) {
 		return CommentSearchDto.builder()
 			.comments(comment.getContent())
 			.username(comment.getUser().getUsername())
-			.deep(comment.getDeep())
+			.depth(comment.getDepth())
 			.build();
 	}
 
@@ -29,7 +29,7 @@ public class CommentSearchDto {
 		return CommentSearchDto.builder()
 			.comments(comment.getContent())
 			.username(comment.getUser().getUsername())
-			.deep(comment.getDeep())
+			.depth(comment.getDepth())
 			.parentCommentId(comment.getParent().getId())
 			.build();
 	}

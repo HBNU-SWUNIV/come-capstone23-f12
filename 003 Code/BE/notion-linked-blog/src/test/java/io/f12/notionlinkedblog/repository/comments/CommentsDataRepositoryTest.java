@@ -51,7 +51,7 @@ class CommentsDataRepositoryTest {
 			.user(savedUser)
 			.post(savedPost)
 			.content("testComment")
-			.deep(0)
+			.depth(0)
 			.build();
 		savedComment = commentsDataRepository.save(comments);
 
@@ -75,7 +75,7 @@ class CommentsDataRepositoryTest {
 				.user(savedUser)
 				.post(savedPost)
 				.content("testComment2")
-				.deep(0)
+				.depth(0)
 				.build());
 
 			//when

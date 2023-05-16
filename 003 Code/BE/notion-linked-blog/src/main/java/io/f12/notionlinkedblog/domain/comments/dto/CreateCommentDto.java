@@ -16,6 +16,6 @@ public class CreateCommentDto {
 	@NotEmpty
 	private String comment;
 	@NotNull
-	private Integer deep;
+	private Integer depth;
 	private Long parentCommentId;
 }
