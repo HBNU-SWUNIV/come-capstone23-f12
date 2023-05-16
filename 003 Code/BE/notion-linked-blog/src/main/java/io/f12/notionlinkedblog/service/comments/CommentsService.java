@@ -33,7 +33,7 @@ public class CommentsService {
 		List<Comments> comments = commentsDataRepository.findByPostId(postId);
 		CommentSearchDto commentSearchDto = new CommentSearchDto();
 		return comments.stream().map(c -> {
-			return c.getDepth().equals(0) ? commentSearchDto.createParentComment(c) :
+			return isParent(c) ? commentSearchDto.createParentComment(c) :
 				commentSearchDto.createChildComment(c);
 		}).collect(Collectors.toList());
 
@@ -46,7 +46,7 @@ public class CommentsService {
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.USER_NOT_EXIST));
 
 		Comments parentComment = null;
-		if (commentDto.getDepth().equals(1)) {
+		if (isChild(commentDto)) {
 			parentComment = commentsDataRepository.findById(commentDto.getParentCommentId())
 				.orElseThrow(() -> new IllegalArgumentException(
 					COMMENT_NOT_EXIST));
@@ -100,5 +100,13 @@ public class CommentsService {
 
 	private boolean isSameUser(Long sessionUserId, Long databaseUserId) {
 		return Objects.equals(sessionUserId, databaseUserId);
+	}
+
+	private static boolean isParent(Comments c) {
+		return c.getDepth().equals(0);
+	}
+
+	private static boolean isChild(CreateCommentDto commentDto) {
+		return commentDto.getDepth().equals(1);
 	}
 }
