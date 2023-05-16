@@ -4,7 +4,6 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostException
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -352,18 +351,16 @@ class PostDataRepositoryTest {
 	}
 
 	private List<PostSearchDto> postToPostDto(Slice<Post> posts) {
-		List<PostSearchDto> returnPosts = new ArrayList<>();
-		posts.stream().iterator().forEachRemaining(post -> {
-			PostSearchDto dto = PostSearchDto.builder()
-				.username(post.getUser().getUsername())
-				.title(post.getTitle())
-				.content(post.getContent())
-				.thumbnail(post.getThumbnail())
-				.viewCount(post.getViewCount())
+		Slice<PostSearchDto> mappedPosts = posts.map(p -> {
+			return PostSearchDto.builder()
+				.username(p.getUser().getUsername())
+				.title(p.getTitle())
+				.content(p.getContent())
+				.thumbnail(p.getThumbnail())
+				.viewCount(p.getViewCount())
 				.build();
-			returnPosts.add(dto);
 		});
-		return returnPosts;
+		return mappedPosts.getContent();
 	}
 
 }

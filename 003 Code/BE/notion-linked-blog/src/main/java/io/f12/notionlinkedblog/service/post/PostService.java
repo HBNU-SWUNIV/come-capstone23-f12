@@ -3,7 +3,6 @@ package io.f12.notionlinkedblog.service.post;
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostExceptionsMessages.*;
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -113,18 +112,16 @@ public class PostService {
 	}
 
 	private List<PostSearchDto> postToPostDto(Slice<Post> posts) {
-		List<PostSearchDto> returnPosts = new ArrayList<>();
-		posts.stream().iterator().forEachRemaining(post -> {
-			PostSearchDto dto = PostSearchDto.builder()
-				.username(post.getUser().getUsername())
-				.title(post.getTitle())
-				.content(post.getContent())
-				.thumbnail(post.getThumbnail())
-				.viewCount(post.getViewCount())
+		Slice<PostSearchDto> mappedPosts = posts.map(p -> {
+			return PostSearchDto.builder()
+				.username(p.getUser().getUsername())
+				.title(p.getTitle())
+				.content(p.getContent())
+				.thumbnail(p.getThumbnail())
+				.viewCount(p.getViewCount())
 				.build();
-			returnPosts.add(dto);
 		});
-		return returnPosts;
+		return mappedPosts.getContent();
 	}
 
 	private boolean isSame(Long idA, Long idB) {
