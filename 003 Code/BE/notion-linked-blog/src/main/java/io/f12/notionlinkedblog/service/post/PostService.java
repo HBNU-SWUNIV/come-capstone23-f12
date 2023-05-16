@@ -58,7 +58,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 		Slice<Post> posts = postDataRepository.findByTitle(dto.getParam(), paging);
 
-		List<PostSearchDto> postSearchDtos = postToPostDto(posts);
+		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
 		return PostSearchResponseDto.builder()
 			.pageSize(posts.getSize())
@@ -71,7 +71,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 		Slice<Post> posts = postDataRepository.findByContent(dto.getParam(), paging);
 
-		List<PostSearchDto> postSearchDtos = postToPostDto(posts);
+		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
 		return PostSearchResponseDto.builder()
 			.pageSize(posts.getSize())
@@ -111,7 +111,7 @@ public class PostService {
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent(), postEditDto.getThumbnail());
 	}
 
-	private List<PostSearchDto> postToPostDto(Slice<Post> posts) {
+	private List<PostSearchDto> convertPostToPostDto(Slice<Post> posts) {
 		Slice<PostSearchDto> mappedPosts = posts.map(p -> {
 			return PostSearchDto.builder()
 				.username(p.getUser().getUsername())
