@@ -39,7 +39,7 @@ public class PostApiController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "포스트 생성", description = "포스트를 생성합니다.")
 	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody PostCreateDto postCreateDto) {
+		@RequestBody @Validated PostCreateDto postCreateDto) {
 		return postService.createPost(loginUser.getUser().getId(), postCreateDto);
 	}
 
