@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,7 @@ public class CommentsApiController {
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	public CommentSearchDto createComments(@PathVariable("id") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody CreateCommentDto commentDto) {
+		@RequestBody @Validated CreateCommentDto commentDto) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
 	}
 
@@ -53,7 +54,7 @@ public class CommentsApiController {
 	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	public CommentSearchDto editComments(@PathVariable("id") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody EditCommentDto commentDto) {
+		@RequestBody @Validated EditCommentDto commentDto) {
 		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
