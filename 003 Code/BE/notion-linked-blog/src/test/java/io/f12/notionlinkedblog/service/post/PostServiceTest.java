@@ -380,7 +380,7 @@ class PostServiceTest {
 				postList.add(postB);
 				SliceImpl<Post> postSlice = new SliceImpl<>(postList);
 				//Mock
-				given(postDataRepository.findByLatest(paging))
+				given(postDataRepository.findLatestByCreatedAtDesc(paging))
 					.willReturn(postSlice);
 				//when
 				PostSearchResponseDto latestPosts = postService.getLatestPosts(requestPageNumber);

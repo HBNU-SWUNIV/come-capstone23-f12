@@ -321,7 +321,7 @@ class PostDataRepositoryTest {
 					//given
 					PageRequest paging = PageRequest.of(0, 3);
 					//when
-					Slice<Post> posts = postDataRepository.findByLatest(paging);
+					Slice<Post> posts = postDataRepository.findLatestByCreatedAtDesc(paging);
 					List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 					//then
 					assertThat(posts).size().isEqualTo(paging.getPageSize());

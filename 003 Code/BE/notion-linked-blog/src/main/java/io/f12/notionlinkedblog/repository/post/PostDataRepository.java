@@ -26,7 +26,7 @@ public interface PostDataRepository extends JpaRepository<Post, Long> {
 	@Query("SELECT p "
 		+ "FROM Post p join fetch p.user u "
 		+ "ORDER BY p.createdAt DESC")
-	Slice<Post> findByLatest(Pageable pageable);
+	Slice<Post> findLatestByCreatedAtDesc(Pageable pageable);
 
 	@Query("SELECT p "
 		+ "FROM Post p join fetch p.user u "

@@ -96,7 +96,7 @@ public class PostService {
 
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
-		Slice<Post> posts = postDataRepository.findByLatest(paging);
+		Slice<Post> posts = postDataRepository.findLatestByCreatedAtDesc(paging);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return PostSearchResponseDto.builder()
