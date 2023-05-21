@@ -13,6 +13,7 @@ export default class MyDocument extends Document {
 				});
 
 			const initialProps = await Document.getInitialProps(ctx);
+
 			return {
 				...initialProps,
 				styles: (
@@ -27,6 +28,7 @@ export default class MyDocument extends Document {
 		}
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	render() {
 		return (
 			<Html>
