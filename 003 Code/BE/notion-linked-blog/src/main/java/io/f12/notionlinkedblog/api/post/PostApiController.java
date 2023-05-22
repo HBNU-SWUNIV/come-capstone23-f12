@@ -84,4 +84,13 @@ public class PostApiController {
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		postService.removePost(postId, loginUser.getUser().getId());
 	}
+
+	@PostMapping("/like/{postId}")
+	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "해당하는 Post 에 Like 를 추가/삭제 합니다")
+	public void addLikeToPost(@PathVariable Long postId,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
+		postService.likeStatusChange(postId, loginUser.getUser().getId());
+	}
+
 }
