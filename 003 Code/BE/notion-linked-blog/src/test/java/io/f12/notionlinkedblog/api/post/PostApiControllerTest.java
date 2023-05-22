@@ -99,14 +99,11 @@ class PostApiControllerTest {
 				.build();
 			String requestBody = objectMapper.writeValueAsString(body);
 			//mock
-			MockHttpSession mockHttpSession = new MockHttpSession();
-			mockHttpSession.setAttribute(mockHttpSession.getId(), user);
 
 			//when
 			ResultActions resultActions = mockMvc.perform(
 				post(url)
 					.contentType(MediaType.APPLICATION_JSON)
-					.session(mockHttpSession)
 					.content(requestBody)
 			);
 			//then
@@ -329,6 +326,25 @@ class PostApiControllerTest {
 			);
 			//then
 			resultActions.andExpect(status().isNoContent());
+		}
+	}
+
+	@DisplayName("포스트 좋아요")
+	@Nested
+	class likePost {
+		@DisplayName("성공 케이스")
+		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+		@Test
+		void successCase() throws Exception {
+			//given
+			final String url = Endpoint.Api.POST + "/like/" + testPost.getId();
+			//when
+			ResultActions resultActions = mockMvc.perform(
+				post(url)
+			);
+			//then
+			resultActions.andExpect(status().isCreated());
+
 		}
 	}
 

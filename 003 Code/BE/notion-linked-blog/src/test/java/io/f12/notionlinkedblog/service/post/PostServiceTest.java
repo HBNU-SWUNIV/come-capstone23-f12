@@ -20,6 +20,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
@@ -27,6 +28,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 
@@ -41,6 +43,8 @@ class PostServiceTest {
 
 	@Mock
 	UserDataRepository userDataRepository;
+	@Mock
+	LikeDataRepository likeDataRepository;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -562,6 +566,79 @@ class PostServiceTest {
 
 			}
 
+		}
+	}
+
+	@DisplayName("포스트 좋아요")
+	@Nested
+	class likePost {
+		@DisplayName("성공 케이스")
+		@Nested
+		class successCase {
+			@DisplayName("좋아요")
+			@Test
+			void likeTest() {
+				//given
+				Long fakeUserId = 1L;
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+				ReflectionTestUtils.setField(user, "id", fakeUserId);
+
+				Long fakePostId = 1L;
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.build();
+				ReflectionTestUtils.setField(post, "id", fakePostId);
+				//mock
+				given(postDataRepository.findById(fakePostId))
+					.willReturn(Optional.of(post));
+				given(userDataRepository.findById(fakeUserId))
+					.willReturn(Optional.of(user));
+				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
+					.willReturn(Optional.empty());
+				//when
+				postService.likeStatusChange(fakePostId, fakeUserId);
+			}
+
+			@DisplayName("좋아요 취소")
+			@Test
+			void cancelLikeTest() {
+				//given
+				Long fakeUserId = 1L;
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+				ReflectionTestUtils.setField(user, "id", fakeUserId);
+
+				Long fakePostId = 1L;
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.build();
+				ReflectionTestUtils.setField(post, "id", fakePostId);
+				LikeSearchDto dto = LikeSearchDto.builder()
+					.postId(post.getId())
+					.userID(user.getId())
+					.likeId(1L)
+					.build();
+				//mock
+				given(postDataRepository.findById(fakePostId))
+					.willReturn(Optional.of(post));
+				given(userDataRepository.findById(fakeUserId))
+					.willReturn(Optional.of(user));
+				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
+					.willReturn(Optional.of(dto));
+				//when
+				postService.likeStatusChange(fakePostId, fakeUserId);
+			}
 		}
 	}
 
