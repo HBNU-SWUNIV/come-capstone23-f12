@@ -69,7 +69,7 @@ public class PostService {
 
 		return PostSearchResponseDto.builder()
 			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageSize())
+			.pageNow(paging.getPageNumber())
 			.posts(postSearchDtos)
 			.elementsSize(ids.size())
 			.build();
@@ -85,7 +85,7 @@ public class PostService {
 
 		return PostSearchResponseDto.builder()
 			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageSize())
+			.pageNow(paging.getPageNumber())
 			.posts(postSearchDtos)
 			.elementsSize(ids.size())
 			.build();
@@ -115,7 +115,7 @@ public class PostService {
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return PostSearchResponseDto.builder()
 			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageSize())
+			.pageNow(paging.getPageNumber())
 			.posts(postSearchDtos)
 			.elementsSize(ids.size())
 			.build();
