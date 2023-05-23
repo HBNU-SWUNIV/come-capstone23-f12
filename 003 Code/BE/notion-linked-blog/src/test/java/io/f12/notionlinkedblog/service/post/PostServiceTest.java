@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -195,6 +194,8 @@ class PostServiceTest {
 					.password(passwordEncoder.encode("1234"))
 					.build();
 
+				Long fakePostAId = 1L;
+				Long fakePostBId = 2L;
 				Post post1 = Post.builder()
 					.user(user)
 					.title(title)
@@ -206,26 +207,32 @@ class PostServiceTest {
 					.title(title)
 					.content(content)
 					.build();
+				ReflectionTestUtils.setField(post1, "id", fakePostAId);
+				ReflectionTestUtils.setField(post2, "id", fakePostBId);
+				List<Long> ids = new ArrayList<>();
+				ids.add(fakePostAId);
+				ids.add(fakePostBId);
 				List<Post> postList = new ArrayList<>();
 				postList.add(post1);
 				postList.add(post2);
-
-				SliceImpl<Post> builtSlice = new SliceImpl<>(postList);
 
 				SearchRequestDto requestDto = SearchRequestDto.builder()
 					.param("test")
 					.pageNumber(0)
 					.build();
-
+				PageRequest paging = PageRequest.of(requestDto.getPageNumber(), 20);
 				//Mock
-				given(postDataRepository.findByTitle(requestDto.getParam(),
-					PageRequest.of(requestDto.getPageNumber(), 20)))
-					.willReturn(builtSlice);
-
+				given(postDataRepository.findPostIdsByTitle(requestDto.getParam(), paging))
+					.willReturn(ids);
+				given(postDataRepository.findByIds(ids))
+					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostsByTitle(requestDto);
 				PostSearchDto postSearchDto = posts.getPosts().get(0);
 				//then
+				assertThat(posts).extracting(PostSearchResponseDto::getPageSize).isEqualTo(20);
+				assertThat(posts).extracting(PostSearchResponseDto::getPageNow).isEqualTo(requestDto.getPageNumber());
+				assertThat(posts).extracting(PostSearchResponseDto::getElementsSize).isEqualTo(2);
 				assertThat(posts.getPosts()).size().isEqualTo(2);
 				assertThat(postSearchDto).extracting("title").isEqualTo(title);
 				assertThat(postSearchDto).extracting("username").isEqualTo(username);
@@ -256,6 +263,8 @@ class PostServiceTest {
 					.pageNumber(0)
 					.build();
 
+				Long fakePostAId = 1L;
+				Long fakePostBId = 2L;
 				Post post1 = Post.builder()
 					.user(user)
 					.title(title)
@@ -267,20 +276,29 @@ class PostServiceTest {
 					.title(title)
 					.content(content)
 					.build();
+				ReflectionTestUtils.setField(post1, "id", fakePostAId);
+				ReflectionTestUtils.setField(post2, "id", fakePostBId);
+				List<Long> ids = new ArrayList<>();
+				ids.add(fakePostAId);
+				ids.add(fakePostBId);
 				List<Post> postList = new ArrayList<>();
 				postList.add(post1);
 				postList.add(post2);
 
-				SliceImpl<Post> builtSlice = new SliceImpl<>(postList);
+				PageRequest paging = PageRequest.of(requestDto.getPageNumber(), 20);
 
 				//Mock
-				given(postDataRepository.findByContent(requestDto.getParam(),
-					PageRequest.of(requestDto.getPageNumber(), 20)))
-					.willReturn(builtSlice);
+				given(postDataRepository.findPostIdsByContent(requestDto.getParam(), paging))
+					.willReturn(ids);
+				given(postDataRepository.findByIds(ids))
+					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostByContent(requestDto);
 				PostSearchDto postSearchDto = posts.getPosts().get(0);
 				//then
+				assertThat(posts).extracting(PostSearchResponseDto::getPageSize).isEqualTo(20);
+				assertThat(posts).extracting(PostSearchResponseDto::getPageNow).isEqualTo(requestDto.getPageNumber());
+				assertThat(posts).extracting(PostSearchResponseDto::getElementsSize).isEqualTo(2);
 				assertThat(posts.getPosts()).size().isEqualTo(2);
 				assertThat(postSearchDto).extracting("title").isEqualTo(title);
 				assertThat(postSearchDto).extracting("username").isEqualTo(username);
@@ -379,18 +397,25 @@ class PostServiceTest {
 				Integer requestPageNumber = 0;
 				PageRequest paging = PageRequest.of(requestPageNumber, 20);
 
+				List<Long> postIds = new ArrayList<>();
+				postIds.add(fakePostAId);
+				postIds.add(fakePostBId);
 				List<Post> postList = new ArrayList<>();
 				postList.add(postA);
 				postList.add(postB);
-				SliceImpl<Post> postSlice = new SliceImpl<>(postList);
+
 				//Mock
-				given(postDataRepository.findLatestByCreatedAtDesc(paging))
-					.willReturn(postSlice);
+				given(postDataRepository.findLatestPostIdsByCreatedAtDesc(paging))
+					.willReturn(postIds);
+				given(postDataRepository.findByIds(postIds))
+					.willReturn(postList);
+
 				//when
 				PostSearchResponseDto latestPosts = postService.getLatestPosts(requestPageNumber);
 				//then
-				assertThat(latestPosts).extracting(PostSearchResponseDto::getPageSize).isEqualTo(2);
+				assertThat(latestPosts).extracting(PostSearchResponseDto::getPageSize).isEqualTo(20);
 				assertThat(latestPosts).extracting(PostSearchResponseDto::getPageNow).isEqualTo(requestPageNumber);
+				assertThat(latestPosts).extracting(PostSearchResponseDto::getElementsSize).isEqualTo(2);
 				assertThat(latestPosts.getPosts()).size().isEqualTo(2);
 			}
 		}
