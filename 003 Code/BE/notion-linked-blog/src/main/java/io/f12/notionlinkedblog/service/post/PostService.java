@@ -5,9 +5,9 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserException
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,29 +61,33 @@ public class PostService {
 
 	public PostSearchResponseDto getPostsByTitle(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
-		Slice<Post> posts = postDataRepository.findByTitle(dto.getParam(), paging);
+
+		List<Long> ids = postDataRepository.findPostIdsByTitle(dto.getParam(), paging);
+		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
 		return PostSearchResponseDto.builder()
-			.pageSize(posts.getSize())
-			.pageNow(posts.getNumber())
+			.pageSize(paging.getPageSize())
+			.pageNow(paging.getPageSize())
 			.posts(postSearchDtos)
-			.elementsSize(posts.getNumberOfElements())
+			.elementsSize(ids.size())
 			.build();
 	}
 
 	public PostSearchResponseDto getPostByContent(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
-		Slice<Post> posts = postDataRepository.findByContent(dto.getParam(), paging);
+
+		List<Long> ids = postDataRepository.findPostIdsByContent(dto.getParam(), paging);
+		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
 		return PostSearchResponseDto.builder()
-			.pageSize(posts.getSize())
-			.pageNow(posts.getNumber())
+			.pageSize(paging.getPageSize())
+			.pageNow(paging.getPageSize())
 			.posts(postSearchDtos)
-			.elementsSize(posts.getNumberOfElements())
+			.elementsSize(ids.size())
 			.build();
 	}
 
@@ -105,28 +109,30 @@ public class PostService {
 
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) { //
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
-		Slice<Post> posts = postDataRepository.findLatestByCreatedAtDesc(paging);
+		List<Long> ids = postDataRepository.findLatestPostIdsByCreatedAtDesc(paging);
+		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return PostSearchResponseDto.builder()
-			.pageSize(posts.getSize())
-			.pageNow(posts.getNumber())
+			.pageSize(paging.getPageSize())
+			.pageNow(paging.getPageSize())
 			.posts(postSearchDtos)
-			.elementsSize(posts.getNumberOfElements())
+			.elementsSize(ids.size())
 			.build();
 	}
 
 	//TODO: Like 기능 개발 완료 후
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
-		Slice<Post> posts = postDataRepository.findPopularityByViewCountAtDesc(paging);
+		List<Long> ids = postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging);
+		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return PostSearchResponseDto.builder()
-			.pageSize(posts.getSize())
-			.pageNow(posts.getNumber())
+			.pageSize(paging.getPageSize())
+			.pageNow(paging.getPageSize())
 			.posts(postSearchDtos)
-			.elementsSize(posts.getNumberOfElements())
+			.elementsSize(ids.size())
 			.build();
 	}
 
@@ -167,8 +173,8 @@ public class PostService {
 		}
 	}
 
-	private List<PostSearchDto> convertPostToPostDto(Slice<Post> posts) {
-		Slice<PostSearchDto> mappedPosts = posts.map(p -> {
+	private List<PostSearchDto> convertPostToPostDto(List<Post> posts) {
+		return posts.stream().map(p -> {
 			return PostSearchDto.builder()
 				.postId(p.getId())
 				.username(p.getUser().getUsername())
@@ -178,8 +184,7 @@ public class PostService {
 				.viewCount(p.getViewCount())
 				.likes(p.getLikes().size())
 				.build();
-		});
-		return mappedPosts.getContent();
+		}).collect(Collectors.toList());
 	}
 
 	private boolean isSame(Long idA, Long idB) {
