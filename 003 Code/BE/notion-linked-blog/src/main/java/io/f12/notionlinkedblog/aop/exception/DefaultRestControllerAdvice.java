@@ -15,7 +15,7 @@ public class DefaultRestControllerAdvice {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
-		return ResponseEntity.badRequest().body(ex.getMessage());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 
 	@ExceptionHandler(NullPointerException.class)
