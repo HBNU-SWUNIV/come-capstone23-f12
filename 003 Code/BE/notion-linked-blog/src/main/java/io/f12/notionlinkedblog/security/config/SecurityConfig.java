@@ -1,6 +1,7 @@
 package io.f12.notionlinkedblog.security.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,6 +38,7 @@ public class SecurityConfig {
 		http
 			.authorizeRequests()
 			.antMatchers(Endpoint.Api.USER + "/email/signup").permitAll()
+			.antMatchers(HttpMethod.GET, Endpoint.Api.USER + "/{id}").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/**").hasRole("USER")
 			.anyRequest().permitAll();
 
