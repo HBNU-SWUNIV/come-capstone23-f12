@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.security.config;
 
+import static io.f12.notionlinkedblog.api.common.Endpoint.Api.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,7 @@ public class SecurityConfig {
 			.headers().frameOptions().disable()
 			.and()
 			.csrf().disable();
-		
+
 		http
 			.cors().configurationSource(corsConfigurationSource());
 
@@ -58,7 +60,7 @@ public class SecurityConfig {
 
 		http
 			.logout()
-			.logoutUrl("/api/logout")
+			.logoutUrl(LOGOUT)
 			.clearAuthentication(true)
 			.invalidateHttpSession(true)
 			.deleteCookies("JSESSIONID")
