@@ -86,7 +86,7 @@ public class CommentsApiController {
 			content = @Content(mediaType = "application/json",
 				schema = @Schema(implementation = AuthenticationFailureDto.class))),
 		@ApiResponse(responseCode = "404", description = "존재하지 않는 리소스(댓글) 접근"),
-		@ApiResponse(responseCode = "301", description = "댓글 수정자와 댓글 소유자 불일치")
+		@ApiResponse(responseCode = "401", description = "댓글 수정자와 댓글 소유자 불일치")
 	})
 	public CommentSearchDto editComments(@PathVariable("id") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
