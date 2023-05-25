@@ -21,15 +21,15 @@ export default function SignupForm({switchForm}) {
 	const [isRequestSendVerifyCode, setIsRequestSendVerifyCode] = useState(false);
 	const deadline = useMemo(() => Date.now() + 1000 * 60 * 5, [isRequestSendVerifyCode]);
 	const [form] = Form.useForm();
-	const [email, setEmail] = useState("");
-	const [verificationCode, setVerificationCode] = useState("");
+	const [email, onChangeEmail] = handleInput("");
+	const [verificationCode, onChangeVerificationCode] = handleInput("");
 	const [submitting, setSubmitting] = useState(false);
 	const [startCountDown, setStartCountdown] = useState(false);
 	const [requestCode, setRequestCode] = useState(false);
 	const [resendLoading, setResendLoading] = useState(false);
 	const [isVerified, setIsVerified] = useState(false);
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	const [username, onChangeUsername] = handleInput("");
+	const [password, onChangePassword] = handleInput("");
 	const [signupLoading, setSignupLoading] = useState(false);
 	const [isSignup, setIsSignup] = useState(false);
 
@@ -101,7 +101,7 @@ export default function SignupForm({switchForm}) {
 					name="email"
 					rules={[{required: true, pattern: /\S/g, message: "이메일은 필수 입력사항입니다"}]}
 				>
-					<Input onChange={e => handleInput(e, setEmail)} value={email} placeholder="인증 코드를 받을 이메일을 입력하세요" disabled={requestCode}/>
+					<Input onChange={onChangeEmail} value={email} placeholder="인증 코드를 받을 이메일을 입력하세요" disabled={requestCode}/>
 				</Form.Item>
 				{!isVerified && requestCode && (
 					<Form.Item
@@ -109,7 +109,7 @@ export default function SignupForm({switchForm}) {
 						name="verificationCode"
 						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해주세요"}]}
 					>
-						<Input onChange={e => handleInput(e, setVerificationCode)} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
+						<Input onChange={onChangeVerificationCode} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
 					</Form.Item>
 				)}
 				{isVerified && (
@@ -119,14 +119,14 @@ export default function SignupForm({switchForm}) {
 							name="username"
 							rules={[{required: true, pattern: /\S/g, message: "이름은 필수 입력사항입니다"}]}
 						>
-							<Input onChange={e => handleInput(e, setUsername)} value={username}/>
+							<Input onChange={onChangeUsername} value={username}/>
 						</Form.Item>
 						<Form.Item
 							label="비밀번호"
 							name="password"
 							rules={[{required: true, pattern: /\S/g, message: "비밀번호는 필수 입력사항입니다"}]}
 						>
-							<Input.Password onChange={e => handleInput(e, setPassword)} value={password}/>
+							<Input.Password onChange={onChangePassword} value={password}/>
 						</Form.Item>
 						<Form.Item
 							label="비밀번호확인"
