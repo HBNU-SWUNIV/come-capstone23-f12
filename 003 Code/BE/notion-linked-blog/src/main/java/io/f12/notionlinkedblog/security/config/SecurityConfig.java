@@ -37,16 +37,18 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
+			.antMatchers(Endpoint.Api.EMAIL + "/**").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/email/signup").permitAll()
 			.antMatchers(HttpMethod.GET, Endpoint.Api.USER + "/{id}").permitAll()
+			.antMatchers(HttpMethod.GET, Endpoint.Api.POST + "/**").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/**").hasRole("USER")
-			.anyRequest().permitAll();
+			.anyRequest().authenticated();
 
 		http
 			.headers().frameOptions().disable()
 			.and()
 			.csrf().disable();
-
+		
 		http
 			.cors().configurationSource(corsConfigurationSource());
 
