@@ -1,4 +1,4 @@
-import AppLayout from "@/components/AppLayout";
+import AppLayout from "@/components/common/AppLayout";
 import Head from "next/head";
 import {useAppSelector} from "@/hooks/hooks";
 

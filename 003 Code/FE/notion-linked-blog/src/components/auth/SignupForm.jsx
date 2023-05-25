@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Col, Form, Input, Row, Statistic, Typography} from "antd";
 import {requestSignupAPI, requestVerificationCodeAPI, requestVerifyCodeAPI} from "@/apis/signup";
 import {StyledDiv, StyledSpace, StyledText} from "@/components/auth/AuthForm";
@@ -18,7 +18,8 @@ const StyledCol = styled(Col)`
 `;
 
 export default function SignupForm({switchForm}) {
-	const deadline = Date.now() + 1000 * 60 * 5;
+	const [isRequestSendVerifyCode, setIsRequestSendVerifyCode] = useState(false);
+	const deadline = useMemo(() => Date.now() + 1000 * 60 * 5, [isRequestSendVerifyCode]);
 	const [form] = Form.useForm();
 	const [email, setEmail] = useState("");
 	const [verificationCode, setVerificationCode] = useState("");
@@ -50,6 +51,7 @@ export default function SignupForm({switchForm}) {
 			await requestVerificationCodeAPI(email);
 			setRequestCode(true);
 			setStartCountdown(true);
+			setIsRequestSendVerifyCode(true);
 		} catch (e) {
 			console.log("인증 코드 요청 관련 에러", e);
 		}
@@ -60,6 +62,7 @@ export default function SignupForm({switchForm}) {
 		try {
 			await requestVerifyCodeAPI(verificationCode);
 			setIsVerified(true);
+			setIsRequestSendVerifyCode(false);
 		} catch (e) {
 			console.log("인증 코드 검증 에러", e);
 		}
@@ -78,11 +81,13 @@ export default function SignupForm({switchForm}) {
 	};
 
 	const resendCode = async () => {
+		setIsRequestSendVerifyCode(true);
 		setResendLoading(true);
 		setStartCountdown(false);
 		await handleRequestCode();
 		setResendLoading(false);
 		setStartCountdown(true);
+		setIsRequestSendVerifyCode(false);
 	};
 
 	return (
