@@ -67,12 +67,7 @@ public class PostService {
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
-		return PostSearchResponseDto.builder()
-			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageNumber())
-			.posts(postSearchDtos)
-			.elementsSize(ids.size())
-			.build();
+		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public PostSearchResponseDto getPostByContent(SearchRequestDto dto) { // DONE
@@ -83,12 +78,7 @@ public class PostService {
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
-		return PostSearchResponseDto.builder()
-			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageNumber())
-			.posts(postSearchDtos)
-			.elementsSize(ids.size())
-			.build();
+		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public PostSearchDto getPostDtoById(Long id) { //DONE
@@ -113,12 +103,7 @@ public class PostService {
 		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
-		return PostSearchResponseDto.builder()
-			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageNumber())
-			.posts(postSearchDtos)
-			.elementsSize(ids.size())
-			.build();
+		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
@@ -127,12 +112,7 @@ public class PostService {
 		List<Post> posts = postDataRepository.findByIds(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
-		return PostSearchResponseDto.builder()
-			.pageSize(paging.getPageSize())
-			.pageNow(paging.getPageSize())
-			.posts(postSearchDtos)
-			.elementsSize(ids.size())
-			.build();
+		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public void removePost(Long postId, Long userId) {
@@ -184,6 +164,15 @@ public class PostService {
 				.likes(p.getLikes().size())
 				.build();
 		}).collect(Collectors.toList());
+	}
+
+	private PostSearchResponseDto buildPostSearchResponseDto(PageRequest paging, List<PostSearchDto> dto, int size) {
+		return PostSearchResponseDto.builder()
+			.pageSize(paging.getPageSize())
+			.pageNow(paging.getPageNumber())
+			.posts(dto)
+			.elementsSize(size)
+			.build();
 	}
 
 	private boolean isSame(Long idA, Long idB) {
