@@ -18,12 +18,10 @@ const PostWriteSetting = (props) => {
   });
   const [description, onChangeDescription] = handleInput("");
   const [isPublic, setIsPublic] = useState(1);
-  const [url, onChangeUrl] = handleInput("");
   const [loading, setLoading] = useState(false);
   const title = props.title;
   const content = props.content;
   const thumbnail = thumbImage.image_file;
-  const {user} = useAppSelector(state => state.user);
 
   const setPublicRange = (e) => {
     setIsPublic(e.target.value);
