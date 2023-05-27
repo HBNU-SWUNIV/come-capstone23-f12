@@ -20,6 +20,7 @@
     "eslint": "8.38.0",
     "eslint-config-naver": "^2.1.0",
     "eslint-config-next": "13.3.0",
+    "faker": "^6.6.6",
     "next": "13.3.0",
     "next-redux-wrapper": "^8.1.0",
     "next-remove-imports": "^1.0.11",

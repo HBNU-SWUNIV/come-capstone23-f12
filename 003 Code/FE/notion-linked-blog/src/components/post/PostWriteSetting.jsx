@@ -39,6 +39,8 @@ const PostWriteSetting = (props) => {
     formData.append("title", title);
     formData.append("content", content);
     formData.append("thumbnail", thumbnail);
+    formData.append("description", description);
+    formData.append("isPublic", isPublic.toString());
 
     try {
       await requestSubmitPostAPI(formData);
@@ -82,12 +84,6 @@ const PostWriteSetting = (props) => {
                   <Radio.Button icon={<LockOutlined/>} value={2}>비공개</Radio.Button>
                 </Radio.Group>
               </Space>
-            </Space>
-            <Space direction="vertical">
-              <p>URL설정</p>
-              <Input
-                value={url} onChange={onChangeUrl} prefix={`${user.username}/`} style={{margin: "10px"}}
-              />
             </Space>
             <Space direction="vertical">
               <p>시리즈설정</p>
