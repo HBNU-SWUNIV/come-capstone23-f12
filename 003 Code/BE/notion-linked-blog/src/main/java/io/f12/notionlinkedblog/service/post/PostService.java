@@ -121,7 +121,6 @@ public class PostService {
 			.build();
 	}
 
-	//TODO: Like 기능 개발 완료 후
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging);
