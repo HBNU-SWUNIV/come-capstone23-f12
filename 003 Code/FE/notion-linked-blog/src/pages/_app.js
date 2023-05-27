@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react";
 import wrapper from "@/redux/store";
 import {createGlobalStyle} from "styled-components";
 import AppHeader from "@/components/common/AppHeader";
@@ -19,6 +20,15 @@ const GlobalStyles = createGlobalStyle`
 
 function App({Component, ...rest}) {
 	const {store, props} = wrapper.useWrappedStore(rest);
+	const [hydrate, setHydrate] = useState(false);
+
+	useEffect(() => {
+		setHydrate(true);
+	}, []);
+
+	if (!hydrate) {
+		return null;
+	}
 
 	return (
 		<Provider store={store}>
