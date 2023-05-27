@@ -4,7 +4,6 @@ import {useAppSelector} from "@/hooks/hooks";
 import styled from "styled-components";
 
 const StyledContentRow = styled(Row)`
-	margin-top: 32px;
 	max-width: 1760px;
 `;
 

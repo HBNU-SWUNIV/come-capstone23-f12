@@ -15,7 +15,6 @@ const {Header} = Layout;
 const {Text} = Typography;
 
 const StyledText = styled(Text)`
-  color: #FFF;
 `;
 
 const StyledSpace = styled(Space)`
@@ -60,6 +59,22 @@ const StyledHeaderRow = styled(Row)`
 	@media screen and (max-width: 816px) {
 		width: calc(352px * 1 - 32px);
 	}
+`;
+
+const StyledCol = styled(Col)`
+	display: flex;
+	align-items: center;
+`;
+
+const StyledLink = styled(Link)`
+	display: flex;
+	justify-content: space-between;
+  align-items: center;
+	width: 70px;
+`;
+
+const StyledImg = styled.img`
+	width: 32px;
 `;
 
 function AppHeader() {
@@ -111,11 +126,14 @@ function AppHeader() {
 	return (
 		<StyledHeader>
 			<StyledHeaderRow>
-				<Col>
-					<StyledText>
-						<Link href="/">Logo</Link>
-					</StyledText>
-				</Col>
+				<StyledCol>
+					<StyledLink href="/">
+						<StyledImg src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png" alt="Logo" />
+						<StyledText>
+							NLB
+						</StyledText>
+					</StyledLink>
+				</StyledCol>
 				<Col>
 					{!user ?
 						(<Button type="primary" onClick={showModal}>로그인</Button>) :
