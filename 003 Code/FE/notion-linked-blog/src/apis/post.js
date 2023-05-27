@@ -3,9 +3,8 @@ import {apiClient} from "@/apis/apiClient";
 export const requestSubmitPostAPI = async post => {
   try {
     await apiClient.post("/posts", post, {
-      withCredentials: true,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data"
       },
     });
   } catch (e) {
