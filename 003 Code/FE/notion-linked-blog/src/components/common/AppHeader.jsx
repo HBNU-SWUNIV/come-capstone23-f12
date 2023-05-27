@@ -36,14 +36,30 @@ const StyledHeader = styled(Header)`
   display: flex;
   justify-content: center;
   padding: 0;
+	background-color: #F5F5F5;
 `;
 
 const StyledHeaderRow = styled(Row)`
   display: flex;
-  width: 100%;
   max-width: 1728px;
   justify-content: space-between;
-	margin: 0 32px;
+	width: 100%;
+
+	@media screen and (max-width: 1872px) {
+		width: calc(352px * 4 - 32px);
+	}
+
+	@media screen and (max-width: 1520px) {
+		width: calc(352px * 3 - 32px);
+	}
+
+	@media screen and (max-width: 1168px) {
+		width: calc(352px * 2 - 32px);
+	}
+
+	@media screen and (max-width: 816px) {
+		width: calc(352px * 1 - 32px);
+	}
 `;
 
 function AppHeader() {
