@@ -99,7 +99,7 @@ export default function SignupForm({switchForm}) {
 				<Form.Item
 					label="이메일"
 					name="email"
-					rules={[{required: true, pattern: /\S/g, message: "이메일은 필수 입력사항입니다"}]}
+					rules={[{required: true, pattern: /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i, message: "이메일은 필수 입력사항입니다"}]}
 				>
 					<Input onChange={onChangeEmail} value={email} placeholder="인증 코드를 받을 이메일을 입력하세요" disabled={requestCode}/>
 				</Form.Item>
@@ -107,7 +107,7 @@ export default function SignupForm({switchForm}) {
 					<Form.Item
 						label="인증 코드"
 						name="verificationCode"
-						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해주세요"}]}
+						rules={[{required: true, pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, message: "인증 코드를 입력해주세요"}]}
 					>
 						<Input onChange={onChangeVerificationCode} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
 					</Form.Item>
