@@ -1,7 +1,7 @@
 import {Button, Form, Input, Typography} from "antd";
 import styled from "styled-components";
 import {StyledDiv, StyledSpace, StyledText} from "@/components/auth/AuthForm";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {handleInput} from "@/components/auth/common";
 import {loginByEmailAPI} from "@/apis/user";
 import {useAppDispatch} from "@/hooks/hooks";
@@ -18,24 +18,33 @@ export default function LoginForm({switchForm, setIsModalOpen}) {
 	const [email, onChangeEmail] = handleInput("");
 	const [password, onChangePassword] = handleInput("");
 	const [loading, setLoading] = useState(false);
-	const [isCorrect, setIsCorrect] = useState(true);
 	const dispatch = useAppDispatch();
-
+	const [err, setErr] = useState("");
 	const handleSubmit = async () => {
+		if (email.length === 0 || password.length === 0) {
+			setErr("이메일 또는 비밀번호 입력을 확인해주세요");
+			return;
+		}
+
 		setLoading(true);
 		try {
 			const response = await loginByEmailAPI({email, password});
 
 			dispatch(login(response.data.user));
 			setIsModalOpen(false);
-			setIsCorrect(true);
+			setErr("");
 		} catch (e) {
+			setErr("이메일 또는 비밀번호가 틀립니다");
 			console.log("로그인 실패", e);
-			setIsCorrect(false);
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	const ErrorDiv = styled.div`
+		text-align: center;
+		color: red;
+	`;
 
 	return (
 		<StyledSpace direction="vertical" size="large">
@@ -54,7 +63,7 @@ export default function LoginForm({switchForm, setIsModalOpen}) {
 				>
 					<Input.Password onChange={onChangePassword} placeholder="비밀번호를 입력하세요" value={password}/>
 				</Form.Item>
-				{isCorrect === true ? null : <div style={{textAlign:"center", color:"red"}}>이메일 또는 비밀번호가 일치하지 않습니다</div>}
+				<ErrorDiv>{err}</ErrorDiv>
 				<StyledFormItem>
 					<Button type="primary" htmlType="submit" onClick={handleSubmit} loading={loading}>로그인</Button>
 				</StyledFormItem>
