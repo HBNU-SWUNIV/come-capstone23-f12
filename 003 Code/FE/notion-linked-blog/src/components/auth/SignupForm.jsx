@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Button, Col, Form, Input, Row, Statistic, Typography} from "antd";
 import {requestSignupAPI, requestVerificationCodeAPI, requestVerifyCodeAPI} from "@/apis/signup";
 import {StyledDiv, StyledSpace, StyledText} from "@/components/auth/AuthForm";
@@ -32,6 +32,7 @@ export default function SignupForm({switchForm}) {
 	const [password, onChangePassword] = handleInput("");
 	const [signupLoading, setSignupLoading] = useState(false);
 	const [isSignup, setIsSignup] = useState(false);
+	const [err, setError] = useState("");
 
 	const handleSignup = async () => {
 		setSignupLoading(true);
@@ -64,6 +65,8 @@ export default function SignupForm({switchForm}) {
 			setIsVerified(true);
 			setIsRequestSendVerifyCode(false);
 		} catch (e) {
+			setStartCountdown(true);
+			setError("인증코드가 올바르지 않습니다.");
 			console.log("인증 코드 검증 에러", e);
 		}
 	};
@@ -90,6 +93,10 @@ export default function SignupForm({switchForm}) {
 		setIsRequestSendVerifyCode(false);
 	};
 
+	useEffect(() => {
+		setError("");
+	}, [verificationCode]);
+
 	return (
 		<StyledSpace direction="vertical" size="large">
 			<Text>이메일로 회원가입</Text>
@@ -99,7 +106,7 @@ export default function SignupForm({switchForm}) {
 				<Form.Item
 					label="이메일"
 					name="email"
-					rules={[{required: true, pattern: /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i, message: "이메일은 필수 입력사항입니다"}]}
+					rules={[{required: true, pattern: /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i, message: "올바른 이메일을 입력하세요"}]}
 				>
 					<Input onChange={onChangeEmail} value={email} placeholder="인증 코드를 받을 이메일을 입력하세요" disabled={requestCode}/>
 				</Form.Item>
@@ -107,11 +114,12 @@ export default function SignupForm({switchForm}) {
 					<Form.Item
 						label="인증 코드"
 						name="verificationCode"
-						rules={[{required: true, pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, message: "인증 코드를 입력해주세요"}]}
+						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해주세요"}]}
 					>
 						<Input onChange={onChangeVerificationCode} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
 					</Form.Item>
 				)}
+				<div>{err}</div>
 				{isVerified && (
 					<>
 						<Form.Item
@@ -124,7 +132,7 @@ export default function SignupForm({switchForm}) {
 						<Form.Item
 							label="비밀번호"
 							name="password"
-							rules={[{required: true, pattern: /\S/g, message: "비밀번호는 필수 입력사항입니다"}]}
+							rules={[{required: true, pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, message: "비밀번호는 8자로 영문 대 소문자, 숫자, 특수기호를 조합해서 사용하세요."}]}
 						>
 							<Input.Password onChange={onChangePassword} value={password}/>
 						</Form.Item>

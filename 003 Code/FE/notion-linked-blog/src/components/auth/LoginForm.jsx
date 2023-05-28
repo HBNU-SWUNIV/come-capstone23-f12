@@ -21,11 +21,6 @@ export default function LoginForm({switchForm, setIsModalOpen}) {
 	const dispatch = useAppDispatch();
 	const [err, setErr] = useState("");
 	const handleSubmit = async () => {
-		if (email.length === 0 || password.length === 0) {
-			setErr("이메일 또는 비밀번호 입력을 확인해주세요");
-			return;
-		}
-
 		setLoading(true);
 		try {
 			const response = await loginByEmailAPI({email, password});
@@ -34,12 +29,18 @@ export default function LoginForm({switchForm, setIsModalOpen}) {
 			setIsModalOpen(false);
 			setErr("");
 		} catch (e) {
-			setErr("이메일 또는 비밀번호가 틀립니다");
+			if (email.length > 0 && password.length > 0) {
+				setErr("이메일 또는 비밀번호가 틀립니다");
+			}
 			console.log("로그인 실패", e);
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		setErr("");
+	}, [email, password]);
 
 	const ErrorDiv = styled.div`
 		text-align: center;
@@ -54,12 +55,14 @@ export default function LoginForm({switchForm, setIsModalOpen}) {
 				<Form.Item
 					label="이메일"
 					name="email"
+					rules={[{required: true, message: "이메일을 입력해주세요"}]}
 				>
 					<Input onChange={onChangeEmail} placeholder="이메일을 입력하세요" value={email}/>
 				</Form.Item>
 				<Form.Item
 					label="비밀번호"
 					name="password"
+					rules={[{required: true, message: "비밀번호를 입력해주세요"}]}
 				>
 					<Input.Password onChange={onChangePassword} placeholder="비밀번호를 입력하세요" value={password}/>
 				</Form.Item>
