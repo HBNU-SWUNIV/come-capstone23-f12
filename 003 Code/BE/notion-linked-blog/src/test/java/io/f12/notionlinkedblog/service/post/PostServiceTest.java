@@ -4,6 +4,10 @@ import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostException
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +19,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
@@ -57,7 +68,7 @@ class PostServiceTest {
 		class successCase {
 			@DisplayName("모든 데이터 존재")
 			@Test
-			void haveEveryData() {
+			void haveEveryData() throws IOException {
 				//given
 				Long fakeId = 1L;
 				User user = User.builder()
@@ -69,6 +80,7 @@ class PostServiceTest {
 				String title = "testTitle";
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
+				String path = "path";
 
 				PostCreateDto postDto = PostCreateDto.builder()
 					.title(title)
@@ -80,27 +92,32 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
+					.thumbnailName(thumbnail)
+					.storedThumbnailPath(path)
 					.build();
 
 				ReflectionTestUtils.setField(user, "id", fakeId);
+
+				File file = new ClassPathResource("static/images/test.jpg").getFile();
+
 				//Mock
+				MultipartFile mockMultipartFile = new MockMultipartFile(file.getName(), new FileInputStream(file));
 				given(userDataRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
 				given(postDataRepository.save(any(Post.class)))
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto, mockMultipartFile);
+
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
 				assertThat(createdPost).extracting("content").isEqualTo(content);
-				assertThat(createdPost).extracting("thumbnail").isEqualTo(thumbnail);
 			}
 
 			@DisplayName("섬네일 제외")
 			@Test
-			void withoutThumbnail() {
+			void withoutThumbnail() throws IOException {
 				//given
 				Long fakeId = 1L;
 				User user = User.builder()
@@ -130,11 +147,11 @@ class PostServiceTest {
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto, null);
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
 				assertThat(createdPost).extracting("content").isEqualTo(content);
-				assertThat(createdPost).extracting("thumbnail").isNull();
+				assertThat(createdPost).extracting("requestThumbnailLink").isNull();
 			}
 
 		}
@@ -163,7 +180,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.createPost(fakeId, postDto);
+					postService.createPost(fakeId, postDto, null);
 				}).isInstanceOf(NullPointerException.class);
 
 			}
@@ -187,6 +204,7 @@ class PostServiceTest {
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
 				String username = "tester";
+				String path = "path";
 
 				User user = User.builder()
 					.username(username)
@@ -200,7 +218,8 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
+					.thumbnailName(thumbnail)
+					.storedThumbnailPath(path)
 					.build();
 				Post post2 = Post.builder()
 					.user(user)
@@ -251,6 +270,7 @@ class PostServiceTest {
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
 				String username = "tester";
+				String path = "path";
 
 				User user = User.builder()
 					.username(username)
@@ -269,13 +289,15 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
+					.thumbnailName(thumbnail)
+					.storedThumbnailPath(path)
 					.build();
 				Post post2 = Post.builder()
 					.user(user)
 					.title(title)
 					.content(content)
 					.build();
+
 				ReflectionTestUtils.setField(post1, "id", fakePostAId);
 				ReflectionTestUtils.setField(post2, "id", fakePostBId);
 				List<Long> ids = new ArrayList<>();
@@ -318,6 +340,7 @@ class PostServiceTest {
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
 				String username = "tester";
+				String path = "path";
 
 				User user = User.builder()
 					.username(username)
@@ -329,7 +352,8 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
+					.thumbnailName(thumbnail)
+					.storedThumbnailPath(path)
 					.viewCount(10L)
 					.build();
 				//Mock
@@ -383,6 +407,8 @@ class PostServiceTest {
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
+					.thumbnailName("thumbnail")
+					.storedThumbnailPath("path")
 					.user(user)
 					.build();
 				Post postB = Post.builder()
@@ -545,12 +571,10 @@ class PostServiceTest {
 				Long fakeUserId = 1L;
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
-				String editThumbnail = "editedThumbnail";
 
 				PostEditDto editDto = PostEditDto.builder()
 					.title(editTitle)
 					.content(editContent)
-					.thumbnail(editThumbnail)
 					.build();
 
 				User user = User.builder()
@@ -563,14 +587,13 @@ class PostServiceTest {
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
-					.thumbnail("tentThumbnail")
 					.build();
 
 				//Mock
 				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
-				postService.editPost(fakePostId, fakeUserId, editDto);
+				postService.editPostContent(fakePostId, fakeUserId, editDto);
 
 			}
 		}
@@ -587,11 +610,9 @@ class PostServiceTest {
 				Long fakeUserId = 1L;
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
-				String editThumbnail = "editedThumbnail";
 				PostEditDto editDto = PostEditDto.builder()
 					.title(editTitle)
 					.content(editContent)
-					.thumbnail(editThumbnail)
 					.build();
 				//Mock
 				given(postDataRepository.findById(fakePostId))
@@ -599,7 +620,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPost(fakePostId, fakeUserId, editDto);
+					postService.editPostContent(fakePostId, fakeUserId, editDto);
 				}).isInstanceOf(IllegalArgumentException.class)
 					.hasMessageContaining(POST_NOT_EXIST);
 
@@ -614,12 +635,10 @@ class PostServiceTest {
 				Long illegalEditorId = fakeUserId + 1L;
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
-				String editThumbnail = "editedThumbnail";
 
 				PostEditDto editDto = PostEditDto.builder()
 					.title(editTitle)
 					.content(editContent)
-					.thumbnail(editThumbnail)
 					.build();
 
 				User writer = User.builder()
@@ -634,7 +653,6 @@ class PostServiceTest {
 					.user(writer)
 					.title("testTitle")
 					.content("testContent")
-					.thumbnail("tentThumbnail")
 					.build();
 
 				//Mock
@@ -643,7 +661,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPost(fakePostId, illegalEditorId, editDto);
+					postService.editPostContent(fakePostId, illegalEditorId, editDto);
 				}).isInstanceOf(IllegalStateException.class)
 					.hasMessageContaining(WRITER_USER_NOT_MATCH);
 
@@ -725,4 +743,67 @@ class PostServiceTest {
 		}
 	}
 
+	@DisplayName("썸네일 조회")
+	@Nested
+	class readImageFile {
+
+		@DisplayName("성공 케이스")
+		@Nested
+		class SuccessCase {
+			@DisplayName("썸네일 존재 케이스")
+			@Test
+			void thumbnailExist() throws MalformedURLException {
+				//given
+				String imageName = "thumbName";
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.thumbnailName(imageName)
+					.storedThumbnailPath("path.png")
+					.build();
+				//mock
+				given(postDataRepository.findThumbnailPathWithName(imageName))
+					.willReturn("path.png");
+				//when
+				ResponseEntity<Resource> resourceResponseEntity = postService.readImageFile(imageName);
+
+				//then
+				assertThat(resourceResponseEntity).extracting("statusCode").isEqualTo(HttpStatus.OK);
+				assertThat(resourceResponseEntity.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_PNG);
+			}
+		}
+
+		@DisplayName("실패 케이스")
+		@Nested
+		class FailureCase {
+			@DisplayName("썸네일 존재 케이스")
+			@Test
+			void thumbnailExist() {
+				//given
+				String imageName = "thumbName";
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.build();
+				//when
+				//then
+				assertThatThrownBy(() -> {
+					ResponseEntity<Resource> resourceResponseEntity = postService.readImageFile(imageName);
+				}).isInstanceOf(IllegalArgumentException.class);
+			}
+		}
+
+	}
 }

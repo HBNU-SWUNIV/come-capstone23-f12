@@ -334,7 +334,6 @@ class PostApiControllerTest {
 			PostEditDto body = PostEditDto.builder()
 				.title("testTitle")
 				.content("testContent")
-				.thumbnail("testThumbnail")
 				.build();
 
 			String requestBody = objectMapper.writeValueAsString(body);
@@ -390,6 +389,23 @@ class PostApiControllerTest {
 			//then
 			resultActions.andExpect(status().isCreated());
 
+		}
+	}
+
+	@DisplayName("썸네일 실제 조회")
+	@Nested
+	class getThumbnail {
+		@DisplayName("성공 케이스")
+		@Test
+		void successCase() throws Exception {
+			//given
+			final String url = Endpoint.Api.REQUEST_IMAGE + "testImage";
+			//when
+			ResultActions resultActions = mockMvc.perform(
+				get(url)
+			);
+			//then
+			resultActions.andExpect(status().isOk());
 		}
 	}
 
