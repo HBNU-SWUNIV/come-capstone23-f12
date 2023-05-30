@@ -1,6 +1,11 @@
 package io.f12.notionlinkedblog.api.post;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,8 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
@@ -46,15 +53,17 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "201", description = "포스트 생성 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchDto.class))),
+				schema = @Schema(implementation = PostSearchDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
 		@ApiResponse(responseCode = "401", description = "회원 미 로그인",
 			content = @Content(mediaType = "application/json",
 				schema = @Schema(implementation = AuthenticationFailureDto.class))),
 		@ApiResponse(responseCode = "404", description = "회원 데이터 미존재")
 	})
 	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated PostCreateDto postCreateDto) {
-		return postService.createPost(loginUser.getUser().getId(), postCreateDto);
+		@RequestPart(value = "dto") @Validated PostCreateDto postCreateDto,
+		@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+		return postService.createPost(loginUser.getUser().getId(), postCreateDto, file);
 	}
 
 	@GetMapping("/{id}")
@@ -62,7 +71,8 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchDto.class))),
+				schema = @Schema(implementation = PostSearchDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
 		@ApiResponse(responseCode = "400", description = "RequestDto 미존재")
 	})
 	public PostSearchDto getPostsById(@PathVariable("id") Long id) {
@@ -74,7 +84,8 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchResponseDto.class)))
+				schema = @Schema(implementation = PostSearchResponseDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
 	})
 	public PostSearchResponseDto searchPostsByTitle(@RequestBody @Validated SearchRequestDto titleDto) {
 		return postService.getPostsByTitle(titleDto);
@@ -85,7 +96,8 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchResponseDto.class)))
+				schema = @Schema(implementation = PostSearchResponseDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
 	})
 	public PostSearchResponseDto searchPostsByContent(@RequestBody @Validated SearchRequestDto contentDto) {
 		return postService.getPostByContent(contentDto);
@@ -96,7 +108,8 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchResponseDto.class)))
+				schema = @Schema(implementation = PostSearchResponseDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
 	})
 	public PostSearchResponseDto searchLatestPosts(@PathVariable Integer pageNumber) {
 		return postService.getLatestPosts(pageNumber);
@@ -107,7 +120,8 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = "application/json",
-				schema = @Schema(implementation = PostSearchResponseDto.class)))
+				schema = @Schema(implementation = PostSearchResponseDto.class,
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
 	})
 	public PostSearchResponseDto searchPopularPosts(@PathVariable Integer pageNumber) {
 		return postService.getPopularityPosts(pageNumber);
@@ -128,7 +142,7 @@ public class PostApiController {
 	public String editPost(@PathVariable("id") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated PostEditDto editInfo) {
-		postService.editPost(postId, loginUser.getUser().getId(), editInfo);
+		postService.editPostContent(postId, loginUser.getUser().getId(), editInfo);
 		return Endpoint.Api.POST + "/" + postId;
 	}
 
@@ -162,6 +176,18 @@ public class PostApiController {
 	public void addLikeToPost(@PathVariable Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		postService.likeStatusChange(postId, loginUser.getUser().getId());
+	}
+
+	@GetMapping("/requestThumbnail/{imageName}")
+	@Operation(summary = "imageName 에 해당하는 이미지를 가져옵니다")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "이미지 가져오기 성공",
+			content = @Content(mediaType = "image/*")),
+		@ApiResponse(responseCode = "404", description = "이미지 미존재"),
+		@ApiResponse(responseCode = "401", description = "DB에 이미지 이름 저장 오류, 문의 요망")
+	})
+	public ResponseEntity<Resource> getThumbnail(@PathVariable String imageName) throws MalformedURLException {
+		return postService.readImageFile(imageName);
 	}
 
 }

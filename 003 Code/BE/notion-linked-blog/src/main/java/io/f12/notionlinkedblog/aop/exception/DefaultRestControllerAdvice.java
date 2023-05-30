@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.aop.exception;
 
+import java.net.MalformedURLException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,5 +27,11 @@ public class DefaultRestControllerAdvice {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public ResponseEntity<String> handleNullPointer(NullPointerException ex) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+	}
+
+	@ExceptionHandler(MalformedURLException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<String> handleMalformedException(MalformedURLException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 }
