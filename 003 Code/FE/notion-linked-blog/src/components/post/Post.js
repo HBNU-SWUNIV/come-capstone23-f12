@@ -15,20 +15,21 @@ export const UploaderDiv = styled.div`
 `;
 
 export const WriteDiv = styled.div`
-		display: flex;
-		flex-direction: column;
-    margin: 30px;
-	`;
+	display: flex;
+	flex-direction: column;
+   margin: 30px;
+`;
 
-export const SpaceDiv = styled.div`
-		width: 50%;
-	`;
+// export const SpaceDiv = styled.div`
+// 	width: 50%;
+// `;
 
 export const TempButton = styled(Button)`
-		margin: 10px;
-	`;
+	margin: 10px;
+`;
 
 export const ButtonSpace = styled(Space)`
-		display: flex;
-		justify-content: space-between;
-	`;
+	display: flex;
+	justify-content: space-between;
+  width: 50%;
+`;

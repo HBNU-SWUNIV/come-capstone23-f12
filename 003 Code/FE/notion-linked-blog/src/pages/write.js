@@ -38,15 +38,13 @@ const Write = () => {
 			<WriteDiv>
 				<Input bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle} style={{fontSize: "3rem"}}></Input>
 				<PostEditor content={content} editContent={editContent}/>
-				<SpaceDiv className="space-align-block">
-					<ButtonSpace align="center">
-						<Link href={"./"}><Button>나가기</Button></Link>
-						<div>
-							<TempButton type="primary">임시저장</TempButton>
-							<Button type="primary" onClick={isDoneWritePost}>출간하기</Button>
-						</div>
-					</ButtonSpace>
-				</SpaceDiv>
+				<ButtonSpace align="center">
+					<Link href={"./"}><Button>나가기</Button></Link>
+					<div>
+						<TempButton type="primary">임시저장</TempButton>
+						<Button type="primary" onClick={isDoneWritePost}>출간하기</Button>
+					</div>
+				</ButtonSpace>
 			</WriteDiv>
 	);
 };
