@@ -4,9 +4,11 @@ import static org.springframework.http.MediaType.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLConnection;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +30,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
+import io.f12.notionlinkedblog.domain.post.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.security.common.dto.AuthenticationFailureDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
@@ -227,7 +230,12 @@ public class PostApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public ResponseEntity<Resource> getThumbnail(@PathVariable String imageName) throws MalformedURLException {
-		return postService.readImageFile(imageName);
+		ThumbnailReturnDto thumbnailInfo = postService.readImageFile(imageName);
+		String mediaType = URLConnection.guessContentTypeFromName(thumbnailInfo.getThumbnailPath());
+		return ResponseEntity.ok()
+			.contentType(MediaType.parseMediaType(mediaType))
+			.body(thumbnailInfo.getImage());
+
 	}
 
 }
