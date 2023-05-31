@@ -80,6 +80,9 @@ public class PostApiController {
 					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
 		@ApiResponse(responseCode = "400", description = "RequestDto 미존재",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class))),
+		@ApiResponse(responseCode = "404", description = "Post 데이터 미존재",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto getPostsById(@PathVariable("id") Long id) {
@@ -128,7 +131,10 @@ public class PostApiController {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchResponseDto.class,
-					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
+		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchResponseDto searchPopularPosts(@PathVariable Integer pageNumber) {
 		return postService.getPopularityPosts(pageNumber);
@@ -197,7 +203,7 @@ public class PostApiController {
 		postService.likeStatusChange(postId, loginUser.getUser().getId());
 	}
 
-	@GetMapping("/requestThumbnail/{imageName}")
+	@GetMapping("/thumbnail/{imageName}")
 	@Operation(summary = "imageName 에 해당하는 이미지를 가져옵니다")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "이미지 가져오기 성공",
