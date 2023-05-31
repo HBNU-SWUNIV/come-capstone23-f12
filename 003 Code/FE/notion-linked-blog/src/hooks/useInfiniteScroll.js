@@ -7,13 +7,13 @@ export default function useInfiniteScroll({
 	const currentChild = useRef(null);
 
 	const intersectionObserver = useMemo(() => new IntersectionObserver(
-		(entries, observerr) => {
+		(entries, observer) => {
 			if (target?.current === null) {
 				return;
 			}
 			if (entries[0].isIntersecting) {
 				setCount(v => v + 1);
-				observerr.disconnect();
+				observer.disconnect();
 			}
 		},
 	), [target, root, rootMargin, threshold]);
