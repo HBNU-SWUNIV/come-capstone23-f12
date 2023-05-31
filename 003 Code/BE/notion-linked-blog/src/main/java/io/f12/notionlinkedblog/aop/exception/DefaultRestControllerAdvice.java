@@ -22,11 +22,11 @@ public class DefaultRestControllerAdvice {
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public CommonErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
 		return CommonErrorResponse.builder()
 			.errorMassage(ex.getMessage())
-			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
+			.errorCode(HttpStatus.NOT_FOUND.value()).build();
 	}
 
 	@ExceptionHandler(NullPointerException.class)
@@ -48,6 +48,14 @@ public class DefaultRestControllerAdvice {
 	@ExceptionHandler(MultipartException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CommonErrorResponse handleMultipartException(MultipartException ex) {
+		return CommonErrorResponse.builder()
+			.errorMassage(ex.getMessage())
+			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
+	}
+
+	@ExceptionHandler(NumberFormatException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public CommonErrorResponse handleNumberFormatException(NumberFormatException ex) {
 		return CommonErrorResponse.builder()
 			.errorMassage(ex.getMessage())
 			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
