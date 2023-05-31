@@ -108,7 +108,8 @@ class PostServiceTest {
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto, mockMultipartFile);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(),
+					mockMultipartFile);
 
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
@@ -147,7 +148,8 @@ class PostServiceTest {
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto, null);
+				PostSearchDto createdPost = postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(),
+					null);
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
 				assertThat(createdPost).extracting("content").isEqualTo(content);
@@ -179,7 +181,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.createPost(fakeId, postDto, null);
+					postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(), null);
 				}).isInstanceOf(NullPointerException.class);
 
 			}

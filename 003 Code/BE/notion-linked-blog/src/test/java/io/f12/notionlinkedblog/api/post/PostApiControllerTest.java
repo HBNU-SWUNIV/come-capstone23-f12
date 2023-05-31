@@ -101,13 +101,16 @@ class PostApiControllerTest {
 				UserSearchDto user = userDataRepository.findUserById(testUser.getId())
 					.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 				//mock
-
-				MockMultipartFile createInfo = new MockMultipartFile("dto", "", APPLICATION_JSON_VALUE,
-					"{\"title\":\"testTitle\", \"content\": \"testContent\"}".getBytes());
-
+				MockMultipartFile titleData = new MockMultipartFile("title",
+					"testTitle".getBytes());
+				MockMultipartFile contentData = new MockMultipartFile("content",
+					"testContent".getBytes());
 				//when
 				ResultActions resultActions = mockMvc.perform(
-					multipart(url).file(createInfo).accept(APPLICATION_JSON_VALUE));
+					multipart(url)
+						.file(titleData)
+						.file(contentData)
+				);
 				//then
 				resultActions.andExpect(status().isCreated());
 			}
@@ -124,13 +127,17 @@ class PostApiControllerTest {
 				//mock
 				MockMultipartFile fileInfo = new MockMultipartFile("file", "", IMAGE_JPEG_VALUE,
 					Files.readAllBytes(file.toPath()));
-
-				MockMultipartFile createInfo = new MockMultipartFile("dto", "", APPLICATION_JSON_VALUE,
-					"{\"title\":\"testTitle\", \"content\": \"testContent\"}".getBytes());
+				MockMultipartFile titleData = new MockMultipartFile("title",
+					"testTitle".getBytes());
+				MockMultipartFile contentData = new MockMultipartFile("content",
+					"testContent".getBytes());
 
 				//when
 				ResultActions resultActions = mockMvc.perform(
-					multipart(url).file(fileInfo).file(createInfo).accept(APPLICATION_JSON_VALUE));
+					multipart(url)
+						.file(fileInfo)
+						.file(titleData)
+						.file(contentData));
 				//then
 				resultActions.andExpect(status().isCreated());
 			}
