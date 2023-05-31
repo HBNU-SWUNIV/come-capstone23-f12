@@ -76,15 +76,15 @@ class PostDataRepositoryTest {
 
 	@DisplayName("포스트 조회")
 	@Nested
-	class findPost {
+	class PostLookup {
 
 		@DisplayName("단건 조회")
 		@Nested
-		class singleSearch {
+		class SingleSearch {
 
 			@DisplayName("ID로 PostDto 조회")
 			@Nested
-			class findPostDtoById {
+			class LookupPostDtoById {
 
 				@DisplayName("정상 조회")
 				@Test
@@ -103,7 +103,7 @@ class PostDataRepositoryTest {
 
 				@DisplayName("실패 케이스")
 				@Nested
-				class failureCase {
+				class FailCase {
 					@DisplayName("비정상 조회 - 없는 데이터 조회시")
 					@Test
 					void searchUnavailablePost() {
@@ -137,7 +137,7 @@ class PostDataRepositoryTest {
 
 			@DisplayName("ID로 Post 조회")
 			@Nested
-			class findPostById {
+			class LookupPostById {
 
 				@DisplayName("정상 조회")
 				@Test
@@ -154,7 +154,7 @@ class PostDataRepositoryTest {
 
 				@DisplayName("실패 케이스")
 				@Nested
-				class failureCase {
+				class FaileCase {
 
 					@DisplayName("존재하지 않는 포스트 조회")
 					@Test
@@ -177,14 +177,14 @@ class PostDataRepositoryTest {
 
 		@DisplayName("다건 조회")
 		@Nested
-		class multiSearch {
+		class MultiSearch {
 			@DisplayName("제목으로 조회")
 			@Nested
-			class findPostsByTitle {
+			class LookupPostsByTitle {
 
 				@DisplayName("성공 케이스")
 				@Nested
-				class successfulCase {
+				class SuccessCase {
 					@DisplayName("정상 조회 - 데이터 0개")
 					@Test
 					void successfulCase_NoData() {
@@ -250,10 +250,10 @@ class PostDataRepositoryTest {
 
 			@DisplayName("내용으로 조회")
 			@Nested
-			class findPostByContent {
+			class LookupPostByContent {
 				@DisplayName("성공 케이스")
 				@Nested
-				class successfulCase {
+				class SuccessCase {
 					@DisplayName("정상 조회 - 데이터 0개")
 					@Test
 					void successfulCase_NoData() {
@@ -321,7 +321,7 @@ class PostDataRepositoryTest {
 
 		@DisplayName("포스트 정렬 조회 - 최신순")
 		@Nested
-		class SearchByDate {
+		class LookupByDate {
 			@BeforeEach
 			void init() {
 				for (int i = 0; i < 10; i++) {
@@ -337,7 +337,7 @@ class PostDataRepositoryTest {
 
 			@DisplayName("성공 케이스")
 			@Nested
-			class successfulCase {
+			class SuccessCase {
 				@DisplayName("조회 성공")
 				@Test
 				void successful() {
@@ -357,10 +357,10 @@ class PostDataRepositoryTest {
 
 	@DisplayName("포스트 편집")
 	@Nested
-	class editPost {
+	class EditPost {
 		@DisplayName("성공 케이스")
 		@Nested
-		class successfulCase {
+		class SuccessCase {
 			@DisplayName("미 변경")
 			@Test
 			void partialChange() {
@@ -404,10 +404,10 @@ class PostDataRepositoryTest {
 
 	@DisplayName("썸네일 조회")
 	@Nested
-	class getThumbnailImage {
+	class LookupThumbnailImage {
 		@DisplayName("ID로 PostDto 조회")
 		@Nested
-		class findThumbnailPathByThumbnailName {
+		class LookupThumbnailPathByThumbnailName {
 			@DisplayName("정상 조회")
 			@Test
 			void successCase() {

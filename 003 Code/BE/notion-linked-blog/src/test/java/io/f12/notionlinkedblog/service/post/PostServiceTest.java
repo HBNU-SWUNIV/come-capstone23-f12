@@ -61,11 +61,11 @@ class PostServiceTest {
 
 	@DisplayName("포스트 생성")
 	@Nested
-	class createPost {
+	class CreatePost {
 
 		@DisplayName("성공케이스")
 		@Nested
-		class successCase {
+		class SuccessCase {
 			@DisplayName("모든 데이터 존재")
 			@Test
 			void haveEveryData() throws IOException {
@@ -154,7 +154,7 @@ class PostServiceTest {
 
 		@DisplayName("실패 케이스")
 		@Nested
-		class failureCase {
+		class FailCase {
 			@DisplayName("USER 미존재")
 			@Test
 			void undefinedUser() {
@@ -183,11 +183,11 @@ class PostServiceTest {
 
 	@DisplayName("포스트 조회")
 	@Nested
-	class findPost {
+	class LookupPost {
 
 		@DisplayName("title 로 조회")
 		@Nested
-		class findPostByTitle {
+		class LookupPostByTitle {
 			@DisplayName("성공케이스")
 			@Test
 			void successCase() {
@@ -252,7 +252,7 @@ class PostServiceTest {
 
 		@DisplayName("content 로 조회")
 		@Nested
-		class findPostByContent {
+		class LookupPostByContent {
 			@DisplayName("성공케이스")
 			@Test
 			void successCase() {
@@ -322,7 +322,7 @@ class PostServiceTest {
 
 		@DisplayName("postId 로 조회")
 		@Nested
-		class findPostByPostId {
+		class LookupPostByPostId {
 			@DisplayName("성공케이스")
 			@Test
 			void successCase() {
@@ -380,7 +380,7 @@ class PostServiceTest {
 
 		@DisplayName("최신 포스트 조회")
 		@Nested
-		class findLatestPosts {
+		class LookupLatestPosts {
 			@DisplayName("성공케이스")
 			@Test
 			void successCase() {
@@ -440,7 +440,7 @@ class PostServiceTest {
 
 		@DisplayName("인기 포스트 조회")
 		@Nested
-		class findTrendPosts {
+		class LookupTrendPosts {
 			@DisplayName("성공케이스")
 			@Test
 			void successCase() {
@@ -499,7 +499,7 @@ class PostServiceTest {
 
 	@DisplayName("포스트 삭제")
 	@Nested
-	class removePost {
+	class RemovePost {
 		@DisplayName("성공 케이스")
 		@Test
 		void successfulCase() {
@@ -550,11 +550,11 @@ class PostServiceTest {
 
 	@DisplayName("포스트 수정")
 	@Nested
-	class editPost {
+	class EditPost {
 
 		@DisplayName("성공케이스")
 		@Nested
-		class successfulCase {
+		class SuccessCase {
 			@DisplayName("데이터 수정")
 			@Test
 			void editEveryData() {
@@ -592,7 +592,7 @@ class PostServiceTest {
 
 		@DisplayName("실패케이스")
 		@Nested
-		class failureCase {
+		class FailCase {
 
 			@DisplayName("포스트 미존재")
 			@Test
@@ -664,10 +664,10 @@ class PostServiceTest {
 
 	@DisplayName("포스트 좋아요")
 	@Nested
-	class likePost {
+	class LikePost {
 		@DisplayName("성공 케이스")
 		@Nested
-		class successCase {
+		class SuccessCase {
 			@DisplayName("좋아요")
 			@Test
 			void likeTest() {
@@ -736,7 +736,7 @@ class PostServiceTest {
 
 		@DisplayName("실패 케이스")
 		@Nested
-		class failureCase {
+		class FailCase {
 			@DisplayName("회원 미존재")
 			@Test
 			void noExistUser() {

@@ -89,10 +89,10 @@ class PostApiControllerTest {
 
 	@DisplayName("포스트 생성")
 	@Nested
-	class createPost {
+	class CreatePost {
 		@DisplayName("성공케이스")
 		@Nested
-		class successCase {
+		class SuccessCase {
 			@DisplayName("썸네일 미존재 케이스")
 			@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 			@Test
@@ -163,11 +163,11 @@ class PostApiControllerTest {
 
 	@DisplayName("포스트 조회")
 	@Nested
-	class getPost {
+	class PostLookup {
 
 		@DisplayName("단건 조회")
 		@Nested
-		class singleLookup {
+		class SingleLookup {
 			@DisplayName("포스트 ID로 조회")
 			@Nested
 			class getPostById {
@@ -192,7 +192,7 @@ class PostApiControllerTest {
 
 		@DisplayName("다건 조회")
 		@Nested
-		class multiLookup {
+		class MultiLookup {
 			@DisplayName("포스트 title 로 조회")
 			@Nested
 			class getPostsByTitle {
@@ -277,7 +277,7 @@ class PostApiControllerTest {
 
 		@DisplayName("최신순으로 테스트 조회")
 		@Nested
-		class searchLatestPosts {
+		class SearchLatestPosts {
 			@DisplayName("성공 케이스")
 			@Test
 			void successCase() throws Exception {
@@ -300,7 +300,7 @@ class PostApiControllerTest {
 
 			@DisplayName("실패 케이스")
 			@Nested
-			class failureCase {
+			class FailCase {
 				@DisplayName("pageNumber 미존재")
 				@Test
 				void successCase() throws Exception {
@@ -324,7 +324,7 @@ class PostApiControllerTest {
 
 		@DisplayName("인기순으로 테스트 조회")
 		@Nested
-		class searchPopularPosts {
+		class SearchPopularPosts {
 			@DisplayName("성공 케이스")
 			@Test
 			void successCase() throws Exception {
@@ -347,7 +347,7 @@ class PostApiControllerTest {
 
 			@DisplayName("실패 케이스")
 			@Nested
-			class failureCase {
+			class FailCase {
 				@DisplayName("pageNumber 미존재")
 				@Test
 				void successCase() throws Exception {
@@ -373,7 +373,7 @@ class PostApiControllerTest {
 
 	@DisplayName("포스트 수정")
 	@Nested
-	class editPost {
+	class EditPost {
 		@DisplayName("성공 케이스")
 		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
@@ -404,7 +404,7 @@ class PostApiControllerTest {
 
 	@DisplayName("포스트 삭제")
 	@Nested
-	class removePost {
+	class RemovePost {
 		@DisplayName("성공 케이스")
 		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
@@ -428,7 +428,7 @@ class PostApiControllerTest {
 
 	@DisplayName("포스트 좋아요")
 	@Nested
-	class likePost {
+	class LikePost {
 		@DisplayName("성공 케이스")
 		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
 		@Test
