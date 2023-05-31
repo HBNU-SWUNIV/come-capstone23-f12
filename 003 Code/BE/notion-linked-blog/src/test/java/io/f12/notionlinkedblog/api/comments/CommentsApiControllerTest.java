@@ -62,6 +62,7 @@ class CommentsApiControllerTest {
 		testPost = postDataRepository.save(Post.builder()
 			.user(testUser)
 			.title("testTitle")
+			.isPublic(true)
 			.content("testContent").build());
 		testComment = commentsDataRepository.save(Comments.builder()
 			.user(testUser)

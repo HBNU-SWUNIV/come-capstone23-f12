@@ -33,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
@@ -82,11 +81,8 @@ class PostServiceTest {
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
 				String path = "path";
-
-				PostCreateDto postDto = PostCreateDto.builder()
-					.title(title)
-					.content(content)
-					.build();
+				String description = "description";
+				String isPublic = "0";
 
 				Post returnPost = Post.builder()
 					.user(user)
@@ -108,7 +104,7 @@ class PostServiceTest {
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(),
+				PostSearchDto createdPost = postService.createPost(fakeId, title, content, description, isPublic,
 					mockMultipartFile);
 
 				//then
@@ -129,10 +125,8 @@ class PostServiceTest {
 
 				String title = "testTitle";
 				String content = "testContent";
-				PostCreateDto postDto = PostCreateDto.builder()
-					.title(title)
-					.content(content)
-					.build();
+				String description = "description";
+				String isPublic = "0";
 
 				Post returnPost = Post.builder()
 					.user(user)
@@ -148,7 +142,7 @@ class PostServiceTest {
 					.willReturn(returnPost);
 
 				//when
-				PostSearchDto createdPost = postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(),
+				PostSearchDto createdPost = postService.createPost(fakeId, title, content, description, isPublic,
 					null);
 				//then
 				assertThat(createdPost).extracting("title").isEqualTo(title);
@@ -167,11 +161,8 @@ class PostServiceTest {
 				//given
 				String title = "testTitle";
 				String content = "testContent";
-				String thumbnail = "testThumbnail";
-				PostCreateDto postDto = PostCreateDto.builder()
-					.title(title)
-					.content(content)
-					.build();
+				String description = "description";
+				String isPublic = "1";
 				Long fakeId = 1L;
 
 				//Mock
@@ -181,7 +172,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.createPost(fakeId, postDto.getTitle(), postDto.getContent(), null);
+					postService.createPost(fakeId, title, content, description, isPublic, null);
 				}).isInstanceOf(NullPointerException.class);
 
 			}
@@ -255,7 +246,7 @@ class PostServiceTest {
 				assertThat(posts).extracting(PostSearchResponseDto::getElementsSize).isEqualTo(2);
 				assertThat(posts.getPosts()).size().isEqualTo(2);
 				assertThat(postSearchDto).extracting("title").isEqualTo(title);
-				assertThat(postSearchDto).extracting("username").isEqualTo(username);
+				assertThat(postSearchDto).extracting("author").isEqualTo(username);
 			}
 		}
 
@@ -324,7 +315,7 @@ class PostServiceTest {
 				assertThat(posts).extracting(PostSearchResponseDto::getElementsSize).isEqualTo(2);
 				assertThat(posts.getPosts()).size().isEqualTo(2);
 				assertThat(postSearchDto).extracting("title").isEqualTo(title);
-				assertThat(postSearchDto).extracting("username").isEqualTo(username);
+				assertThat(postSearchDto).extracting("author").isEqualTo(username);
 
 			}
 		}
@@ -365,7 +356,7 @@ class PostServiceTest {
 
 				//then
 				assertThat(postDto).extracting("title").isEqualTo(title);
-				assertThat(postDto).extracting("username").isEqualTo(username);
+				assertThat(postDto).extracting("author").isEqualTo(username);
 
 			}
 

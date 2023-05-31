@@ -77,6 +77,7 @@ class PostApiControllerTest {
 		testPost = postRepository.save(Post.builder()
 			.user(testUser)
 			.title("testTitle")
+			.isPublic(true)
 			.content("testContent").build());
 	}
 
@@ -103,13 +104,20 @@ class PostApiControllerTest {
 				//mock
 				MockMultipartFile titleData = new MockMultipartFile("title",
 					"testTitle".getBytes());
+				log.info("titleData.getContentType(): {}", titleData.getContentType());
 				MockMultipartFile contentData = new MockMultipartFile("content",
 					"testContent".getBytes());
+				MockMultipartFile descriptionData = new MockMultipartFile("description",
+					"description".getBytes());
+				MockMultipartFile isPublicData = new MockMultipartFile("isPublic",
+					"0".getBytes());
 				//when
 				ResultActions resultActions = mockMvc.perform(
 					multipart(url)
 						.file(titleData)
 						.file(contentData)
+						.file(descriptionData)
+						.file(isPublicData)
 				);
 				//then
 				resultActions.andExpect(status().isCreated());
@@ -131,13 +139,20 @@ class PostApiControllerTest {
 					"testTitle".getBytes());
 				MockMultipartFile contentData = new MockMultipartFile("content",
 					"testContent".getBytes());
+				MockMultipartFile descriptionData = new MockMultipartFile("description",
+					"description".getBytes());
+				MockMultipartFile isPublicData = new MockMultipartFile("isPublic",
+					"0".getBytes());
 
 				//when
 				ResultActions resultActions = mockMvc.perform(
 					multipart(url)
 						.file(fileInfo)
 						.file(titleData)
-						.file(contentData));
+						.file(contentData)
+						.file(descriptionData)
+						.file(isPublicData)
+				);
 				//then
 				resultActions.andExpect(status().isCreated());
 			}
@@ -273,6 +288,7 @@ class PostApiControllerTest {
 				postRepository.save(Post.builder()
 					.user(testUser)
 					.title("testTitle 2")
+					.isPublic(true)
 					.content("testContent").build());
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -294,6 +310,7 @@ class PostApiControllerTest {
 					postRepository.save(Post.builder()
 						.user(testUser)
 						.title("testTitle 2")
+						.isPublic(true)
 						.content("testContent").build());
 					//when
 					ResultActions resultActions = mockMvc.perform(
@@ -318,6 +335,7 @@ class PostApiControllerTest {
 				postRepository.save(Post.builder()
 					.user(testUser)
 					.title("testTitle 2")
+					.isPublic(true)
 					.content("testContent").build());
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -339,6 +357,7 @@ class PostApiControllerTest {
 					postRepository.save(Post.builder()
 						.user(testUser)
 						.title("testTitle 2")
+						.isPublic(true)
 						.content("testContent").build());
 					//when
 					ResultActions resultActions = mockMvc.perform(

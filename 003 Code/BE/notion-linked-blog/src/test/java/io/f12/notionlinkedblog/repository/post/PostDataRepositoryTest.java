@@ -60,6 +60,7 @@ class PostDataRepositoryTest {
 			.user(user)
 			.thumbnailName(thumbnail)
 			.storedThumbnailPath(path)
+			.isPublic(true)
 			.build();
 		post = postDataRepository.save(savedPost);
 
@@ -118,6 +119,7 @@ class PostDataRepositoryTest {
 							.title(title)
 							.content(content)
 							.user(savedUser)
+							.isPublic(true)
 							.build();
 						Post save = postDataRepository.save(post);
 						long searchId = save.getId() + 1;
@@ -225,6 +227,7 @@ class PostDataRepositoryTest {
 								.title(title + i)
 								.content(content)
 								.user(user)
+								.isPublic(true)
 								.build();
 							postDataRepository.save(savedPost);
 						}
@@ -271,9 +274,6 @@ class PostDataRepositoryTest {
 						//given
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
-						// Slice<Post> postByContent = postDataRepository.findByContent(content, paging);
-						// List<PostSearchDto> postSearchDtos = convertPostToPostDto(postByContent);
-						// PostSearchDto post = postSearchDtos.get(0);
 
 						List<Long> ids = postDataRepository.findPostIdsByContent(content, paging);
 						List<Post> posts = postDataRepository.findByIds(ids);
@@ -297,6 +297,7 @@ class PostDataRepositoryTest {
 								.title(title + i)
 								.content(content + i)
 								.user(user)
+								.isPublic(true)
 								.build();
 							postDataRepository.save(savedPost);
 						}
@@ -328,6 +329,7 @@ class PostDataRepositoryTest {
 						.title(title + " " + i)
 						.content(content)
 						.user(user)
+						.isPublic(true)
 						.build();
 					postDataRepository.save(newPost);
 				}
