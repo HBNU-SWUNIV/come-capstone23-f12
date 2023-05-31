@@ -1,9 +1,12 @@
 package io.f12.notionlinkedblog.api.post;
 
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -29,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
@@ -37,9 +41,11 @@ import io.f12.notionlinkedblog.domain.user.dto.info.UserSearchDto;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.service.post.PostService;
+import lombok.extern.slf4j.Slf4j;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@Slf4j
 class PostApiControllerTest {
 
 	@Autowired
@@ -83,31 +89,52 @@ class PostApiControllerTest {
 	@DisplayName("포스트 생성")
 	@Nested
 	class createPost {
-		@DisplayName("성공 케이스")
-		@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-		@Test
-		void successCase() throws Exception {
-			//given
-			final String url = Endpoint.Api.POST;
-			UserSearchDto user = userDataRepository.findUserById(testUser.getId())
-				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		@DisplayName("성공케이스")
+		@Nested
+		class successCase {
+			@DisplayName("썸네일 미존재 케이스")
+			@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+			@Test
+			void createPostWithoutThumbnail() throws Exception {
+				//given
+				final String url = Endpoint.Api.POST;
+				UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+					.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+				//mock
 
-			PostCreateDto body = PostCreateDto.builder()
-				.title("testTitle")
-				.content("testContent")
-				.thumbnail("testThumbnail")
-				.build();
-			String requestBody = objectMapper.writeValueAsString(body);
-			//mock
+				MockMultipartFile createInfo = new MockMultipartFile("dto", "", APPLICATION_JSON_VALUE,
+					"{\"title\":\"testTitle\", \"content\": \"testContent\"}".getBytes());
 
-			//when
-			ResultActions resultActions = mockMvc.perform(
-				post(url)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(requestBody)
-			);
-			//then
-			resultActions.andExpect(status().isCreated());
+				//when
+				ResultActions resultActions = mockMvc.perform(
+					multipart(url).file(createInfo).accept(APPLICATION_JSON_VALUE));
+				//then
+				resultActions.andExpect(status().isCreated());
+			}
+
+			@DisplayName("썸네일 존재 케이스")
+			@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+			@Test
+			void createPostWithThumbnail() throws Exception {
+				//given
+				final String url = Endpoint.Api.POST;
+				UserSearchDto user = userDataRepository.findUserById(testUser.getId())
+					.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+				File file = new ClassPathResource("static/images/test.jpg").getFile();
+				//mock
+				MockMultipartFile fileInfo = new MockMultipartFile("file", "", IMAGE_JPEG_VALUE,
+					Files.readAllBytes(file.toPath()));
+
+				MockMultipartFile createInfo = new MockMultipartFile("dto", "", APPLICATION_JSON_VALUE,
+					"{\"title\":\"testTitle\", \"content\": \"testContent\"}".getBytes());
+
+				//when
+				ResultActions resultActions = mockMvc.perform(
+					multipart(url).file(fileInfo).file(createInfo).accept(APPLICATION_JSON_VALUE));
+				//then
+				resultActions.andExpect(status().isCreated());
+			}
+
 		}
 
 	}
@@ -266,7 +293,7 @@ class PostApiControllerTest {
 						get(url)
 					);
 					//then
-					resultActions.andExpect(status().isNotFound());
+					resultActions.andExpect(status().isBadRequest());
 				}
 			}
 		}
@@ -311,7 +338,7 @@ class PostApiControllerTest {
 						get(url)
 					);
 					//then
-					resultActions.andExpect(status().isNotFound());
+					resultActions.andExpect(status().isBadRequest());
 				}
 			}
 		}

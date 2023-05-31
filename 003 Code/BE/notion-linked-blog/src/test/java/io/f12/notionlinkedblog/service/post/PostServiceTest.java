@@ -85,7 +85,6 @@ class PostServiceTest {
 				PostCreateDto postDto = PostCreateDto.builder()
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
 					.build();
 
 				Post returnPost = Post.builder()
@@ -169,7 +168,6 @@ class PostServiceTest {
 				PostCreateDto postDto = PostCreateDto.builder()
 					.title(title)
 					.content(content)
-					.thumbnail(thumbnail)
 					.build();
 				Long fakeId = 1L;
 
