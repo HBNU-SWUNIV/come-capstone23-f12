@@ -65,7 +65,7 @@ public class PostApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestPart(value = "file", required = false) MultipartFile file,
+		@RequestPart(value = "thumbnail", required = false) MultipartFile file,
 		@RequestPart(value = "title") String title,
 		@RequestPart(value = "content") String content) throws IOException {
 		return postService.createPost(loginUser.getUser().getId(), title, content, file);
