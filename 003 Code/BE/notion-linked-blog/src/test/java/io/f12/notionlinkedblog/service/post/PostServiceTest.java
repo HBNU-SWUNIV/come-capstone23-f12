@@ -21,11 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -37,6 +33,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
+import io.f12.notionlinkedblog.domain.post.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
@@ -817,22 +814,14 @@ class PostServiceTest {
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
-				Post post = Post.builder()
-					.user(user)
-					.title("testTitle")
-					.content("testContent")
-					.thumbnailName(imageName)
-					.storedThumbnailPath("path.png")
-					.build();
 				//mock
 				given(postDataRepository.findThumbnailPathWithName(imageName))
 					.willReturn("path.png");
 				//when
-				ResponseEntity<Resource> resourceResponseEntity = postService.readImageFile(imageName);
+				ThumbnailReturnDto thumbnailReturnDto = postService.readImageFile(imageName);
 
 				//then
-				assertThat(resourceResponseEntity).extracting("statusCode").isEqualTo(HttpStatus.OK);
-				assertThat(resourceResponseEntity.getHeaders().getContentType()).isEqualTo(MediaType.IMAGE_PNG);
+				assertThat(thumbnailReturnDto).extracting("thumbnailPath").isEqualTo("path.png");
 			}
 		}
 
@@ -857,7 +846,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					ResponseEntity<Resource> resourceResponseEntity = postService.readImageFile(imageName);
+					postService.readImageFile(imageName);
 				}).isInstanceOf(IllegalArgumentException.class);
 			}
 		}
