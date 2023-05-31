@@ -1,6 +1,7 @@
 package io.f12.notionlinkedblog.service.post;
 
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -739,11 +740,76 @@ class PostServiceTest {
 				postService.likeStatusChange(fakePostId, fakeUserId);
 			}
 		}
+
+		@DisplayName("실패 케이스")
+		@Nested
+		class failureCase {
+			@DisplayName("회원 미존재")
+			@Test
+			void noExistUser() {
+				//given
+				Long fakeUserId = 1L;
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+
+				Long fakePostId = 1L;
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.build();
+				//mock
+				given(postDataRepository.findById(fakePostId))
+					.willReturn(Optional.of(post));
+				given(userDataRepository.findById(fakeUserId))
+					.willReturn(Optional.empty());
+				//when
+				assertThatThrownBy(() -> {
+					postService.likeStatusChange(fakePostId, fakeUserId);
+				})
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining(USER_NOT_EXIST);
+
+			}
+
+			@DisplayName("포스트 미존재")
+			@Test
+			void noExistPost() {
+				//given
+				Long fakeUserId = 1L;
+				User user = User.builder()
+					.username("tester")
+					.email("test@gmail.com")
+					.password("1234")
+					.build();
+
+				Long fakePostId = 1L;
+				Post post = Post.builder()
+					.user(user)
+					.title("testTitle")
+					.content("testContent")
+					.build();
+				//mock
+				given(postDataRepository.findById(fakePostId))
+					.willReturn(Optional.empty());
+				//when
+				assertThatThrownBy(() -> {
+					postService.likeStatusChange(fakePostId, fakeUserId);
+				})
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining(POST_NOT_EXIST);
+
+			}
+		}
+
 	}
 
 	@DisplayName("썸네일 조회")
 	@Nested
-	class readImageFile {
+	class ThumbnailLookup {
 
 		@DisplayName("성공 케이스")
 		@Nested

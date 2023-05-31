@@ -421,7 +421,7 @@ class PostApiControllerTest {
 
 	@DisplayName("썸네일 실제 조회")
 	@Nested
-	class getThumbnail {
+	class ThumbnailLookup {
 		@DisplayName("성공 케이스")
 		@Test
 		void successCase() throws Exception {
