@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Button, Space} from "antd";
 
 export const CoverDiv = styled.div`
   display: flex;
@@ -12,3 +13,22 @@ export const UploaderDiv = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const WriteDiv = styled.div`
+		display: flex;
+		flex-direction: column;
+    margin: 30px;
+	`;
+
+export const SpaceDiv = styled.div`
+		width: 50%;
+	`;
+
+export const TempButton = styled(Button)`
+		margin: 10px;
+	`;
+
+export const ButtonSpace = styled(Space)`
+		display: flex;
+		justify-content: space-between;
+	`;

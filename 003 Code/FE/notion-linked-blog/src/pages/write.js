@@ -4,8 +4,14 @@ import React, {useState} from "react";
 import dynamic from "next/dynamic";
 import {handleInput} from "@/components/auth/common";
 import PostWriteSetting from "@/components/post/PostWriteSetting";
-import {Button, Input, Space} from "antd";
+import {Button, Input} from "antd";
 import Link from "next/link";
+import {
+	ButtonSpace,
+	SpaceDiv,
+	TempButton,
+	WriteDiv,
+} from "@/components/post/Post";
 
 const PostEditor = dynamic(
 	() => import("@/components/post/PostWrite"),
@@ -26,23 +32,22 @@ const Write = () => {
 		setContent(content);
 	};
 
-
 	return (
 		isDoneWrite ?
 			<PostWriteSetting title={title} content={content} isDoneWritePost={isDoneWritePost}/> :
-			<div style={{display: "flex", flexDirection: "column", margin: "30px"}}>
+			<WriteDiv>
 				<Input bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle} style={{fontSize: "3rem"}}></Input>
 				<PostEditor content={content} editContent={editContent}/>
-				<div className="space-align-block" style={{width: "50%"}}>
-					<Space align="center" style={{display: "flex", justifyContent: "space-between"}}>
+				<SpaceDiv className="space-align-block">
+					<ButtonSpace align="center">
 						<Link href={"./"}><Button>나가기</Button></Link>
 						<div>
-							<Button type="primary" style={{margin: "10px"}}>임시저장</Button>
+							<TempButton type="primary">임시저장</TempButton>
 							<Button type="primary" onClick={isDoneWritePost}>출간하기</Button>
 						</div>
-					</Space>
-				</div>
-			</div>
+					</ButtonSpace>
+				</SpaceDiv>
+			</WriteDiv>
 	);
 };
 
