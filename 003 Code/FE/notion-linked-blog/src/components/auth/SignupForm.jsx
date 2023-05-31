@@ -32,7 +32,7 @@ export default function SignupForm({switchForm}) {
 	const [password, onChangePassword] = handleInput("");
 	const [signupLoading, setSignupLoading] = useState(false);
 	const [isSignup, setIsSignup] = useState(false);
-	const [err, setError] = useState("");
+	const [isCorrectVerificationCode, setIsCorrectVerificationCode] = useState(true);
 
 	const handleSignup = async () => {
 		setSignupLoading(true);
@@ -66,7 +66,7 @@ export default function SignupForm({switchForm}) {
 			setIsRequestSendVerifyCode(false);
 		} catch (e) {
 			setStartCountdown(true);
-			setError("인증코드가 올바르지 않습니다.");
+			setIsCorrectVerificationCode(false);
 			console.log("인증 코드 검증 에러", e);
 		}
 	};
@@ -94,9 +94,8 @@ export default function SignupForm({switchForm}) {
 	};
 
 	useEffect(() => {
-		setError("");
+		setIsCorrectVerificationCode(true);
 	}, [verificationCode]);
-
 	return (
 		<StyledSpace direction="vertical" size="large">
 			<Text>이메일로 회원가입</Text>
@@ -106,20 +105,28 @@ export default function SignupForm({switchForm}) {
 				<Form.Item
 					label="이메일"
 					name="email"
-					rules={[{required: true, pattern: /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i, message: "올바른 이메일을 입력하세요"}]}
+					rules={[{required: true, pattern: /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i, message: "이메일 형식에 맞지 않는 메일 주소입니다. 다시 입력해 주세요."}]}
 				>
 					<Input onChange={onChangeEmail} value={email} placeholder="인증 코드를 받을 이메일을 입력하세요" disabled={requestCode}/>
 				</Form.Item>
-				{!isVerified && requestCode && (
+				{!isVerified && requestCode && (isCorrectVerificationCode ?
 					<Form.Item
 						label="인증 코드"
 						name="verificationCode"
-						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해주세요"}]}
+						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해 주세요"}]}
+					>
+						<Input onChange={onChangeVerificationCode} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
+					</Form.Item> :
+					<Form.Item
+						label="인증 코드"
+						name="verificationCode"
+						rules={[{required: true, pattern: /\S/g, message: "인증 코드를 입력해 주세요"}]}
+						validateStatus="error"
+						help="올바른 인증코드를 입력해주세요"
 					>
 						<Input onChange={onChangeVerificationCode} value={verificationCode} placeholder="전송된 인증 코드를 입력해 주세요"/>
 					</Form.Item>
 				)}
-				<div>{err}</div>
 				{isVerified && (
 					<>
 						<Form.Item
@@ -141,12 +148,12 @@ export default function SignupForm({switchForm}) {
 							name="passwordForConfirm"
 							dependencies={["password"]}
 							rules={[
-								{required: true, pattern: /\S/g, message: "비밀번호 확인을 해주세요"}, ({getFieldValue}) => ({
+								{required: true, pattern: /\S/g, message: "비밀번호가 일치하지 않습니다."}, ({getFieldValue}) => ({
 									validator(_, value) {
 										if (!value || getFieldValue("password") === value) {
 											return Promise.resolve();
 										}
-										return Promise.reject(new Error("비밀번호가 일치하지 않습니다"));
+										return Promise.reject(new Error("비밀번호가 일치하지 않습니다."));
 									},
 								}),
 							]}
