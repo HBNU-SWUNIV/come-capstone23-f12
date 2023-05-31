@@ -120,7 +120,7 @@ public class PostApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchResponseDto.class,
 					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
-		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재",
+		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재 혹은 파라미터 타입 오류",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
@@ -135,7 +135,7 @@ public class PostApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchResponseDto.class,
 					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
-		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재",
+		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재 혹은 파라미터 타입 오류",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
