@@ -37,8 +37,8 @@ const PostWriteSetting = props => {
 		formData.append("title", title);
 		formData.append("content", content);
 		formData.append("thumbnail", thumbnail);
-		formData.append("description", description.toString());
-		formData.append("isPublic", isPublic.toString());
+		// formData.append("description", description.toString());
+		// formData.append("isPublic", isPublic.toString());
 
 		try {
 			await requestSubmitPostAPI(formData);
