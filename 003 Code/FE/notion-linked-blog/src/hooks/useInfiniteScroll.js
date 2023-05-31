@@ -6,7 +6,7 @@ export default function useInfiniteScroll({
 	const [count, setCount] = useState(0);
 	const currentChild = useRef(null);
 
-	const observer = useMemo(() => new IntersectionObserver(
+	const intersectionObserver = useMemo(() => new IntersectionObserver(
 		(entries, observerr) => {
 			if (target?.current === null) {
 				return;
@@ -27,12 +27,12 @@ export default function useInfiniteScroll({
 
 		if (observeChild && currentChild.current !== observeChild) {
 			currentChild.current = observeChild;
-			observer.observe(observeChild);
+			intersectionObserver.observe(observeChild);
 		}
 
 		return () => {
-			if (target.current !== null && observer) {
-				observer.unobserve(target.current);
+			if (target.current !== null && intersectionObserver) {
+				intersectionObserver.unobserve(target.current);
 			}
 		};
 	}, [count, targetArray, target, endPoint]);
