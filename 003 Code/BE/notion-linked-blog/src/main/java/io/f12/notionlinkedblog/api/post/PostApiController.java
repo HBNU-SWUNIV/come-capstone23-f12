@@ -119,7 +119,10 @@ public class PostApiController {
 		@ApiResponse(responseCode = "200", description = "포스트 조회 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchResponseDto.class,
-					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다")))
+					description = "requestThumbnailLink 은 해당 API 로 이미지를 다시 요청해야 합니다"))),
+		@ApiResponse(responseCode = "400", description = "파라미터(페이지 번호) 미존재",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchResponseDto searchLatestPosts(@PathVariable Integer pageNumber) {
 		return postService.getLatestPosts(pageNumber);
