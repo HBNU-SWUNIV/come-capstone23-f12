@@ -27,7 +27,6 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
@@ -48,7 +47,7 @@ public class PostService {
 	private final LikeDataRepository likeDataRepository;
 	private final int pageSize = 20;
 
-	public PostSearchDto createPost(Long userId, PostCreateDto postCreateDto, MultipartFile multipartFile)
+	public PostSearchDto createPost(Long userId, String title, String content, MultipartFile multipartFile)
 		throws IOException {
 		User findUser = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -68,8 +67,8 @@ public class PostService {
 		}
 		Post post = Post.builder()
 			.user(findUser)
-			.title(postCreateDto.getTitle())
-			.content(postCreateDto.getContent())
+			.title(title)
+			.content(content)
 			.storedThumbnailPath(fullPath)
 			.thumbnailName(newName)
 			.viewCount(0L)

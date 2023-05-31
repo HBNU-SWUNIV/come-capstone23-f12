@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
-import io.f12.notionlinkedblog.domain.post.dto.PostCreateDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
@@ -66,9 +65,10 @@ public class PostApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestPart(value = "dto") @Validated PostCreateDto postCreateDto,
-		@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-		return postService.createPost(loginUser.getUser().getId(), postCreateDto, file);
+		@RequestPart(value = "file", required = false) MultipartFile file,
+		@RequestPart(value = "title") String title,
+		@RequestPart(value = "content") String content) throws IOException {
+		return postService.createPost(loginUser.getUser().getId(), title, content, file);
 	}
 
 	@GetMapping("/{id}")
