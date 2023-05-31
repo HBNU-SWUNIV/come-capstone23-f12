@@ -36,10 +36,12 @@ import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class PostService {
 
 	private final PostDataRepository postDataRepository;
@@ -47,10 +49,18 @@ public class PostService {
 	private final LikeDataRepository likeDataRepository;
 	private final int pageSize = 20;
 
-	public PostSearchDto createPost(Long userId, String title, String content, MultipartFile multipartFile)
-		throws IOException {
+	public PostSearchDto createPost(Long userId, String title, String content, String description,
+		String stringIsPublic, MultipartFile multipartFile) throws IOException {
 		User findUser = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		boolean isPublic = false;
+
+		if (stringIsPublic.equals("0") || stringIsPublic.equals("1")) {
+			isPublic = stringIsPublic.equals("0");
+		} else {
+			throw new IllegalArgumentException("isPublic Value is Not 0 or 1");
+		}
 
 		String systemPath = System.getProperty("user.dir");
 
@@ -62,9 +72,10 @@ public class PostService {
 		if (multipartFile != null) {
 			fullPath = getSavedDirectory(multipartFile, systemPath, fileName);
 			multipartFile.transferTo(new File(fullPath));
-			newName = fileName + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+			newName = fileName + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 			requestThumbnailLink = Endpoint.Api.REQUEST_IMAGE + newName;
 		}
+
 		Post post = Post.builder()
 			.user(findUser)
 			.title(title)
@@ -72,16 +83,22 @@ public class PostService {
 			.storedThumbnailPath(fullPath)
 			.thumbnailName(newName)
 			.viewCount(0L)
+			.description(description)
+			.isPublic(isPublic)
 			.build();
 
 		Post savedPost = postDataRepository.save(post);
 
 		return PostSearchDto.builder()
-			.username(savedPost.getUser().getUsername())
+			.postId(savedPost.getId())
 			.title(savedPost.getTitle())
 			.content(savedPost.getContent())
-			.requestThumbnailLink(requestThumbnailLink)
 			.viewCount(savedPost.getViewCount())
+			.likes(0)
+			.requestThumbnailLink(requestThumbnailLink)
+			.description(savedPost.getDescription())
+			.createdAt(savedPost.getCreatedAt())
+			.author(savedPost.getUser().getUsername())
 			.build();
 	}
 
@@ -113,19 +130,30 @@ public class PostService {
 		post.addViewCount();
 
 		String thumbnailLink = null;
+		Integer likeSize = null;
+		Integer commentsSize = null;
 
 		if (post.getThumbnailName() != null) {
 			thumbnailLink = Endpoint.Api.REQUEST_IMAGE + post.getThumbnailName();
 		}
+		if (post.getLikes() != null) {
+			likeSize = post.getLikes().size();
+		}
+		if (post.getComments() != null) {
+			commentsSize = post.getComments().size();
+		}
 
 		return PostSearchDto.builder()
 			.postId(post.getId())
-			.username(post.getUser().getUsername())
 			.title(post.getTitle())
 			.content(post.getContent())
-			.requestThumbnailLink(thumbnailLink)
 			.viewCount(post.getViewCount())
-			.likes(post.getLikes().size())
+			.requestThumbnailLink(thumbnailLink)
+			.description(post.getDescription())
+			.createdAt(post.getCreatedAt())
+			.countOfComments(commentsSize)
+			.author(post.getUser().getUsername())
+			.likes(likeSize)
 			.build();
 	}
 
@@ -204,14 +232,25 @@ public class PostService {
 			if (p.getThumbnailName() != null) {
 				thumbnailLink = Endpoint.Api.REQUEST_IMAGE + p.getThumbnailName();
 			}
+			Integer likeSize = null;
+			if (p.getLikes() != null) {
+				likeSize = p.getLikes().size();
+			}
+			Integer commentsSize = null;
+			if (p.getComments() != null) {
+				commentsSize = p.getComments().size();
+			}
 			return PostSearchDto.builder()
 				.postId(p.getId())
-				.username(p.getUser().getUsername())
 				.title(p.getTitle())
 				.content(p.getContent())
-				.requestThumbnailLink(thumbnailLink)
 				.viewCount(p.getViewCount())
-				.likes(p.getLikes().size())
+				.likes(likeSize)
+				.requestThumbnailLink(thumbnailLink)
+				.description(p.getDescription())
+				.createdAt(p.getCreatedAt())
+				.countOfComments(commentsSize)
+				.author(p.getUser().getUsername())
 				.build();
 		}).collect(Collectors.toList());
 	}

@@ -62,13 +62,18 @@ public class PostApiController {
 				schema = @Schema(implementation = AuthenticationFailureDto.class))),
 		@ApiResponse(responseCode = "404", description = "회원 데이터 미존재",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class))),
+		@ApiResponse(responseCode = "404", description = "isPublic 값이 0, 1 이 아닌경우",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto createPost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestPart(value = "thumbnail", required = false) MultipartFile file,
 		@RequestPart(value = "title") String title,
-		@RequestPart(value = "content") String content) throws IOException {
-		return postService.createPost(loginUser.getUser().getId(), title, content, file);
+		@RequestPart(value = "content") String content,
+		@RequestPart(value = "description", required = false) String description,
+		@RequestPart(value = "isPublic") String isPublic) throws IOException {
+		return postService.createPost(loginUser.getUser().getId(), title, content, description, isPublic, file);
 	}
 
 	@GetMapping("/{id}")
@@ -82,6 +87,9 @@ public class PostApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class))),
 		@ApiResponse(responseCode = "404", description = "Post 데이터 미존재",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class))),
+		@ApiResponse(responseCode = "415", description = "필수 데이터 미존재",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
