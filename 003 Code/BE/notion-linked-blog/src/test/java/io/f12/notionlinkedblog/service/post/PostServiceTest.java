@@ -79,7 +79,7 @@ class PostServiceTest {
 				String thumbnail = "testThumbnail";
 				String path = "path";
 				String description = "description";
-				String isPublic = "0";
+				Boolean isPublic = true;
 
 				Post returnPost = Post.builder()
 					.user(user)
@@ -123,7 +123,7 @@ class PostServiceTest {
 				String title = "testTitle";
 				String content = "testContent";
 				String description = "description";
-				String isPublic = "0";
+				Boolean isPublic = true;
 
 				Post returnPost = Post.builder()
 					.user(user)
@@ -159,7 +159,7 @@ class PostServiceTest {
 				String title = "testTitle";
 				String content = "testContent";
 				String description = "description";
-				String isPublic = "1";
+				Boolean isPublic = true;
 				Long fakeId = 1L;
 
 				//Mock
