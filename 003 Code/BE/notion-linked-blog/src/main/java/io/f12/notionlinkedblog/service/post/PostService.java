@@ -47,18 +47,10 @@ public class PostService {
 	private final int pageSize = 20;
 
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
-		String stringIsPublic, MultipartFile multipartFile) throws IOException {
+		Boolean isPublic, MultipartFile multipartFile) throws IOException {
 		User findUser = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-
-		boolean isPublic = false;
-
-		if (stringIsPublic.equals("0") || stringIsPublic.equals("1")) {
-			isPublic = stringIsPublic.equals("0");
-		} else {
-			throw new IllegalArgumentException("isPublic Value is Not 0 or 1");
-		}
-
+		
 		String systemPath = System.getProperty("user.dir");
 
 		String fileName = makeFileName();
