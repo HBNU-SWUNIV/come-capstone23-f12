@@ -76,7 +76,7 @@ public class PostApiController {
 		@RequestPart(value = "content") String content,
 		@RequestPart(value = "description", required = false) String description,
 		@RequestPart(value = "isPublic") String stringIsPublic) throws IOException {
-		boolean isPublic = changeIsPublicToBoolean(stringIsPublic);
+		boolean isPublic = validateIsPublic(stringIsPublic);
 		return postService.createPost(loginUser.getUser().getId(), title, content, description, isPublic, file);
 	}
 
@@ -239,7 +239,7 @@ public class PostApiController {
 
 	}
 
-	private boolean changeIsPublicToBoolean(String isPublic) {
+	private boolean validateIsPublic(String isPublic) {
 		boolean booleanIsPublic = false;
 
 		if (isPublic.equals("0") || isPublic.equals("1")) {
