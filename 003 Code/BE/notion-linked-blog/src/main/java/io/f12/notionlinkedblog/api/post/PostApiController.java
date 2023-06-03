@@ -76,8 +76,9 @@ public class PostApiController {
 		@RequestPart(value = "content") String content,
 		@RequestPart(value = "description", required = false) String description,
 		@RequestPart(value = "isPublic") String stringIsPublic) throws IOException {
-		boolean isPublic = validateIsPublic(stringIsPublic);
-		return postService.createPost(loginUser.getUser().getId(), title, content, description, isPublic, file);
+		validateIsPublic(stringIsPublic);
+		return postService.createPost(loginUser.getUser().getId(), title, content, description,
+			isPublic(stringIsPublic), file);
 	}
 
 	@GetMapping("/{id}")
@@ -239,14 +240,13 @@ public class PostApiController {
 
 	}
 
-	private boolean validateIsPublic(String isPublic) {
-		boolean booleanIsPublic = false;
-
-		if (isPublic.equals("0") || isPublic.equals("1")) {
-			booleanIsPublic = isPublic.equals("0");
-		} else {
-			throw new IllegalArgumentException("isPublic Value is Not 0 or 1");
+	private void validateIsPublic(String isPublic) {
+		if (!(isPublic.equals("0") || isPublic.equals("1"))) {
+			throw new IllegalArgumentException("isPublic must be 0 or 1");
 		}
-		return booleanIsPublic;
+	}
+
+	private boolean isPublic(String isPublic) {
+		return isPublic.equals("0");
 	}
 }
