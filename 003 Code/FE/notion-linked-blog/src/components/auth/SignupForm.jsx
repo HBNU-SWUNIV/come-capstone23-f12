@@ -192,6 +192,6 @@ export default function SignupForm({switchForm}) {
 					<Button type="link" onClick={switchForm}>로그인</Button>
 				</StyledText>
 			</StyledDiv>
-		</StyledSpace >
+		</StyledSpace>
 	);
 }
