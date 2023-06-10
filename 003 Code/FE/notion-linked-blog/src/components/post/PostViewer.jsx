@@ -34,7 +34,7 @@ const StyledTitle = styled.div`
 	font-size: 3rem;
 `;
 
-const StyledSubTitle = styled.dev`
+const StyledSubTitle = styled.div`
 `;
 
 export default function PostViewer({post}) {
