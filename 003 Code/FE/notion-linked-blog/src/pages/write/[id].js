@@ -73,10 +73,10 @@ const Write = () => {
 
 	return (
 		isDoneWrite ?
-			<PostWriteSetting title={title} content={content} isDoneWritePost={isDoneWritePost}/> :
+			<PostWriteSetting title={title} content={content} isDoneWritePost={isDoneWritePost} /> :
 			<WriteDiv>
-				<StyledInput bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle}></StyledInput>
-				<PostEditor content={content} editContent={editContent}/>
+				<StyledInput bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle} />
+				<PostEditor content={content} editContent={editContent} />
 				<ButtonSpace align="center">
 					<Link href={"/"}><Button>나가기</Button></Link>
 					<StyledButtonDiv>
