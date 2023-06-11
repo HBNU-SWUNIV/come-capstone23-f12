@@ -88,6 +88,7 @@ export default function PostViewer({post}) {
 							postId: post.postId,
 							title: post.title,
 							content: post.content,
+							author: post.author,
 						},
 					}}
 					as={`/write/${post.postId}`}>

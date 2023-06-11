@@ -105,7 +105,7 @@ function AppHeader() {
 	const handleLogout = useCallback(async () => {
 		await logoutAPI();
 		dispatch(logout());
-		router.replace("/");
+		await router.replace("/");
 	}, []);
 
 	const items = [
