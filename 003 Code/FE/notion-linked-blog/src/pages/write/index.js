@@ -4,12 +4,13 @@ import React, {useState} from "react";
 import dynamic from "next/dynamic";
 import {handleInput} from "@/components/auth/common";
 import PostWriteSetting from "@/components/post/PostWriteSetting";
-import {Button, Input} from "antd";
+import {Button} from "antd";
 import Link from "next/link";
 import {
 	ButtonSpace,
 	TempButton,
 	WriteDiv,
+	StyledInput,
 } from "@/components/post/Post";
 
 const PostEditor = dynamic(
@@ -35,7 +36,7 @@ const Write = () => {
 		isDoneWrite ?
 			<PostWriteSetting title={title} content={content} isDoneWritePost={isDoneWritePost}/> :
 			<WriteDiv>
-				<Input bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle} style={{fontSize: "3rem"}}></Input>
+				<StyledInput bordered={false} value={title} placeholder="제목을 입력하세요" onChange={onChangeTitle}></StyledInput>
 				<PostEditor content={content} editContent={editContent}/>
 				<ButtonSpace align="center">
 					<Link href={"./"}><Button>나가기</Button></Link>
