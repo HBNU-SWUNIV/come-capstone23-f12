@@ -26,6 +26,7 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
 import org.springframework.util.ReflectionUtils;
 
 import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
+import io.f12.notionlinkedblog.security.common.dto.AuthenticationFailureDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.filter.AjaxEmailPasswordAuthenticationFilter;
 import io.f12.notionlinkedblog.security.login.check.filter.LoginStatusCheckingFilter;
@@ -83,10 +84,10 @@ public class SwaggerConfig {
 	}
 
 	private void addNotFoundApiResponse(Operation operation) {
-		String statusCode = "405";
+		String statusCode = "404";
 		String description = "존재하지 않는 자원 접근";
 
-		setOperation(operation, statusCode, description, APPLICATION_JSON_VALUE);
+		setOperation(operation, statusCode, description, APPLICATION_JSON_VALUE, CommonErrorResponse.class);
 	}
 
 	private void addUnAuthorizedApiResponse(Operation operation, List<Class<?>> params) {
@@ -94,22 +95,23 @@ public class SwaggerConfig {
 			String statusCode = "401";
 			String description = "인증 실패";
 
-			setOperation(operation, statusCode, description, APPLICATION_JSON_VALUE);
+			setOperation(operation, statusCode, description, APPLICATION_JSON_VALUE, AuthenticationFailureDto.class);
 		}
 	}
 
-	private void setOperation(Operation operation, String statusCode, String description, String mediaTypeName) {
-		Schema<?> notFoundSchema;
+	private void setOperation(
+		Operation operation, String statusCode, String description, String mediaTypeName, Class<?> clazz) {
+		Schema<?> schema;
 		MediaType mediaType = new MediaType();
 
 		Content content = new Content();
 		content.addMediaType(mediaTypeName, mediaType);
 		try {
-			notFoundSchema = createSchemaWithDefaultType(CommonErrorResponse.class);
+			schema = createSchemaWithDefaultType(clazz);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		mediaType.setSchema(notFoundSchema);
+		mediaType.setSchema(schema);
 
 		ApiResponse notFoundApiResponse = new ApiResponse()
 			.description(description)
