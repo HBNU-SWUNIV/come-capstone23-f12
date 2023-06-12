@@ -42,7 +42,7 @@ export default function PostCard({post}) {
 		<StyledCard
 			hoverable
 			bordered={false}
-			cover={<StyledCover />}
+			cover={<StyledCover src={post.thumbnail} />}
 			actions={
 				[
 					<StyledDiv key="left">
