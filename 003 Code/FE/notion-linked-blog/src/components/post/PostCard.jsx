@@ -1,8 +1,6 @@
 import {Card, Typography} from "antd";
 import {HeartFilled} from "@ant-design/icons";
 import {styled} from "styled-components";
-import {useEffect, useState} from "react";
-import {getThumbnail} from "@/apis/post";
 import convertKRTimeStyle from "@/utils/time";
 
 const {Meta} = Card;
