@@ -32,6 +32,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +51,7 @@ public class PostService {
 		Boolean isPublic, MultipartFile multipartFile) throws IOException {
 		User findUser = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-		
+
 		String systemPath = System.getProperty("user.dir");
 
 		String fileName = makeFileName();
@@ -79,6 +80,7 @@ public class PostService {
 		Post savedPost = postDataRepository.save(post);
 
 		return PostSearchDto.builder()
+			.isLiked(false)
 			.postId(savedPost.getId())
 			.title(savedPost.getTitle())
 			.content(savedPost.getContent())
@@ -113,14 +115,22 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
-	public PostSearchDto getPostDtoById(Long id) { //DONE
-		Post post = postDataRepository.findById(id)
+	public PostSearchDto getPostDtoById(Long postId, LoginUser loginUser) { //DONE
+		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		post.addViewCount();
+
+		Long userId = null;
+		try {
+			userId = loginUser.getUser().getId();
+		} catch (Exception e) {
+			log.info("UserIsNotExist: {}", e.getMessage());
+		}
 
 		String thumbnailLink = null;
 		Integer likeSize = null;
 		Integer commentsSize = null;
+		LikeSearchDto likeInfo = null;
 
 		if (post.getThumbnailName() != null) {
 			thumbnailLink = Endpoint.Api.REQUEST_IMAGE + post.getThumbnailName();
@@ -131,8 +141,13 @@ public class PostService {
 		if (post.getComments() != null) {
 			commentsSize = post.getComments().size();
 		}
+		if (userId != null) {
+			likeInfo = likeDataRepository.findByUserIdAndPostId(userId, postId)
+				.orElse(null);
+		}
 
 		return PostSearchDto.builder()
+			.isLiked(likeInfo != null)
 			.postId(post.getId())
 			.title(post.getTitle())
 			.content(post.getContent())
@@ -218,17 +233,20 @@ public class PostService {
 	private List<PostSearchDto> convertPostToPostDto(List<Post> posts) {
 		return posts.stream().map(p -> {
 			String thumbnailLink = null;
+			Integer commentsSize = null;
+			Integer likeSize = null;
+
 			if (p.getThumbnailName() != null) {
 				thumbnailLink = Endpoint.Api.REQUEST_IMAGE + p.getThumbnailName();
 			}
-			Integer likeSize = null;
 			if (p.getLikes() != null) {
 				likeSize = p.getLikes().size();
 			}
-			Integer commentsSize = null;
+
 			if (p.getComments() != null) {
 				commentsSize = p.getComments().size();
 			}
+
 			return PostSearchDto.builder()
 				.postId(p.getId())
 				.title(p.getTitle())
@@ -265,6 +283,6 @@ public class PostService {
 
 	private String getSavedDirectory(MultipartFile multipartFile, String systemPath, String fileName) {
 		return
-			systemPath + "/" + fileName + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+			systemPath + "\\" + fileName + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 	}
 }
