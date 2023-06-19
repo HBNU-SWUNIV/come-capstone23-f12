@@ -24,7 +24,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
@@ -69,6 +68,7 @@ class PostServiceTest {
 				//given
 				Long fakeId = 1L;
 				User user = User.builder()
+					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
@@ -88,8 +88,6 @@ class PostServiceTest {
 					.thumbnailName(thumbnail)
 					.storedThumbnailPath(path)
 					.build();
-
-				ReflectionTestUtils.setField(user, "id", fakeId);
 
 				File file = new ClassPathResource("static/images/test.jpg").getFile();
 
@@ -115,6 +113,7 @@ class PostServiceTest {
 				//given
 				Long fakeId = 1L;
 				User user = User.builder()
+					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
@@ -130,8 +129,6 @@ class PostServiceTest {
 					.title(title)
 					.content(content)
 					.build();
-
-				ReflectionTestUtils.setField(user, "id", fakeId);
 				//Mock
 				given(userDataRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
@@ -204,6 +201,7 @@ class PostServiceTest {
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
 				Post post1 = Post.builder()
+					.id(fakePostAId)
 					.user(user)
 					.title(title)
 					.content(content)
@@ -211,12 +209,11 @@ class PostServiceTest {
 					.storedThumbnailPath(path)
 					.build();
 				Post post2 = Post.builder()
+					.id(fakePostBId)
 					.user(user)
 					.title(title)
 					.content(content)
 					.build();
-				ReflectionTestUtils.setField(post1, "id", fakePostAId);
-				ReflectionTestUtils.setField(post2, "id", fakePostBId);
 				List<Long> ids = new ArrayList<>();
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
@@ -275,6 +272,7 @@ class PostServiceTest {
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
 				Post post1 = Post.builder()
+					.id(fakePostAId)
 					.user(user)
 					.title(title)
 					.content(content)
@@ -282,13 +280,12 @@ class PostServiceTest {
 					.storedThumbnailPath(path)
 					.build();
 				Post post2 = Post.builder()
+					.id(fakePostBId)
 					.user(user)
 					.title(title)
 					.content(content)
 					.build();
 
-				ReflectionTestUtils.setField(post1, "id", fakePostAId);
-				ReflectionTestUtils.setField(post2, "id", fakePostBId);
 				List<Long> ids = new ArrayList<>();
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
@@ -483,15 +480,16 @@ class PostServiceTest {
 				//given
 				Long fakeUserId = 1L;
 				User user = User.builder()
+					.id(fakeUserId)
 					.email("test@gmail.com")
 					.username("tester")
 					.password(passwordEncoder.encode("1234"))
 					.build();
-				ReflectionTestUtils.setField(user, "id", fakeUserId);
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
 				Post postA = Post.builder()
+					.id(fakePostAId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
@@ -500,13 +498,12 @@ class PostServiceTest {
 					.user(user)
 					.build();
 				Post postB = Post.builder()
+					.id(fakePostBId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.user(user)
 					.build();
-				ReflectionTestUtils.setField(postA, "id", fakePostAId);
-				ReflectionTestUtils.setField(postB, "id", fakePostBId);
 
 				Integer requestPageNumber = 0;
 				PageRequest paging = PageRequest.of(requestPageNumber, 20);
@@ -543,28 +540,28 @@ class PostServiceTest {
 				//given
 				Long fakeUserId = 1L;
 				User user = User.builder()
+					.id(fakeUserId)
 					.email("test@gmail.com")
 					.username("tester")
 					.password(passwordEncoder.encode("1234"))
 					.build();
-				ReflectionTestUtils.setField(user, "id", fakeUserId);
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
 				Post postA = Post.builder()
+					.id(fakePostAId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.user(user)
 					.build();
 				Post postB = Post.builder()
+					.id(fakePostBId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.user(user)
 					.build();
-				ReflectionTestUtils.setField(postA, "id", fakePostAId);
-				ReflectionTestUtils.setField(postB, "id", fakePostBId);
 
 				Integer requestPageNumber = 0;
 				PageRequest paging = PageRequest.of(requestPageNumber, 20);
@@ -603,19 +600,19 @@ class PostServiceTest {
 			Long fakeUserId = 1L;
 			Long fakePostId = 1L;
 			User user = User.builder()
+				.id(fakeUserId)
 				.email("test@gmail.com")
 				.username("tester")
 				.password(passwordEncoder.encode("1234"))
 				.build();
 
 			Post returnPost = Post.builder()
+				.id(fakePostId)
 				.user(User.builder().username("tester").email("test@test.com").password("password").build())
 				.title("testTitle")
 				.content("testContent")
 				.user(user)
 				.build();
-			ReflectionTestUtils.setField(user, "id", fakeUserId);
-			ReflectionTestUtils.setField(returnPost, "id", fakePostId);
 			//Mock
 			given(postDataRepository.findById(fakePostId))
 				.willReturn(Optional.ofNullable(returnPost));
@@ -666,12 +663,13 @@ class PostServiceTest {
 					.build();
 
 				User user = User.builder()
+					.id(fakeUserId)
 					.username("tester")
 					.email("test@test.com")
 					.password("password")
 					.build();
-				ReflectionTestUtils.setField(user, "id", fakeUserId);
 				Post returnPost = Post.builder()
+					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
@@ -730,12 +728,11 @@ class PostServiceTest {
 					.build();
 
 				User writer = User.builder()
+					.id(fakeUserId)
 					.username("tester")
 					.email("test@test.com")
 					.password("password")
 					.build();
-
-				ReflectionTestUtils.setField(writer, "id", fakeUserId);
 
 				Post returnPost = Post.builder()
 					.user(writer)
@@ -770,19 +767,19 @@ class PostServiceTest {
 				//given
 				Long fakeUserId = 1L;
 				User user = User.builder()
+					.id(fakeUserId)
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
-				ReflectionTestUtils.setField(user, "id", fakeUserId);
 
 				Long fakePostId = 1L;
 				Post post = Post.builder()
+					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.build();
-				ReflectionTestUtils.setField(post, "id", fakePostId);
 				//mock
 				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
@@ -800,19 +797,20 @@ class PostServiceTest {
 				//given
 				Long fakeUserId = 1L;
 				User user = User.builder()
+					.id(fakeUserId)
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
-				ReflectionTestUtils.setField(user, "id", fakeUserId);
 
 				Long fakePostId = 1L;
 				Post post = Post.builder()
+					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.build();
-				ReflectionTestUtils.setField(post, "id", fakePostId);
+
 				LikeSearchDto dto = LikeSearchDto.builder()
 					.postId(post.getId())
 					.userID(user.getId())
