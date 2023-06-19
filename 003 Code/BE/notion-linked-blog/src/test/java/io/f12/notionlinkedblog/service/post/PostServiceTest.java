@@ -321,58 +321,157 @@ class PostServiceTest {
 		@Nested
 		class LookupPostByPostId {
 			@DisplayName("성공케이스")
-			@Test
-			void successCase() {
-				//given
-				Long fakeId = 1L;
-				String title = "testTitle";
-				String content = "testContent";
-				String thumbnail = "testThumbnail";
-				String username = "tester";
-				String path = "path";
+			@Nested
+			class SuccessfulCase {
+				@DisplayName("유저가 좋아요를 눌렀을 때")
+				@Test
+				void userLikePost() {
+					//given
+					Long fakeId = 1L;
+					String title = "testTitle";
+					String content = "testContent";
+					String thumbnail = "testThumbnail";
+					String username = "tester";
+					String path = "path";
 
-				User user = User.builder()
-					.username(username)
-					.email("test@gamil.com")
-					.password(passwordEncoder.encode("1234"))
-					.build();
+					User user = User.builder()
+						.username(username)
+						.email("test@gamil.com")
+						.password(passwordEncoder.encode("1234"))
+						.build();
 
-				Post testPost = Post.builder()
-					.user(user)
-					.title(title)
-					.content(content)
-					.thumbnailName(thumbnail)
-					.storedThumbnailPath(path)
-					.viewCount(10L)
-					.build();
-				//Mock
-				given(postDataRepository.findById(fakeId))
-					.willReturn(Optional.ofNullable(testPost));
-				//when
-				PostSearchDto postDto = postService.getPostDtoById(fakeId);
+					Post testPost = Post.builder()
+						.user(user)
+						.title(title)
+						.content(content)
+						.thumbnailName(thumbnail)
+						.storedThumbnailPath(path)
+						.viewCount(10L)
+						.build();
+					LikeSearchDto likeSearchDto = LikeSearchDto.builder()
+						.postId(1L)
+						.likeId(1L)
+						.userID(1L)
+						.build();
+					//Mock
+					given(postDataRepository.findById(fakeId))
+						.willReturn(Optional.ofNullable(testPost));
+					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
+						.willReturn(Optional.ofNullable(likeSearchDto));
+					//when
+					PostSearchDto postDto = postService.getPostDtoById(fakeId, fakeId);
 
-				//then
-				assertThat(postDto).extracting("title").isEqualTo(title);
-				assertThat(postDto).extracting("author").isEqualTo(username);
+					//then
+					assertThat(postDto).extracting("title").isEqualTo(title);
+					assertThat(postDto).extracting("author").isEqualTo(username);
+					assertThat(postDto).extracting("isLiked").isEqualTo(true);
 
+				}
+
+				@DisplayName("유저가 좋아요를 눌렀을 때")
+				@Test
+				void userNotLikePost() {
+					//given
+					Long fakeId = 1L;
+					String title = "testTitle";
+					String content = "testContent";
+					String thumbnail = "testThumbnail";
+					String username = "tester";
+					String path = "path";
+
+					User user = User.builder()
+						.username(username)
+						.email("test@gamil.com")
+						.password(passwordEncoder.encode("1234"))
+						.build();
+
+					Post testPost = Post.builder()
+						.user(user)
+						.title(title)
+						.content(content)
+						.thumbnailName(thumbnail)
+						.storedThumbnailPath(path)
+						.viewCount(10L)
+						.build();
+					LikeSearchDto likeSearchDto = LikeSearchDto.builder()
+						.postId(1L)
+						.likeId(1L)
+						.userID(1L)
+						.build();
+					//Mock
+					given(postDataRepository.findById(fakeId))
+						.willReturn(Optional.ofNullable(testPost));
+					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
+						.willReturn(Optional.empty());
+					//when
+					PostSearchDto postDto = postService.getPostDtoById(fakeId, fakeId);
+
+					//then
+					assertThat(postDto).extracting("title").isEqualTo(title);
+					assertThat(postDto).extracting("author").isEqualTo(username);
+					assertThat(postDto).extracting("isLiked").isEqualTo(false);
+
+				}
 			}
 
-			@DisplayName("실패케이스 - 해당 포스트 미존재")
-			@Test
-			void failureCase() {
-				//given
-				Long fakeId = 1L;
+			@DisplayName("실패케이스")
+			@Nested
+			class FailureCase {
+				@DisplayName("해당 포스트 미존재")
+				@Test
+				void postNotExist() {
+					//given
+					Long fakeId = 1L;
 
-				//Mock
-				given(postDataRepository.findById(fakeId))
-					.willReturn(Optional.empty());
-				//when
-				//then
-				assertThatThrownBy(() -> {
-					postService.getPostDtoById(fakeId);
-				}).isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining(POST_NOT_EXIST);
+					//Mock
+					given(postDataRepository.findById(fakeId))
+						.willReturn(Optional.empty());
+					//when
+					//then
+					assertThatThrownBy(() -> {
+						postService.getPostDtoById(fakeId, fakeId);
+					}).isInstanceOf(IllegalArgumentException.class)
+						.hasMessageContaining(POST_NOT_EXIST);
+				}
+
+				@DisplayName("UserID 미존재")
+				@Test
+				void userNotExist() {
+					//given
+					Long fakeId = 1L;
+					String title = "testTitle";
+					String content = "testContent";
+					String thumbnail = "testThumbnail";
+					String username = "tester";
+					String path = "path";
+
+					User user = User.builder()
+						.username(username)
+						.email("test@gamil.com")
+						.password(passwordEncoder.encode("1234"))
+						.build();
+
+					Post testPost = Post.builder()
+						.user(user)
+						.title(title)
+						.content(content)
+						.thumbnailName(thumbnail)
+						.storedThumbnailPath(path)
+						.viewCount(10L)
+						.build();
+					//Mock
+					given(postDataRepository.findById(fakeId))
+						.willReturn(Optional.ofNullable(testPost));
+					//when
+					PostSearchDto postDto = postService.getPostDtoById(fakeId, null);
+
+					//then
+					assertThat(postDto).extracting("title").isEqualTo(title);
+					assertThat(postDto).extracting("author").isEqualTo(username);
+					assertThat(postDto).extracting("isLiked").isEqualTo(false);
+				}
 			}
+
 		}
 
 		@DisplayName("최신 포스트 조회")
