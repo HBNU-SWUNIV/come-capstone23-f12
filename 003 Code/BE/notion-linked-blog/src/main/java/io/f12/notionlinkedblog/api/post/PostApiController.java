@@ -92,7 +92,13 @@ public class PostApiController {
 	})
 	public PostSearchDto getPostsById(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@PathVariable("id") Long postId) {
-		return postService.getPostDtoById(postId, loginUser);
+		Long userId = null;
+		try {
+			userId = loginUser.getUser().getId();
+		} catch (Exception e) {
+			log.info("UserIsNotExist: {}", e.getMessage());
+		}
+		return postService.getPostDtoById(postId, userId);
 	}
 
 	@GetMapping("/title")

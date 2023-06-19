@@ -32,7 +32,6 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
-import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,17 +114,10 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
-	public PostSearchDto getPostDtoById(Long postId, LoginUser loginUser) { //DONE
+	public PostSearchDto getPostDtoById(Long postId, Long userId) { //DONE
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		post.addViewCount();
-
-		Long userId = null;
-		try {
-			userId = loginUser.getUser().getId();
-		} catch (Exception e) {
-			log.info("UserIsNotExist: {}", e.getMessage());
-		}
 
 		String thumbnailLink = null;
 		Integer likeSize = null;
