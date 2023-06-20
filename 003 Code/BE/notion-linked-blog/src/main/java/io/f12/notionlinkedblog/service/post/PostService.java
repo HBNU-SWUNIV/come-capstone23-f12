@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,6 @@ import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.domain.post.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
@@ -209,16 +207,12 @@ public class PostService {
 		}
 	}
 
-	public ThumbnailReturnDto readImageFile(String imageName) throws MalformedURLException {
+	public File readImageFile(String imageName) throws MalformedURLException {
 		String thumbnailPathWithName = postDataRepository.findThumbnailPathWithName(imageName);
 		if (thumbnailPathWithName == null) {
 			throw new IllegalArgumentException(IMAGE_NOT_EXIST);
 		}
-		UrlResource urlResource = new UrlResource("file:" + thumbnailPathWithName);
-		return ThumbnailReturnDto.builder()
-			.thumbnailPath(thumbnailPathWithName)
-			.image(urlResource)
-			.build();
+		return new File(thumbnailPathWithName);
 	}
 
 	// 내부 사용 매서드

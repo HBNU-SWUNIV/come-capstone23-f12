@@ -30,7 +30,6 @@ import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.domain.post.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.post.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -201,38 +200,15 @@ public class PostApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public ResponseEntity<byte[]> getThumbnail(@PathVariable String imageName) throws IOException {
-		ThumbnailReturnDto thumbnailInfo = postService.readImageFile(imageName);
-
-		File file = new File(thumbnailInfo.getThumbnailPath());
+		File imageFile = postService.readImageFile(imageName);
 		ResponseEntity<byte[]> result = null;
 
 		try {
 			HttpHeaders header = new HttpHeaders();
-			header.add("Content-type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+			header.add("Content-type", Files.probeContentType(imageFile.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(imageFile), header, HttpStatus.OK);
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-	@GetMapping("/thumbnail/test")
-	public ResponseEntity<byte[]> test() throws IOException {
-		File file = new File("image.png");
-		log.info("file.path: {}", file.getPath());
-		ResponseEntity<byte[]> result = null;
-
-		try {
-
-			HttpHeaders header = new HttpHeaders();
-
-			header.add("Content-type", Files.probeContentType(file.toPath()));
-
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 
 		return result;
