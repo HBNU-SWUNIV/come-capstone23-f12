@@ -32,7 +32,6 @@ import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.domain.post.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
@@ -913,12 +912,12 @@ class PostServiceTest {
 					.build();
 				//mock
 				given(postDataRepository.findThumbnailPathWithName(imageName))
-					.willReturn("path.png");
+					.willReturn("testImage.png");
 				//when
-				ThumbnailReturnDto thumbnailReturnDto = postService.readImageFile(imageName);
+				File file = postService.readImageFile(imageName);
 
 				//then
-				assertThat(thumbnailReturnDto).extracting("thumbnailPath").isEqualTo("path.png");
+				assertThat(file).exists();
 			}
 		}
 
