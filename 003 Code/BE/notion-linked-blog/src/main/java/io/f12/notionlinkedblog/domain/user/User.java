@@ -16,9 +16,9 @@ import io.f12.notionlinkedblog.domain.BaseTimeEntity;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.dto.info.UserBasicInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.info.UserBlogTitleEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.info.UserSocialInfoEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.response.UserBasicInfoEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.response.UserBlogTitleEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.response.UserSocialInfoEditDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -88,4 +88,7 @@ public class User extends BaseTimeEntity {
 		this.blogTitle = editDto.getBlogTitle();
 	}
 
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 }
