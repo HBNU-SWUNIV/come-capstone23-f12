@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEditDto {
+public class UserBasicInfoEditDto {
 	@NotEmpty
 	private String username;
-	private String profile;
 	private String introduction;
-	private String blogTitle;
-	private String githubLink;
-	private String instagramLink;
 }
