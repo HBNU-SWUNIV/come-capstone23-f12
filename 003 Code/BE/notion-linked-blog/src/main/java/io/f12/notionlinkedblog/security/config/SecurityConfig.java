@@ -5,7 +5,6 @@ import static org.springframework.http.MediaType.*;
 
 import java.nio.charset.StandardCharsets;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,29 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 
 	private final UserDetailsService userDetailsService;
-
-	@Bean
-	public FilterRegistrationBean<CharacterEncodingFilter> filterRegistrationBean() {
-		FilterRegistrationBean<CharacterEncodingFilter> registrationBean = new FilterRegistrationBean<>();
-		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-		registrationBean.setFilter(characterEncodingFilter);
-		characterEncodingFilter.setEncoding("UTF-8");
-		characterEncodingFilter.setForceEncoding(true);
-		registrationBean.setOrder(Integer.MIN_VALUE);
-		registrationBean.addUrlPatterns("/api/login/*");
-		registrationBean.addUrlPatterns("/api/users/*");
-		registrationBean.addUrlPatterns("/api/posts/like/*");
-		registrationBean.addUrlPatterns("/api/posts");
-		registrationBean.addUrlPatterns("/api/posts/{id}");
-		registrationBean.addUrlPatterns("/api/posts/title");
-		registrationBean.addUrlPatterns("/api/posts/content");
-		registrationBean.addUrlPatterns("/api/posts/content/");
-		registrationBean.addUrlPatterns("/api/posts/newest/*");
-		registrationBean.addUrlPatterns("/api/posts/trend/*");
-		registrationBean.addUrlPatterns("/api/posts/like/*");
-
-		return registrationBean;
-	}
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
