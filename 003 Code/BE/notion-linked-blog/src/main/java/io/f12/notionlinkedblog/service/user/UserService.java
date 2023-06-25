@@ -16,11 +16,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.domain.user.dto.response.ProfileSuccessEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.response.UserBasicInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.response.UserBlogTitleEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.request.ProfileSuccessEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.request.UserBlogTitleEditDto;
+import io.f12.notionlinkedblog.domain.user.dto.request.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.response.UserSearchDto;
-import io.f12.notionlinkedblog.domain.user.dto.response.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;
