@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.user.dto.request.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
@@ -89,14 +90,13 @@ public class UserService {
 			findUser.setProfile(null);
 		}
 		//새로운 프로파일 등록
-		String fullPath = getSavedDirectory(imageFile, systemPath, imageName);
+		String fullPath = getSavedDirectory(imageFile, systemPath, profileFileName);
 		imageFile.transferTo(new File(fullPath));
 		String newName = profileFileName + "." + StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
 
-		findUser.setProfile(newName);
-		//TODO: 정확한 Endpoint 정하기
+		findUser.setProfile(systemPath + "/" + newName);
 		return ProfileSuccessEditDto.builder()
-			.requestLink(newName)
+			.requestLink(Endpoint.Api.REQUEST_PROFILE_IMAGE + id)
 			.build();
 	}
 
@@ -106,6 +106,18 @@ public class UserService {
 		userDataRepository.deleteById(id);
 	}
 
+	public File readImageFile(Long userId) {
+		User editedUSer =
+			userDataRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		if (editedUSer.getProfile() == null) {
+			throw new IllegalArgumentException(IMAGE_NOT_EXIST);
+		}
+
+		return new File(editedUSer.getProfile());
+	}
+
+	//내부 사용 매서드
 	private void checkEmailIsDuplicated(final String email) {
 		boolean isPresent = userDataRepository.findByEmail(email).isPresent();
 		if (isPresent) {
@@ -113,7 +125,6 @@ public class UserService {
 		}
 	}
 
-	//내부 사용 매서드
 	private String makeProfileFileName(String username) {
 		StringBuilder sb = new StringBuilder();
 		Date now = new Date();
