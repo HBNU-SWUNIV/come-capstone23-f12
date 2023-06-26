@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.domain.user.dto.request.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.request.UserBlogTitleEditDto;
@@ -157,8 +158,10 @@ public class UserApiController {
 	@GetMapping("/profile/{userId}")
 	@Operation(summary = "userId 에 해당하는 회원의 프로파일 이미지 가져오기", description = "userId에 해당하는 사용자의 프로파일 이미지를 가져옵니다")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "이미지 조회 성공", content = @Content(mediaType = "image/*"))
-		//TODO: 기타 실패 응답 적기
+		@ApiResponse(responseCode = "200", description = "이미지 조회 성공", content = @Content(mediaType = "image/*")),
+		@ApiResponse(responseCode = "404", description = "이미지 미 존재",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public ResponseEntity<byte[]> getProfile(@PathVariable Long userId) throws IOException {
 		File imageFile = userService.readImageFile(userId);
