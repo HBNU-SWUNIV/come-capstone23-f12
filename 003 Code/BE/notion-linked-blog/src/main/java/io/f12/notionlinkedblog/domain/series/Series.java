@@ -44,4 +44,9 @@ public class Series {
 
 	@NotNull
 	private String title;
+
+	public void addPost(Post post) {
+		this.post.add(post);
+		post.setSeries(this);
+	}
 }
