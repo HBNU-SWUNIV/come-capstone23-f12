@@ -111,4 +111,8 @@ public class Post extends PostTimeEntity {
 	public void addViewCount() {
 		viewCount++;
 	}
+
+	public void setSeries(Series series) {
+		this.series = series;
+	}
 }
