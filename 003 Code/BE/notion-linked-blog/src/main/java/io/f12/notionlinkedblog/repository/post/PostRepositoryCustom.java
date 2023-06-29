@@ -23,6 +23,8 @@ public interface PostRepositoryCustom {
 
 	List<Long> findIdsBySeriesIdAsc(Long seriesId, Pageable pageable);
 
+	List<Post> findByPostIdsJoinWithUserAndLike(List<Long> ids);
+
 	List<Post> findByIdsJoinWithSeries(List<Long> ids);
 
 	Post findWithNotion(Long id);

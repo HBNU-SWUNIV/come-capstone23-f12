@@ -100,7 +100,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = postDataRepository.findPostIdsByTitle(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -111,7 +111,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = postDataRepository.findPostIdsByContent(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 

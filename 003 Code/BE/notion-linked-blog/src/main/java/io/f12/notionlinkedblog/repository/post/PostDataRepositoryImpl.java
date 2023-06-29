@@ -124,6 +124,41 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 	}
 
 	@Override
+	public List<Long> findIdsBySeriesIdDesc(Long seriesId, Pageable pageable) {
+		return queryFactory
+			.select(post.id)
+			.from(post)
+			.where(post.series.id.eq(seriesId).and(post.isPublic.isTrue()))
+			.orderBy(post.createdAt.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+	}
+
+	@Override
+	public List<Long> findIdsBySeriesIdAsc(Long seriesId, Pageable pageable) {
+		return queryFactory
+			.select(post.id)
+			.from(post)
+			.where(post.series.id.eq(seriesId).and(post.isPublic.isTrue()))
+			.orderBy(post.createdAt.asc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+	}
+
+	@Override
+	public List<Post> findByIdsJoinWithSeries(List<Long> ids) {
+		return queryFactory.selectFrom(post)
+			.leftJoin(post.series, series)
+			.fetchJoin()
+			.where(post.id.in(ids))
+			.distinct()
+			.fetch();
+
+	}
+
+	@Override
 	public Post findWithNotion(Long id) {
 		return queryFactory.select(post)
 			.from(post)
