@@ -1,4 +1,4 @@
-import {Typography} from "antd";
+import {Input, Typography} from "antd";
 import styled from "styled-components";
 
 const {Title} = Typography;
@@ -43,4 +43,10 @@ export const EditBtn = styled.button`
 	:hover {
 		color: rgb(64, 150, 255);
 	}
+`;
+
+export const StyledInput = styled(Input)`
+	width: 100%;
+	padding: 0.5rem;
+	font-size: 1rem;
 `;

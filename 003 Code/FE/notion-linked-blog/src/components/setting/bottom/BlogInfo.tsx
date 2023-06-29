@@ -1,21 +1,16 @@
 import {CSSProperties, useEffect, useMemo, useState} from "react";
-import {Button, Form, Input, Typography} from "antd";
+import {Button, Form, Typography} from "antd";
 import styled from "styled-components";
 import {RootState} from "@/redux/store";
 import {UserState, modifyBlogTitle} from "@/redux/userSlice";
 import {modifyBlogTitleAPI} from "@/apis/user";
 import {useSelector, useDispatch} from "react-redux";
-import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledTitle} from "./Common";
+import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledInput, StyledTitle} from "./Common";
 
 const {Text} = Typography;
 
 const StyledText = styled(Text)`
 	font-size: 1rem;
-`;
-
-const StyledInput = styled(Input)`
-	width: 100%;
-	padding: 0.5rem;
 `;
 
 export default function BlogInfo() {
