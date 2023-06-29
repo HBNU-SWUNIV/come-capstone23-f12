@@ -1,10 +1,15 @@
+import styled from "styled-components";
 import {RootState} from "@/redux/store";
 import {UserState} from "@/redux/userSlice";
 import {Typography} from "antd";
 import {useSelector} from "react-redux";
-import {Container, RowContainer, StyledTitle} from "./Common";
+import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledTitle} from "./Common";
 
 const {Text} = Typography;
+
+const StyledText = styled(Text)`
+	font-size: 1rem;
+`;
 
 export default function BlogInfo() {
 	const {user} = useSelector<RootState, UserState>(state => state.user);
@@ -16,7 +21,10 @@ export default function BlogInfo() {
 					<StyledTitle level={4}>
 						블로그 제목
 					</StyledTitle>
-					<Text>{user?.blogTitle}</Text>
+					<SpaceBetweenContainer>
+						<StyledText>{user?.blogTitle}</StyledText>
+						<EditBtn>수정</EditBtn>
+					</SpaceBetweenContainer>
 				</RowContainer>
 				<div>
 					<Text type="secondary">

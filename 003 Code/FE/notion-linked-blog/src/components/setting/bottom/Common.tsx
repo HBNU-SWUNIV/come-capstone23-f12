@@ -18,7 +18,29 @@ export const RowContainer = styled.div`
 	flex-direction: row;
 `;
 
+export const SpaceBetweenContainer = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`;
+
 export const StyledTitle = styled(Title)`
 	width: 150px;
 	margin: 0;
+`;
+
+export const EditBtn = styled.button`
+	border: none;
+	background: none;
+	padding: 0;
+	height: fit-content;
+	cursor: pointer;
+	text-decoration: underline;
+	font-size: 1rem;
+	color: rgb(22, 119, 255);
+	transition: color 100ms linear;
+
+	:hover {
+		color: rgb(114, 173, 255);
+	}
 `;

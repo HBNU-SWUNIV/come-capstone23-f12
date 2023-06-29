@@ -3,7 +3,7 @@ import {GithubOutlined, InstagramOutlined} from "@ant-design/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {UserState} from "@/redux/userSlice";
-import {Container, RowContainer, StyledTitle} from "./Common";
+import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledTitle} from "./Common";
 
 const {Text} = Typography;
 
@@ -17,10 +17,13 @@ export default function SocialInfo() {
 					<StyledTitle level={4}>
 						소셜 정보
 					</StyledTitle>
-					<Space direction="vertical">
-						<Typography.Text><GithubOutlined /> {user?.githubLink}</Typography.Text>
-						<Typography.Text><InstagramOutlined /> {user?.instagramLink}</Typography.Text>
-					</Space>
+					<SpaceBetweenContainer>
+						<Space direction="vertical">
+							<Typography.Text><GithubOutlined /> {user?.githubLink}</Typography.Text>
+							<Typography.Text><InstagramOutlined /> {user?.instagramLink}</Typography.Text>
+						</Space>
+						<EditBtn>수정</EditBtn>
+					</SpaceBetweenContainer>
 				</RowContainer>
 				<div>
 					<Text type="secondary">
