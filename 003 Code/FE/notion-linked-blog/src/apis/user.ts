@@ -70,3 +70,18 @@ export const modifyBlogTitleAPI = async (blogTitle: string, id: number) => {
 		throw new Error(e);
 	}
 };
+
+export interface ModifyingSocialInfo {
+	githubLink: string;
+	instagramLink: string;
+}
+
+export const modifySocialInfoAPI = async (
+	{githubLink, instagramLink}: ModifyingSocialInfo, id: number,
+) => {
+	try {
+		await apiClient.put(`/users/social/${id}`, {githubLink, instagramLink});
+	} catch (e) {
+		throw new Error(e);
+	}
+};
