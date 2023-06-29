@@ -15,6 +15,12 @@ public interface PostRepositoryCustom {
 
 	List<Long> findPopularityPostIdsByViewCountAtDesc(Pageable pageable);
 
-	List<Post> findByIds(List<Long> ids);
+	List<Post> findByPostIdsJoinWithUserAndLike(List<Long> ids);
+
+	List<Long> findIdsBySeriesIdDesc(Long seriesId, Pageable pageable);
+
+	List<Long> findIdsBySeriesIdAsc(Long seriesId, Pageable pageable);
+
+	List<Post> findByIdsJoinWithSeries(List<Long> ids);
 
 }

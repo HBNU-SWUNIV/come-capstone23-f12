@@ -17,14 +17,11 @@ import javax.validation.constraints.NotNull;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 @Entity
 @Table(name = "series")
 @Getter
@@ -44,6 +41,14 @@ public class Series {
 
 	@NotNull
 	private String title;
+
+	@Builder
+	public Series(Long id, User user, List<Post> post, String title) {
+		this.id = id;
+		this.user = user;
+		this.post = post;
+		this.title = title;
+	}
 
 	public void addPost(Post post) {
 		this.post.add(post);
