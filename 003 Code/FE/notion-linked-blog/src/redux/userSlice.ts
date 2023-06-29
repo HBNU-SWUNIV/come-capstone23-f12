@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from "@reduxjs/toolkit";
-import {ModifyingSocialInfo, User} from "@/apis/user";
+import {ModifyingSocialInfo, ModifyingBasicInfo, User} from "@/apis/user";
 
 export interface UserState {
 	user: User;
@@ -26,11 +26,15 @@ const userSlice = createSlice({
 			state.user.githubLink = action.payload.githubLink;
 			state.user.instagramLink = action.payload.instagramLink;
 		},
+		modifyBasicInfo: (state, action: PayloadAction<ModifyingBasicInfo>) => {
+			state.user.username = action.payload.username;
+			state.user.introduction = action.payload.introduction;
+		},
 	},
 });
 
 const {actions, reducer: userReducer} = userSlice;
 
-export const {login, logout, modifyBlogTitle, modifySocialInfo} = actions;
+export const {login, logout, modifyBlogTitle, modifySocialInfo, modifyBasicInfo} = actions;
 
 export default userReducer;
