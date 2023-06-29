@@ -25,7 +25,7 @@ const userSlice = createSlice({
 		modifySocialInfo: (state, action: PayloadAction<ModifyingSocialInfo>) => {
 			state.user.githubLink = action.payload.githubLink;
 			state.user.instagramLink = action.payload.instagramLink;
-		}
+		},
 	},
 });
 
