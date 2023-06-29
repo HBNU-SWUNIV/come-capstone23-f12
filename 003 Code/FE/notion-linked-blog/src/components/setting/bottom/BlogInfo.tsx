@@ -5,7 +5,7 @@ import {RootState} from "@/redux/store";
 import {UserState, modifyBlogTitle} from "@/redux/userSlice";
 import {modifyBlogTitleAPI} from "@/apis/user";
 import {useSelector, useDispatch} from "react-redux";
-import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledInput, StyledTitle} from "./Common";
+import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledInput, StyledTitle} from "../Common";
 
 const {Text} = Typography;
 

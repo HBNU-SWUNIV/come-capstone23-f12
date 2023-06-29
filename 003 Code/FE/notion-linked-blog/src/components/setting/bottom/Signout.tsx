@@ -5,7 +5,7 @@ import {Button, Modal, Typography} from "antd";
 import {useRouter} from "next/router";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Container, RowContainer, StyledTitle} from "./Common";
+import {Container, RowContainer, StyledTitle} from "../Common";
 
 const {Text} = Typography;
 

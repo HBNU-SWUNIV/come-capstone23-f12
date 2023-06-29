@@ -45,8 +45,13 @@ export const EditBtn = styled.button`
 	}
 `;
 
-export const StyledInput = styled(Input)`
+export interface StyledInputProps {
+	type?: "normal" | "large";
+}
+
+export const StyledInput = styled(Input) <StyledInputProps>`
 	width: 100%;
 	padding: 0.5rem;
-	font-size: 1rem;
+	font-size: ${props => (props.type === "large" ? "1.5rem" : "1rem")};
+	font-weight: ${props => props.type === "large" && "600"};
 `;

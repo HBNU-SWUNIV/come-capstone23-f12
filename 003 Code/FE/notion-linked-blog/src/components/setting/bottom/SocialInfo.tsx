@@ -6,7 +6,7 @@ import {GithubOutlined, InstagramOutlined} from "@ant-design/icons";
 import {modifySocialInfoAPI} from "@/apis/user";
 import {RootState} from "@/redux/store";
 import {UserState, modifySocialInfo} from "@/redux/userSlice";
-import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledInput, StyledTitle} from "./Common";
+import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledInput, StyledTitle} from "../Common";
 
 const {Text} = Typography;
 
