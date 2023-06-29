@@ -1,8 +1,10 @@
+import {CSSProperties, useEffect, useMemo, useState} from "react";
+import {Button, Form, Input, Typography} from "antd";
 import styled from "styled-components";
 import {RootState} from "@/redux/store";
-import {UserState} from "@/redux/userSlice";
-import {Typography} from "antd";
-import {useSelector} from "react-redux";
+import {UserState, modifyBlogTitle} from "@/redux/userSlice";
+import {modifyBlogTitleAPI} from "@/apis/user";
+import {useSelector, useDispatch} from "react-redux";
 import {Container, EditBtn, RowContainer, SpaceBetweenContainer, StyledTitle} from "./Common";
 
 const {Text} = Typography;
@@ -11,8 +13,55 @@ const StyledText = styled(Text)`
 	font-size: 1rem;
 `;
 
+const StyledInput = styled(Input)`
+	width: 100%;
+	padding: 0.5rem;
+`;
+
 export default function BlogInfo() {
 	const {user} = useSelector<RootState, UserState>(state => state.user);
+	const [isEdit, setIsEdit] = useState(false);
+	const [title, setTitle] = useState("");
+	const [error, setError] = useState(false);
+	const errorMsg = "네트워크 에러가 발생했습니다. 잠시 후에 다시 시도해주세요.";
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setTitle(user?.blogTitle);
+	}, []);
+
+	const inputItemStyle: CSSProperties = useMemo(() => ({
+		flex: "1",
+	}), []);
+
+	const submitBtnItemStyle: CSSProperties = useMemo(() => ({
+		margin: 0,
+	}), []);
+
+	const formStyle: CSSProperties = useMemo(() => ({
+		width: "100%",
+		alignItems: "center",
+	}), []);
+
+	const handleEditBtn = () => {
+		setTitle(user.blogTitle);
+		setIsEdit(true);
+	};
+
+	const handleSubmitBtn = async () => {
+		try {
+			await modifyBlogTitleAPI(title, user.id);
+			dispatch(modifyBlogTitle(title));
+			setIsEdit(false);
+			setError(false);
+		} catch (e) {
+			setError(true);
+		}
+	};
+
+	const handleBlogTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setTitle(e.target.value);
+	};
 
 	return (
 		<>
@@ -22,8 +71,21 @@ export default function BlogInfo() {
 						블로그 제목
 					</StyledTitle>
 					<SpaceBetweenContainer>
-						<StyledText>{user?.blogTitle}</StyledText>
-						<EditBtn>수정</EditBtn>
+						{isEdit ?
+							<Form layout="inline" style={formStyle}>
+								<Form.Item style={inputItemStyle}>
+									<StyledInput value={title} onChange={handleBlogTitleChange} />
+									{error && <Typography.Text type="danger">{errorMsg}</Typography.Text>}
+								</Form.Item>
+								<Form.Item style={submitBtnItemStyle}>
+									<Button type="primary" onClick={handleSubmitBtn}>저장</Button>
+								</Form.Item>
+							</Form> :
+							<>
+								<StyledText>{user?.blogTitle}</StyledText>
+								<EditBtn onClick={handleEditBtn}>수정</EditBtn>
+							</>
+						}
 					</SpaceBetweenContainer>
 				</RowContainer>
 				<div>

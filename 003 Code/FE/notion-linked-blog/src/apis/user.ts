@@ -62,3 +62,11 @@ export const signoutAPI = async (id: number) => {
 		throw new Error(errorMsg);
 	}
 };
+
+export const modifyBlogTitleAPI = async (blogTitle: string, id: number) => {
+	try {
+		await apiClient.put(`/users/blogTitle/${id}`, {blogTitle});
+	} catch (e) {
+		throw new Error(e);
+	}
+};
