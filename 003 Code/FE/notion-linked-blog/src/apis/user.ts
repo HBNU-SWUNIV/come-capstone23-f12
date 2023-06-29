@@ -85,3 +85,18 @@ export const modifySocialInfoAPI = async (
 		throw new Error(e);
 	}
 };
+
+export interface ModifyingBasicInfo {
+	username: string;
+	introduction: string;
+}
+
+export const modifyBasicInfoAPI = async (
+	{username, introduction}: ModifyingBasicInfo, id: number,
+) => {
+	try {
+		await apiClient.put(`/users/basic/${id}`, {username, introduction});
+	} catch (e) {
+		throw new Error(e);
+	}
+};
