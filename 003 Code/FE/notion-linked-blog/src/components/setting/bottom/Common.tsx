@@ -41,6 +41,6 @@ export const EditBtn = styled.button`
 	transition: color 100ms linear;
 
 	:hover {
-		color: rgb(114, 173, 255);
+		color: rgb(64, 150, 255);
 	}
 `;
