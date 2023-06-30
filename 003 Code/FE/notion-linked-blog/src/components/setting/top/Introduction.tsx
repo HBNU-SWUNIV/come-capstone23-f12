@@ -14,13 +14,17 @@ const StyledTitle = styled(Title)`
 `;
 
 const BasicInfoSpace = styled(Space)`
-	width:100%;
-	height: 100%;
-	padding-left: 1.5rem;
-	flex-direction: column;
-	justify-content: start;;
-	align-items: start;
-	border-left: 0.8px solid rgb(205, 205, 205);
+  width: 100%;
+  height: 100%;
+  padding-left: 1.5rem;
+  flex-direction: column;
+  justify-content: start;;
+  align-items: start;
+  border-left: 0.8px solid rgb(205, 205, 205);
+
+  @media screen and (max-width: 768px) {
+    border-left: none;
+  }
 `;
 
 const EditingBasicInfoSpace = styled(Space)`
