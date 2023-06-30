@@ -2,22 +2,22 @@ import {Avatar, Button, Space} from "antd";
 import styled from "styled-components";
 
 const StyledSpace = styled(Space)`
-	padding-right: 24px;
+  padding-right: 24px;
 `;
 
 const ImageButton = styled(Button)`
-	width: 130px;
-	padding: 0 20px;
+  width: 130px;
+  padding: 0 20px;
 `;
 
 const StyledAvatar = styled(Avatar)`
-	width: 128px;
-	height: 128px;
+  width: 128px;
+  height: 128px;
 
-	@media screen and (max-width: 768px){
-		width: 96px;
-		height: 96px;
-	}
+  @media screen and (max-width: 768px) {
+    width: 96px;
+    height: 96px;
+  }
 `;
 
 export default function Profile() {
