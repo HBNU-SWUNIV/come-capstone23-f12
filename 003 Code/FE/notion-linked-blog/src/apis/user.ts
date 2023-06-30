@@ -1,4 +1,5 @@
 import apiClient from "@/apis/apiClient";
+import axios from "axios";
 
 export interface User {
 	id: number;
@@ -96,6 +97,32 @@ export const modifyBasicInfoAPI = async (
 ) => {
 	try {
 		await apiClient.put(`/users/basic/${id}`, {username, introduction});
+	} catch (e) {
+		throw new Error(e);
+	}
+};
+
+export const modifyProfileImageAPI = async (profile: FormData, id: number) => {
+	try {
+		const resp = await apiClient.put(`/users/profileImage/${id}`, profile, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+
+		return resp.data;
+	} catch (e) {
+		throw new Error(e);
+	}
+};
+
+export const getProfileImageAPI = async (id: number) => {
+	try {
+		const resp = await apiClient.get(`/users/profile/${id}`, {
+			responseType: "blob",
+		});
+
+		return resp.data;
 	} catch (e) {
 		throw new Error(e);
 	}

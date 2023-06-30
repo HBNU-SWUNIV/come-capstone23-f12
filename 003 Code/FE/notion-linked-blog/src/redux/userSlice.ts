@@ -30,11 +30,21 @@ const userSlice = createSlice({
 			state.user.username = action.payload.username;
 			state.user.introduction = action.payload.introduction;
 		},
+		modifyProfileImage: (state, action: PayloadAction<string>) => {
+			state.user.profile = action.payload;
+		},
 	},
 });
 
 const {actions, reducer: userReducer} = userSlice;
 
-export const {login, logout, modifyBlogTitle, modifySocialInfo, modifyBasicInfo} = actions;
+export const {
+	login,
+	logout,
+	modifyBlogTitle,
+	modifySocialInfo,
+	modifyBasicInfo,
+	modifyProfileImage,
+} = actions;
 
 export default userReducer;
