@@ -33,12 +33,14 @@ export default function Profile() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		(async () => {
-			const binaryImg = await getProfileImageAPI(user?.id);
+		const fetchProfileImage = async () => {
+			const binaryImg = await getProfileImageAPI(user.id);
 
 			setProfileImage(URL.createObjectURL(binaryImg));
-		})();
-	}, [user, profileImage]);
+		};
+
+		fetchProfileImage();
+	}, []);
 
 	const uploadImage = async options => {
 		const {file} = options;
