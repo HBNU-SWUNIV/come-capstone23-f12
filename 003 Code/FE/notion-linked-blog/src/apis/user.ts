@@ -1,5 +1,4 @@
 import apiClient from "@/apis/apiClient";
-import axios from "axios";
 
 export interface User {
 	id: number;
@@ -66,7 +65,7 @@ export const signoutAPI = async (id: number) => {
 
 export const modifyBlogTitleAPI = async (blogTitle: string, id: number) => {
 	try {
-		await apiClient.put(`/users/blogTitle/${id}`, {blogTitle});
+		await apiClient.put(`/api/users/blogTitle/${id}`, {blogTitle});
 	} catch (e) {
 		throw new Error(e);
 	}
@@ -81,7 +80,7 @@ export const modifySocialInfoAPI = async (
 	{githubLink, instagramLink}: ModifyingSocialInfo, id: number,
 ) => {
 	try {
-		await apiClient.put(`/users/social/${id}`, {githubLink, instagramLink});
+		await apiClient.put(`/api/users/social/${id}`, {githubLink, instagramLink});
 	} catch (e) {
 		throw new Error(e);
 	}
@@ -96,7 +95,7 @@ export const modifyBasicInfoAPI = async (
 	{username, introduction}: ModifyingBasicInfo, id: number,
 ) => {
 	try {
-		await apiClient.put(`/users/basic/${id}`, {username, introduction});
+		await apiClient.put(`/api/users/basic/${id}`, {username, introduction});
 	} catch (e) {
 		throw new Error(e);
 	}
@@ -104,7 +103,7 @@ export const modifyBasicInfoAPI = async (
 
 export const modifyProfileImageAPI = async (profile: FormData, id: number) => {
 	try {
-		const resp = await apiClient.put(`/users/profileImage/${id}`, profile, {
+		const resp = await apiClient.put(`/api/users/profileImage/${id}`, profile, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
@@ -118,7 +117,7 @@ export const modifyProfileImageAPI = async (profile: FormData, id: number) => {
 
 export const getProfileImageAPI = async (id: number) => {
 	try {
-		const resp = await apiClient.get(`/users/profile/${id}`, {
+		const resp = await apiClient.get(`/api/users/profile/${id}`, {
 			responseType: "blob",
 		});
 
