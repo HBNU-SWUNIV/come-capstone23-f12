@@ -426,6 +426,29 @@ class UserApiControllerTests {
 
 			}
 		}
+
+		@DisplayName("회원 프로파일 이미지 정보 삭제")
+		@Nested
+		class UserProfileImageRemove {
+
+			@DisplayName("정상 케이스")
+			@Nested
+			class SuccessCase {
+				@DisplayName("유저 정보 삭제")
+				@WithUserDetails(value = "test@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+				@Test
+				void removeUserInfoTest() throws Exception {
+					//given
+					final String url = Endpoint.Api.USER + "/profileImage/" + testUser.getId();
+					//when
+					ResultActions perform = mockMvc.perform(delete(url));
+					//then
+					perform.andExpectAll(status().isNoContent());
+
+				}
+			}
+
+		}
 	}
 
 	@DisplayName("유저정보 삭제 api")

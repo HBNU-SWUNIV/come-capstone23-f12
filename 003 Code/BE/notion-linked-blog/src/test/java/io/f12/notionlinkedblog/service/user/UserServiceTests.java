@@ -7,6 +7,9 @@ import static org.mockito.BDDMockito.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -273,9 +276,9 @@ class UserServiceTests extends DummyObject {
 			@DisplayName("프로파일 이미지 수정 테스트")
 			@Nested
 			class ProfileEditTest {
-				@DisplayName("프로파일 초기 설정")
+				@DisplayName("프로파일 생성")
 				@Test
-				void initProfile() throws IOException {
+				void createProfileImage() throws IOException {
 					//given
 					User userA = User.builder()
 						.id(1L)
@@ -296,6 +299,42 @@ class UserServiceTests extends DummyObject {
 					File file1 = new File(userA.getProfile());
 					assertThat(file1).isNotEmpty();
 				}
+
+				@DisplayName("프로파일 삭제")
+				@Test
+				void removeProfileImage() throws IOException {
+					//given
+					String originalPath = Paths
+						.get("src", "test", "resources", "static", "images", "test.jpg")
+						.toFile()
+						.getAbsolutePath();
+					String newPath = Paths
+						.get("src", "test", "resources", "static", "images", "new.jpg")
+						.toFile()
+						.getAbsolutePath();
+
+					File originFile = new File(originalPath);
+					File newFile = new File(newPath);
+
+					Files.copy(originFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+					User userA = User.builder()
+						.id(1L)
+						.email("test1@gmail.com")
+						.username("username1")
+						.password("password1")
+						.profile(newPath)
+						.build();
+
+					//stub
+					given(userDataRepository.findById(1L))
+						.willReturn(Optional.of(userA));
+					//when
+					userService.removeUserProfileImage(1L);
+					//then
+					assertThat(userA.getProfile()).isNull();
+				}
+
 			}
 		}
 
