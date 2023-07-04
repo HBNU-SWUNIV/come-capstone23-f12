@@ -387,9 +387,9 @@ class UserServiceTests extends DummyObject {
 		@DisplayName("유저 프로필 조회 테스트")
 		@Nested
 		class UserProfileLookUp {
-			@DisplayName("프로파일 초기 설정")
+			@DisplayName("프로파일 조회")
 			@Test
-			void initProfile() throws IOException {
+			void getProfile() {
 				//given
 				String profilePath = "testImage.png";
 				User userA = User.builder()
@@ -408,6 +408,27 @@ class UserServiceTests extends DummyObject {
 				//then
 				assertThat(file).exists();
 			}
+
+			@DisplayName("기본 프로파일 조회")
+			@Test
+			void getDefaultProfile() {
+				//given
+				User userA = User.builder()
+					.id(1L)
+					.email("test1@gmail.com")
+					.username("username1")
+					.password("password1")
+					.build();
+				//stub
+				given(userDataRepository.findById(1L))
+					.willReturn(Optional.of(userA));
+				//when
+				File file = userService.readImageFile(1L);
+				//then
+				assertThat(file).exists();
+
+			}
+
 		}
 	}
 }
