@@ -161,6 +161,20 @@ public class UserApiController {
 		userService.removeUser(id);
 	}
 
+	@DeleteMapping(value = "/profileImage/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "profileImage 삭제", description = "profileImage 를 삭제합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "이미지 삭제 성공"),
+		@ApiResponse(responseCode = "401", description = "미존재"),
+		@ApiResponse(responseCode = "500", description = "기존 썸네일 삭제 실패")
+	})
+	public void removeUserProfile(
+		@PathVariable Long id, @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
+		checkSameUser(id, loginUser);
+		userService.removeUserProfileImage(id);
+	}
+
 	@GetMapping("/profile/{userId}")
 	@Operation(summary = "userId 에 해당하는 회원의 프로파일 이미지 가져오기", description = "userId에 해당하는 사용자의 프로파일 이미지를 가져옵니다")
 	@ApiResponses(value = {

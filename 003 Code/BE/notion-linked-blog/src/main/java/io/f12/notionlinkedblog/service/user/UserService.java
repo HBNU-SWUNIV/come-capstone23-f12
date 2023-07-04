@@ -100,6 +100,17 @@ public class UserService {
 			.build();
 	}
 
+	public void removeUserProfileImage(Long id) {
+		User findUser = userDataRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		try {
+			Files.delete(Path.of(findUser.getProfile()));
+		} catch (Exception e) {
+			log.warn("파일이 존재하지 않습니다: {}", e.getMessage());
+		}
+		findUser.setProfile(null);
+	}
+
 	public void removeUser(Long id) {
 		userDataRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
