@@ -95,7 +95,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = postDataRepository.findPostIdsByTitle(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -106,7 +106,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = postDataRepository.findPostIdsByContent(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -155,7 +155,7 @@ public class PostService {
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) { //
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = postDataRepository.findLatestPostIdsByCreatedAtDesc(paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
@@ -164,7 +164,7 @@ public class PostService {
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLike(ids);
+		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
