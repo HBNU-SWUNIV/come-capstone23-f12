@@ -45,7 +45,7 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 		return queryFactory.select(post.id)
 			.from(post)
 			.where(post.isPublic.isTrue())
-			.orderBy(post.createdAt.desc())
+			.orderBy(post.createdAt.asc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -63,13 +63,27 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 	}
 
 	@Override
-	public List<Post> findByPostIdsJoinWithUserAndLike(List<Long> ids) { // findByPostIdsJoinWithUserAndLike 였던거
+	public List<Post> findByPostIdsJoinWithUserAndLikeOrderByLatest(List<Long> ids) {
 		return queryFactory.selectFrom(post)
 			.leftJoin(post.user, user)
 			.fetchJoin()
 			.leftJoin(post.likes, like)
 			.fetchJoin()
 			.where(post.id.in(ids))
+			.orderBy(post.createdAt.asc())
+			.distinct()
+			.fetch();
+	}
+
+	@Override
+	public List<Post> findByPostIdsJoinWithUserAndLikeOrderByTrend(List<Long> ids) {
+		return queryFactory.selectFrom(post)
+			.leftJoin(post.user, user)
+			.fetchJoin()
+			.leftJoin(post.likes, like)
+			.fetchJoin()
+			.where(post.id.in(ids))
+			.orderBy(post.popularity.desc())
 			.distinct()
 			.fetch();
 	}
