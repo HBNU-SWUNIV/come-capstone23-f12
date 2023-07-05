@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
 import {modifyProfileImage} from "@/redux/userSlice";
-import {getProfileImageAPI, modifyProfileImageAPI} from "@/apis/user";
+import {deleteProfileImageAPI, getProfileImageAPI, modifyProfileImageAPI} from "@/apis/user";
 import {useEffect, useState} from "react";
 
 const StyledSpace = styled(Space)`
@@ -30,6 +30,8 @@ export default function Profile() {
 	const [profileImage, setProfileImage] = useState("");
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [errorForDeleting, setErrorForDeleting] = useState(false);
+	const [loadingForDeleting, setLoadingForDeleting] = useState(false);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -74,8 +76,25 @@ export default function Profile() {
 		showUploadList: false,
 	};
 
+	const handleRemoveProfileImage = async () => {
+		try {
+			setErrorForDeleting(false);
+			setLoadingForDeleting(true);
+			await deleteProfileImageAPI(id);
+			await getProfileImageAPI(id);
+			const userProfile = await getProfileImageAPI(id);
+			const url = URL.createObjectURL(userProfile);
+
+			setProfileImage(url);
+			dispatch(modifyProfileImage(url));
+		} catch (e) {
+			setErrorForDeleting(true);
+		} finally {
+			setLoadingForDeleting(false);
+		}
+	};
+
 	return (
-		// TODO: 프로파일 이미지 처리
 		<StyledSpace direction="vertical" align="center">
 			<StyledAvatar
 				src={profileImage}
@@ -84,8 +103,9 @@ export default function Profile() {
 			<Upload {...props}>
 				<ImageButton type="primary" loading={loading}>이미지 업로드</ImageButton>
 			</Upload>
-			<ImageButton>이미지 제거</ImageButton>
+			<ImageButton onClick={handleRemoveProfileImage} loading={loadingForDeleting}>이미지 제거</ImageButton>
 			{error && <Typography.Text type="danger">업로드 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</Typography.Text>}
+			{errorForDeleting && <Typography.Text type="danger">이미지 제거 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</Typography.Text>}
 		</StyledSpace>
 	);
 }

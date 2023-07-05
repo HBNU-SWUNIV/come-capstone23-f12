@@ -126,3 +126,11 @@ export const getProfileImageAPI = async (id: number) => {
 		throw new Error(e);
 	}
 };
+
+export const deleteProfileImageAPI = async (id: number) => {
+	try {
+		await apiClient.delete(`/api/users/profileImage/${id}`);
+	} catch (e) {
+		throw new Error(e);
+	}
+};
