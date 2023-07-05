@@ -2,7 +2,7 @@ import {Avatar, Button, Space, Typography, Upload, UploadProps} from "antd";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/redux/store";
-import {modifyProfileImage, UserState} from "@/redux/userSlice";
+import {modifyProfileImage} from "@/redux/userSlice";
 import {getProfileImageAPI, modifyProfileImageAPI} from "@/apis/user";
 import {useEffect, useState} from "react";
 
@@ -26,7 +26,7 @@ const StyledAvatar = styled(Avatar)`
 `;
 
 export default function Profile() {
-	const {user} = useSelector<RootState, UserState>(state => state.user);
+	const id = useSelector<RootState, number>(state => state.user.user?.id);
 	const [profileImage, setProfileImage] = useState("");
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -34,13 +34,15 @@ export default function Profile() {
 
 	useEffect(() => {
 		const fetchProfileImage = async () => {
-			const binaryImg = await getProfileImageAPI(user.id);
+			const binaryImg = await getProfileImageAPI(id);
 
 			setProfileImage(URL.createObjectURL(binaryImg));
 		};
 
-		fetchProfileImage();
-	}, []);
+		if (id) {
+			fetchProfileImage();
+		}
+	}, [id]);
 
 	const uploadImage = async options => {
 		const {file} = options;
@@ -51,8 +53,8 @@ export default function Profile() {
 		try {
 			setError(false);
 			setLoading(true);
-			await modifyProfileImageAPI(formData, user.id);
-			const userProfile = await getProfileImageAPI(user.id);
+			await modifyProfileImageAPI(formData, id);
+			const userProfile = await getProfileImageAPI(id);
 			const url = URL.createObjectURL(userProfile);
 
 			setProfileImage(url);
