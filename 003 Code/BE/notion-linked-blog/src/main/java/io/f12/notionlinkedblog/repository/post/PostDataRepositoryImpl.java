@@ -118,6 +118,7 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 			.leftJoin(post.series, series)
 			.fetchJoin()
 			.where(post.id.in(ids))
+			.orderBy(post.popularity.desc())
 			.distinct()
 			.fetch();
 

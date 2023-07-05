@@ -230,7 +230,7 @@ class PostServiceTest {
 				//Mock
 				given(postDataRepository.findPostIdsByTitle(requestDto.getParam(), paging))
 					.willReturn(ids);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLike(ids))
+				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
 					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostsByTitle(requestDto);
@@ -299,7 +299,7 @@ class PostServiceTest {
 				//Mock
 				given(postDataRepository.findPostIdsByContent(requestDto.getParam(), paging))
 					.willReturn(ids);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLike(ids))
+				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
 					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostByContent(requestDto);
@@ -519,7 +519,7 @@ class PostServiceTest {
 				//Mock
 				given(postDataRepository.findLatestPostIdsByCreatedAtDesc(paging))
 					.willReturn(postIds);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLike(postIds))
+				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(postIds))
 					.willReturn(postList);
 
 				//when
@@ -577,7 +577,7 @@ class PostServiceTest {
 				//Mock
 				given(postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging))
 					.willReturn(postIds);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLike(postIds))
+				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(postIds))
 					.willReturn(postList);
 
 				//when
