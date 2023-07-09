@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
@@ -50,6 +49,9 @@ class CommentsApiControllerTest {
 	private User testUser;
 	private Post testPost;
 	private Comments testComment;
+
+	private String commentEndPoint = "/api/comment";
+	private String commentsEndPoint = "/api/comments";
 
 	@BeforeEach
 	void init() {
@@ -91,7 +93,7 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
-			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
+			final String url = commentsEndPoint + "/" + testPost.getId();
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -114,7 +116,7 @@ class CommentsApiControllerTest {
 				.comment("testComment")
 				.depth(0)
 				.build();
-			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
+			final String url = commentEndPoint + "/" + testPost.getId();
 			//mock
 
 			//when
@@ -135,7 +137,7 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
-				final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
+				final String url = commentEndPoint + "/" + testPost.getId();
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -159,7 +161,7 @@ class CommentsApiControllerTest {
 			EditCommentDto editComment = EditCommentDto.builder()
 				.comment("editComment")
 				.build();
-			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+			final String url = commentEndPoint + "/" + testPost.getId();
 			//mock
 
 			//when
@@ -169,7 +171,7 @@ class CommentsApiControllerTest {
 					.content(objectMapper.writeValueAsString(editComment))
 			);
 			//then
-			resultActions.andExpect(status().isFound());
+			resultActions.andExpect(status().isOk());
 		}
 
 		@DisplayName("실패 케이스")
@@ -180,7 +182,7 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
-				final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+				final String url = commentEndPoint + "/" + testPost.getId();
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -196,7 +198,7 @@ class CommentsApiControllerTest {
 		@Test
 		void writerEditorNotMatch() throws Exception {
 			//given
-			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+			final String url = commentEndPoint + "/" + testPost.getId();
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -215,7 +217,7 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
-			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
+			final String url = commentEndPoint + "/" + testPost.getId();
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -225,24 +227,25 @@ class CommentsApiControllerTest {
 			resultActions.andExpect(status().isNoContent());
 		}
 
+		@DisplayName("실패 케이스")
+		@Nested
+		class FailCase {
+			@DisplayName("작성자 변경자 불일치")
+			@WithUserDetails(value = "test2@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+			@Test
+			void writerEditorNotMatch() throws Exception {
+				//given
+				final String url = commentEndPoint + "/" + testPost.getId();
+				//mock
+				//when
+				ResultActions resultActions = mockMvc.perform(
+					delete(url)
+				);
+				//then
+				resultActions.andExpect(status().isUnauthorized());
+			}
+		}
+
 	}
 
-	@DisplayName("실패 케이스")
-	@Nested
-	class FailCase {
-		@DisplayName("작성자 변경자 불일치")
-		@WithUserDetails(value = "test2@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-		@Test
-		void writerEditorNotMatch() throws Exception {
-			//given
-			final String url = Endpoint.Api.POST + "/" + testComment.getId() + "/comments";
-			//mock
-			//when
-			ResultActions resultActions = mockMvc.perform(
-				delete(url)
-			);
-			//then
-			resultActions.andExpect(status().isUnauthorized());
-		}
-	}
 }
