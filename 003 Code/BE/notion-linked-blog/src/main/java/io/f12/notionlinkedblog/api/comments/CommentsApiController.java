@@ -55,7 +55,7 @@ public class CommentsApiController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "201", description = "회원 정보변경 성공",
+		@ApiResponse(responseCode = "201", description = "댓글 생성 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommentSearchDto.class)))
 	})
