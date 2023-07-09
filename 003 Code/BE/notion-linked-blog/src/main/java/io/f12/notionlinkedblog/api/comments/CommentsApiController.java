@@ -20,10 +20,12 @@ import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,15 +40,14 @@ public class CommentsApiController {
 
 	private final CommentsService commentsService;
 
-	@GetMapping("/api/comments/{postId}")
 	@Operation(summary = "postId 로 댓글 조회", description = "postId 에 해당하는 댓글들 조회")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "201", description = "정보 조회 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
-				schema = @Schema(implementation = CommentSearchDto.class))),
+				array = @ArraySchema(schema = @Schema(implementation = ParentsCommentDto.class)))),
 	})
-	// TODO: 추후 리턴타입 감싸기 필요
-	public List<CommentSearchDto> getComments(@PathVariable("postId") Long postId) {
+	@GetMapping("/api/comments/{postId}")
+	public List<ParentsCommentDto> getComments(@PathVariable("postId") Long postId) {
 		return commentsService.getCommentsByPostId(postId);
 	}
 

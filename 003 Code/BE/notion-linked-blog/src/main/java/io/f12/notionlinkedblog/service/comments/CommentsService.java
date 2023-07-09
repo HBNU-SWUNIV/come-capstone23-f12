@@ -2,9 +2,12 @@ package io.f12.notionlinkedblog.service.comments;
 
 import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.CommentExceptionsMessages.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Queue;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.ChildCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.exceptions.ExceptionMessages;
@@ -29,14 +34,9 @@ public class CommentsService {
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
 
-	public List<CommentSearchDto> getCommentsByPostId(Long postId) {
+	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
 		List<Comments> comments = commentsDataRepository.findByPostId(postId);
-		CommentSearchDto commentSearchDto = new CommentSearchDto();
-		return comments.stream().map(c -> {
-			return isParent(c) ? commentSearchDto.createParentComment(c) :
-				commentSearchDto.createChildComment(c);
-		}).collect(Collectors.toList());
-
+		return convertCommentsToDto(comments);
 	}
 
 	public CommentSearchDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
@@ -107,5 +107,26 @@ public class CommentsService {
 
 	private static boolean isChild(CreateCommentDto commentDto) {
 		return commentDto.getDepth().equals(1);
+	}
+
+	private List<ParentsCommentDto> convertCommentsToDto(List<Comments> comments) {
+		HashMap<Long, ParentsCommentDto> parentsMap = new HashMap<>();
+		Queue<ChildCommentDto> childQueue = new LinkedList<>();
+		for (Comments comment : comments) {
+			if (comment.getDepth().equals(0)) { // 부모의 경우
+				ParentsCommentDto parentsCommentDto = new ParentsCommentDto();
+				parentsMap.put(comment.getId(), parentsCommentDto.createParentCommentDto(comment));
+			} else { //자식의 경우
+				ChildCommentDto childCommentDto = new ChildCommentDto();
+				childQueue.add(childCommentDto.createChildCommentDto(comment));
+			}
+		}
+
+		for (ChildCommentDto childCommentDto : childQueue) {
+			ParentsCommentDto parentsCommentDto = parentsMap.get(childCommentDto.getParentCommentId());
+			parentsCommentDto.addChildComment(childCommentDto);
+		}
+
+		return new ArrayList<>(parentsMap.values());
 	}
 }
