@@ -6,6 +6,7 @@ public class Endpoint {
 		public static final String LOGOUT = "/api/logout";
 		public static final String USER = "/api/users";
 		public static final String POST = "/api/posts";
+		public static final String SERIES = "/api/series";
 		public static final String COMMENTS = "/api/posts/{id}/comments";
 		public static final String LOGIN_STATUS = "/api/users/login-status";
 		public static final String EMAIL = "/api/email";

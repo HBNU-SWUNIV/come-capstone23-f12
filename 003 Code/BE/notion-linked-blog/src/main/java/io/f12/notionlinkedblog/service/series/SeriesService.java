@@ -1,5 +1,8 @@
 package io.f12.notionlinkedblog.service.series;
 
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +17,13 @@ import io.f12.notionlinkedblog.domain.post.dto.SimplePostDto;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
+import io.f12.notionlinkedblog.domain.series.dto.request.SeriesCreateDto;
+import io.f12.notionlinkedblog.domain.series.dto.response.SeriesCreateResponseDto;
+import io.f12.notionlinkedblog.domain.series.dto.response.UserSeriesDto;
+import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.series.SeriesDataRepository;
+import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,8 +34,39 @@ public class SeriesService {
 
 	private final SeriesDataRepository seriesDataRepository;
 	private final PostDataRepository postDataRepository;
+	private final UserDataRepository userDataRepository;
 
 	private static final int pagingSize = 10;
+
+	public SeriesCreateResponseDto createSeries(SeriesCreateDto createDto) {
+		User user = userDataRepository.findById(createDto.getUserId())
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		Series series = Series.builder()
+			.user(user)
+			.title(createDto.getSeriesTitle())
+			.post(new ArrayList<>())
+			.build();
+
+		Series savedSeries = seriesDataRepository.save(series);
+
+		return SeriesCreateResponseDto.builder()
+			.seriesId(savedSeries.getId())
+			.build();
+	}
+
+	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
+		List<Series> series = userDataRepository.findSeriesByUserId(userId)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST))
+			.getSeries();
+
+		return series.stream().map(s -> {
+			return UserSeriesDto.builder()
+				.seriesId(s.getId())
+				.seriesName(s.getTitle())
+				.build();
+		}).collect(Collectors.toList());
+	}
 
 	public SeriesSimpleSearchDto getSimpleSeriesInfo(Long seriesId) {
 		Series series = seriesDataRepository.findSeriesById(seriesId)
@@ -41,13 +80,6 @@ public class SeriesService {
 			.seriesId(series.getId())
 			.posts(simplePosts)
 			.build();
-	}
-
-	private List<SimplePostDto> postToSimplePost(List<Post> post) {
-		return post.stream().map(p -> SimplePostDto.builder()
-			.postId(p.getId())
-			.postTitle(p.getTitle())
-			.build()).collect(Collectors.toList());
 	}
 
 	public SeriesDetailSearchDto getDetailSeriesInfoOrderByDesc(Long seriesId, Integer page) {
@@ -108,6 +140,13 @@ public class SeriesService {
 	}
 
 	// 내부 사용 매서드
+	private List<SimplePostDto> postToSimplePost(List<Post> post) {
+		return post.stream().map(p -> SimplePostDto.builder()
+			.postId(p.getId())
+			.postTitle(p.getTitle())
+			.build()).collect(Collectors.toList());
+	}
+
 	private String thumbnailPathToRequestUrl(String thumbnailName) {
 		return Endpoint.Api.REQUEST_THUMBNAIL_IMAGE + thumbnailName;
 	}

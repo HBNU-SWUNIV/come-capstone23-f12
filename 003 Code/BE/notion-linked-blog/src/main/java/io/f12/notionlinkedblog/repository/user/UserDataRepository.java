@@ -19,4 +19,10 @@ public interface UserDataRepository extends JpaRepository<User, Long> {
 	Optional<UserSearchDto> findUserById(@Param("id") Long id);
 
 	Optional<User> findByEmail(final String email);
+
+	@Query("SELECT u "
+		+ "FROM User u "
+		+ "LEFT JOIN FETCH u.series "
+		+ "WHERE u.id = :userId")
+	Optional<User> findSeriesByUserId(@Param("userId") Long userId);
 }
