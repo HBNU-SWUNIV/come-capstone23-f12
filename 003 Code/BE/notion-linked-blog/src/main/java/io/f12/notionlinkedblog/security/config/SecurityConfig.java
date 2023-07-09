@@ -47,6 +47,7 @@ public class SecurityConfig {
 			.antMatchers(HttpMethod.GET, Endpoint.Api.USER + "/**").permitAll()
 			.antMatchers(HttpMethod.GET, Endpoint.Api.POST + "/**").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/**").hasRole("USER")
+			.antMatchers(HttpMethod.GET, Endpoint.Api.SERIES + "/**").permitAll()
 			// swagger 문서 접근 허용
 			.antMatchers("/swagger-ui/**").permitAll()
 			.antMatchers("/v3/api-docs/**").permitAll()
