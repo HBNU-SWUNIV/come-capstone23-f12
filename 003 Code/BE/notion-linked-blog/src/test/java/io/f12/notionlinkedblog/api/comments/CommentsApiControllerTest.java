@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
@@ -49,9 +50,6 @@ class CommentsApiControllerTest {
 	private User testUser;
 	private Post testPost;
 	private Comments testComment;
-
-	private String commentEndPoint = "/api/comment";
-	private String commentsEndPoint = "/api/comments";
 
 	@BeforeEach
 	void init() {
@@ -93,7 +91,7 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
-			final String url = commentsEndPoint + "/" + testPost.getId();
+			final String url = Endpoint.Api.POST + "/" + testPost.getId() + "/comments";
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -116,7 +114,7 @@ class CommentsApiControllerTest {
 				.comment("testComment")
 				.depth(0)
 				.build();
-			final String url = commentEndPoint + "/" + testPost.getId();
+			final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 			//mock
 
 			//when
@@ -137,7 +135,7 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
-				final String url = commentEndPoint + "/" + testPost.getId();
+				final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -161,7 +159,7 @@ class CommentsApiControllerTest {
 			EditCommentDto editComment = EditCommentDto.builder()
 				.comment("editComment")
 				.build();
-			final String url = commentEndPoint + "/" + testPost.getId();
+			final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 			//mock
 
 			//when
@@ -182,7 +180,7 @@ class CommentsApiControllerTest {
 			@Test
 			void noCreateData() throws Exception {
 				//given
-				final String url = commentEndPoint + "/" + testPost.getId();
+				final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
@@ -198,7 +196,7 @@ class CommentsApiControllerTest {
 		@Test
 		void writerEditorNotMatch() throws Exception {
 			//given
-			final String url = commentEndPoint + "/" + testPost.getId();
+			final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -217,7 +215,7 @@ class CommentsApiControllerTest {
 		@Test
 		void successfulCase() throws Exception {
 			//given
-			final String url = commentEndPoint + "/" + testPost.getId();
+			final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 			//mock
 			//when
 			ResultActions resultActions = mockMvc.perform(
@@ -235,7 +233,7 @@ class CommentsApiControllerTest {
 			@Test
 			void writerEditorNotMatch() throws Exception {
 				//given
-				final String url = commentEndPoint + "/" + testPost.getId();
+				final String url = Endpoint.Api.COMMENTS + "/" + testComment.getId();
 				//mock
 				//when
 				ResultActions resultActions = mockMvc.perform(
