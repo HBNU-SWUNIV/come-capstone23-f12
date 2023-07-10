@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.domain.comments.Comments;
-import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ChildCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
@@ -42,7 +42,7 @@ public class CommentsService {
 		return convertDtosToList(parentsMap, childQueue);
 	}
 
-	public CommentSearchDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
+	public CommentEditDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		User user = userDataRepository.findById(userId)
@@ -64,10 +64,14 @@ public class CommentsService {
 
 		Comments savedComments = commentsDataRepository.save(builtComments);
 
-		CommentSearchDto builtReturnDto = CommentSearchDto.builder()
-			.username(user.getUsername())
-			.comments(savedComments.getContent())
-			.depth(savedComments.getDepth())
+		CommentEditDto builtReturnDto = CommentEditDto.builder()
+			.commentId(savedComments.getId())
+			.comment(savedComments.getContent())
+			.parentCommentId(savedComments.getDepth().equals(0) ? null : parentComment.getId())
+			.createdAt(savedComments.getCreatedAt())
+			.author(user.getUsername())
+			.authorId(user.getId())
+			.authorProfileLink(user.getProfile())
 			.build();
 
 		if (parentComment != null) {
@@ -77,17 +81,23 @@ public class CommentsService {
 		return builtReturnDto;
 	}
 
-	public CommentSearchDto editComment(Long commentId, Long userId, String contents) {
+	public CommentEditDto editComment(Long commentId, Long userId, String contents) {
 		Comments comments = commentsDataRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
+		User user = comments.getUser();
 
 		if (!isSameUser(userId, comments.getUser().getId())) {
 			throw new IllegalStateException(NOT_COMMENT_OWNER);
 		}
 		comments.editComments(contents);
-		return CommentSearchDto.builder()
-			.username(comments.getUser().getUsername())
-			.comments(comments.getContent())
+		return CommentEditDto.builder()
+			.commentId(comments.getId())
+			.comment(comments.getContent())
+			.parentCommentId(comments.getDepth().equals(0) ? null : comments.getParent().getId())
+			.createdAt(comments.getCreatedAt())
+			.author(user.getUsername())
+			.authorId(user.getId())
+			.authorProfileLink(user.getProfile())
 			.build();
 	}
 

@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
-import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.comments.CommentsService;
@@ -57,9 +57,9 @@ public class CommentsApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "201", description = "댓글 생성 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
-				schema = @Schema(implementation = CommentSearchDto.class)))
+				schema = @Schema(implementation = CommentEditDto.class)))
 	})
-	public CommentSearchDto createComment(@PathVariable("commentsId") Long postId,
+	public CommentEditDto createComment(@PathVariable("commentsId") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated CreateCommentDto commentDto) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
@@ -72,7 +72,7 @@ public class CommentsApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = EditCommentDto.class)))
 	})
-	public CommentSearchDto editComment(@PathVariable("commentsId") Long commentId,
+	public CommentEditDto editComment(@PathVariable("commentsId") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated EditCommentDto commentDto) {
 		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
