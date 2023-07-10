@@ -46,12 +46,12 @@ public class CommentsApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				array = @ArraySchema(schema = @Schema(implementation = ParentsCommentDto.class)))),
 	})
-	@GetMapping("/api/comments/{postId}")
+	@GetMapping(Endpoint.Api.COMMENTS)
 	public List<ParentsCommentDto> getComments(@PathVariable("postId") Long postId) {
 		return commentsService.getCommentsByPostId(postId);
 	}
 
-	@PostMapping(Endpoint.Api.COMMENTS)
+	@PostMapping(Endpoint.Api.COMMENT)
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	@ApiResponses(value = {
@@ -65,7 +65,7 @@ public class CommentsApiController {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
 	}
 
-	@PutMapping(Endpoint.Api.COMMENTS)
+	@PutMapping(Endpoint.Api.COMMENT)
 	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "댓글 변경 성공",
@@ -78,7 +78,7 @@ public class CommentsApiController {
 		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
-	@DeleteMapping(Endpoint.Api.COMMENTS)
+	@DeleteMapping(Endpoint.Api.COMMENT)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "댓글 삭제", description = "commentId에 해당하는 댓글 삭제")
 	@ApiResponses(value = {
