@@ -46,12 +46,12 @@ public class CommentsApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				array = @ArraySchema(schema = @Schema(implementation = ParentsCommentDto.class)))),
 	})
-	@GetMapping(Endpoint.Api.COMMENTS)
+	@GetMapping(Endpoint.Api.POST + "/{postId}/comments")
 	public List<ParentsCommentDto> getComments(@PathVariable("postId") Long postId) {
 		return commentsService.getCommentsByPostId(postId);
 	}
 
-	@PostMapping(Endpoint.Api.COMMENT)
+	@PostMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	@ApiResponses(value = {
@@ -59,32 +59,32 @@ public class CommentsApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommentSearchDto.class)))
 	})
-	public CommentSearchDto createComment(@PathVariable("id") Long postId,
+	public CommentSearchDto createComment(@PathVariable("commentsId") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated CreateCommentDto commentDto) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
 	}
 
-	@PutMapping(Endpoint.Api.COMMENT)
+	@PutMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
 	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "댓글 변경 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = EditCommentDto.class)))
 	})
-	public CommentSearchDto editComment(@PathVariable("id") Long commentId,
+	public CommentSearchDto editComment(@PathVariable("commentsId") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated EditCommentDto commentDto) {
 		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
-	@DeleteMapping(Endpoint.Api.COMMENT)
+	@DeleteMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "댓글 삭제", description = "commentId에 해당하는 댓글 삭제")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "204", description = "댓글 삭제 성공")
 	})
-	public void removeComment(@PathVariable("id") Long commentId,
+	public void removeComment(@PathVariable("commentsId") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		commentsService.removeComment(commentId, loginUser.getUser().getId());
 	}
