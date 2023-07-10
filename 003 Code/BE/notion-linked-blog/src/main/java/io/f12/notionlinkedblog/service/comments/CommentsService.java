@@ -107,9 +107,9 @@ public class CommentsService {
 	private void convertCommentsToDto(List<Comments> comments,
 		HashMap<Long, ParentsCommentDto> parentsMap, Queue<ChildCommentDto> childQueue) {
 		for (Comments comment : comments) {
-			if (isParent(comment)) { // 부모의 경우
+			if (isParent(comment)) {
 				parentsMap.put(comment.getId(), createParentsCommentDto(comment));
-			} else { //자식의 경우
+			} else {
 				childQueue.add(createChildCommentDto(comment));
 			}
 		}
@@ -130,7 +130,7 @@ public class CommentsService {
 		return CommentEditDto.builder()
 			.commentId(comments.getId())
 			.comment(comments.getContent())
-			.parentCommentId(comments.getDepth().equals(0) ? null : comments.getParent().getId())
+			.parentCommentId(isParent(comments) ? null : comments.getParent().getId())
 			.createdAt(comments.getCreatedAt())
 			.author(user.getUsername())
 			.authorId(user.getId())
