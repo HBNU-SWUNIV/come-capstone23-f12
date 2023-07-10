@@ -29,14 +29,17 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class CommentsService {
-
 	private final CommentsDataRepository commentsDataRepository;
+
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
 
 	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
 		List<Comments> comments = commentsDataRepository.findByPostId(postId);
-		return convertCommentsToDto(comments);
+		HashMap<Long, ParentsCommentDto> parentsMap = new HashMap<>();
+		Queue<ChildCommentDto> childQueue = new LinkedList<>();
+		convertCommentsToDto(comments, parentsMap, childQueue);
+		return convertDtosToList(parentsMap, childQueue);
 	}
 
 	public CommentSearchDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
@@ -101,17 +104,16 @@ public class CommentsService {
 		return Objects.equals(sessionUserId, databaseUserId);
 	}
 
-	private static boolean isParent(Comments c) {
-		return c.getDepth().equals(0);
+	private static boolean isParent(Comments comments) {
+		return comments.getDepth().equals(0);
 	}
 
 	private static boolean isChild(CreateCommentDto commentDto) {
 		return commentDto.getDepth().equals(1);
 	}
 
-	private List<ParentsCommentDto> convertCommentsToDto(List<Comments> comments) {
-		HashMap<Long, ParentsCommentDto> parentsMap = new HashMap<>();
-		Queue<ChildCommentDto> childQueue = new LinkedList<>();
+	private void convertCommentsToDto(List<Comments> comments,
+		HashMap<Long, ParentsCommentDto> parentsMap, Queue<ChildCommentDto> childQueue) {
 		for (Comments comment : comments) {
 			if (comment.getDepth().equals(0)) { // 부모의 경우
 				ParentsCommentDto parentsCommentDto = new ParentsCommentDto();
@@ -121,6 +123,10 @@ public class CommentsService {
 				childQueue.add(childCommentDto.createChildCommentDto(comment));
 			}
 		}
+	}
+
+	private List<ParentsCommentDto> convertDtosToList(HashMap<Long, ParentsCommentDto> parentsMap,
+		Queue<ChildCommentDto> childQueue) {
 
 		for (ChildCommentDto childCommentDto : childQueue) {
 			ParentsCommentDto parentsCommentDto = parentsMap.get(childCommentDto.getParentCommentId());
