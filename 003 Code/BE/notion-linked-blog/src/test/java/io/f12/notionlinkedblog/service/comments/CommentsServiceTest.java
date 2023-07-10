@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.f12.notionlinkedblog.domain.comments.Comments;
-import io.f12.notionlinkedblog.domain.comments.dto.CommentSearchDto;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
+import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
@@ -156,10 +156,10 @@ class CommentsServiceTest {
 			given(commentsDataRepository.save(any(Comments.class)))
 				.willReturn(comments);
 			//when
-			CommentSearchDto commentDto = commentsService.createComments(fakePostId, fakeUserId, createCommentDto);
+			CommentEditDto commentDto = commentsService.createComments(fakePostId, fakeUserId, createCommentDto);
 			//then
-			assertThat(commentDto).extracting("comments").isEqualTo(content);
-			assertThat(commentDto).extracting("username").isEqualTo(user.getUsername());
+			assertThat(commentDto.getComment()).isEqualTo(content);
+			assertThat(commentDto.getAuthor()).isEqualTo(user.getUsername());
 		}
 
 	}
@@ -195,9 +195,9 @@ class CommentsServiceTest {
 			given(commentsDataRepository.findById(fakeCommentId))
 				.willReturn(Optional.ofNullable(comments));
 			//when
-			CommentSearchDto editedComment = commentsService.editComment(fakeCommentId, fakeUserId, editContent);
+			CommentEditDto editedComment = commentsService.editComment(fakeCommentId, fakeUserId, editContent);
 			//then
-			assertThat(editedComment).extracting("comments").isEqualTo(editContent);
+			assertThat(editedComment.getComment()).isEqualTo(editContent);
 		}
 	}
 
