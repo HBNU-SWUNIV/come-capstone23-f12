@@ -64,15 +64,7 @@ public class CommentsService {
 
 		Comments savedComments = commentsDataRepository.save(builtComments);
 
-		CommentEditDto builtReturnDto = CommentEditDto.builder()
-			.commentId(savedComments.getId())
-			.comment(savedComments.getContent())
-			.parentCommentId(savedComments.getDepth().equals(0) ? null : parentComment.getId())
-			.createdAt(savedComments.getCreatedAt())
-			.author(user.getUsername())
-			.authorId(user.getId())
-			.authorProfileLink(user.getProfile())
-			.build();
+		CommentEditDto builtReturnDto = convertCommentsToCommentEditDto(savedComments, user);
 
 		if (parentComment != null) {
 			parentComment.addChildren(savedComments);
@@ -86,29 +78,19 @@ public class CommentsService {
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		User user = comments.getUser();
 
-		if (!isSameUser(userId, comments.getUser().getId())) {
-			throw new IllegalStateException(NOT_COMMENT_OWNER);
-		}
+		checkIsAuthor(userId, comments);
 		comments.editComments(contents);
-		return CommentEditDto.builder()
-			.commentId(comments.getId())
-			.comment(comments.getContent())
-			.parentCommentId(comments.getDepth().equals(0) ? null : comments.getParent().getId())
-			.createdAt(comments.getCreatedAt())
-			.author(user.getUsername())
-			.authorId(user.getId())
-			.authorProfileLink(user.getProfile())
-			.build();
+		return convertCommentsToCommentEditDto(comments, user);
 	}
 
 	public void removeComment(Long commentId, Long userId) {
 		Comments comments = commentsDataRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
-		if (!isSameUser(userId, comments.getUser().getId())) {
-			throw new IllegalStateException(NOT_COMMENT_OWNER);
-		}
+		checkIsAuthor(userId, comments);
 		commentsDataRepository.deleteById(commentId);
 	}
+
+	// 내부사용 매서드
 
 	private boolean isSameUser(Long sessionUserId, Long databaseUserId) {
 		return Objects.equals(sessionUserId, databaseUserId);
@@ -125,12 +107,10 @@ public class CommentsService {
 	private void convertCommentsToDto(List<Comments> comments,
 		HashMap<Long, ParentsCommentDto> parentsMap, Queue<ChildCommentDto> childQueue) {
 		for (Comments comment : comments) {
-			if (comment.getDepth().equals(0)) { // 부모의 경우
-				ParentsCommentDto parentsCommentDto = new ParentsCommentDto();
-				parentsMap.put(comment.getId(), parentsCommentDto.createParentCommentDto(comment));
+			if (isParent(comment)) { // 부모의 경우
+				parentsMap.put(comment.getId(), createParentsCommentDto(comment));
 			} else { //자식의 경우
-				ChildCommentDto childCommentDto = new ChildCommentDto();
-				childQueue.add(childCommentDto.createChildCommentDto(comment));
+				childQueue.add(createChildCommentDto(comment));
 			}
 		}
 	}
@@ -144,5 +124,33 @@ public class CommentsService {
 		}
 
 		return new ArrayList<>(parentsMap.values());
+	}
+
+	private static CommentEditDto convertCommentsToCommentEditDto(Comments comments, User user) {
+		return CommentEditDto.builder()
+			.commentId(comments.getId())
+			.comment(comments.getContent())
+			.parentCommentId(comments.getDepth().equals(0) ? null : comments.getParent().getId())
+			.createdAt(comments.getCreatedAt())
+			.author(user.getUsername())
+			.authorId(user.getId())
+			.authorProfileLink(user.getProfile())
+			.build();
+	}
+
+	private void checkIsAuthor(Long userId, Comments comments) {
+		if (!isSameUser(userId, comments.getUser().getId())) {
+			throw new IllegalStateException(NOT_COMMENT_OWNER);
+		}
+	}
+
+	private ParentsCommentDto createParentsCommentDto(Comments comment) {
+		ParentsCommentDto parentsCommentDto = new ParentsCommentDto();
+		return parentsCommentDto.createParentCommentDto(comment);
+	}
+
+	private ChildCommentDto createChildCommentDto(Comments comment) {
+		ChildCommentDto childCommentDto = new ChildCommentDto();
+		return childCommentDto.createChildCommentDto(comment);
 	}
 }
