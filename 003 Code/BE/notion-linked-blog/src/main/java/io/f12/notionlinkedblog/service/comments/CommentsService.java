@@ -97,7 +97,7 @@ public class CommentsService {
 	}
 
 	private static boolean isParent(Comments comments) {
-		return comments.getDepth().equals(0);
+		return comments.getDepth() == 0;
 	}
 
 	private static boolean isChild(CreateCommentDto commentDto) {
