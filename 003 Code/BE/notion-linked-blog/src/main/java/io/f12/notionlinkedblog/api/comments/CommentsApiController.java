@@ -51,7 +51,7 @@ public class CommentsApiController {
 		return commentsService.getCommentsByPostId(postId);
 	}
 
-	@PostMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
+	@PostMapping(Endpoint.Api.COMMENTS + "/{commentId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "댓글 생성", description = "postId에 해당하는 댓글 생성")
 	@ApiResponses(value = {
@@ -59,32 +59,32 @@ public class CommentsApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommentEditDto.class)))
 	})
-	public CommentEditDto createComment(@PathVariable("commentsId") Long postId,
+	public CommentEditDto createComment(@PathVariable("commentId") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated CreateCommentDto commentDto) {
 		return commentsService.createComments(postId, loginUser.getUser().getId(), commentDto);
 	}
 
-	@PutMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
+	@PutMapping(Endpoint.Api.COMMENTS + "/{commentId}")
 	@Operation(summary = "댓글 수정", description = "commentsId 에 해당하는 댓글 수정")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "댓글 변경 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = EditCommentDto.class)))
 	})
-	public CommentEditDto editComment(@PathVariable("commentsId") Long commentId,
+	public CommentEditDto editComment(@PathVariable("commentId") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated EditCommentDto commentDto) {
 		return commentsService.editComment(commentId, loginUser.getUser().getId(), commentDto.getComment());
 	}
 
-	@DeleteMapping(Endpoint.Api.COMMENTS + "/{commentsId}")
+	@DeleteMapping(Endpoint.Api.COMMENTS + "/{commentId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@Operation(summary = "댓글 삭제", description = "commentId에 해당하는 댓글 삭제")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "204", description = "댓글 삭제 성공")
 	})
-	public void removeComment(@PathVariable("commentsId") Long commentId,
+	public void removeComment(@PathVariable("commentId") Long commentId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 		commentsService.removeComment(commentId, loginUser.getUser().getId());
 	}
