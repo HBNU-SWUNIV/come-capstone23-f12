@@ -45,6 +45,7 @@ public class SecurityConfig {
 			.antMatchers(Endpoint.Api.EMAIL + "/**").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/email/signup").permitAll()
 			.antMatchers(Endpoint.Api.USER + "/**").hasRole("USER")
+			//TODO: 추후 GET 메소드에 대해 처리 필요
 			.antMatchers(HttpMethod.GET).permitAll()
 			// swagger 문서 접근 허용
 			.antMatchers("/swagger-ui/**").permitAll()
