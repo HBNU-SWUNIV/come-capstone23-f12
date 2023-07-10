@@ -21,7 +21,7 @@ public class ParentsCommentDto {
 	private Long authorId;
 	private String author;
 	private String authorProfileLink;
-	private List<ChildCommentDto> child;
+	private List<ChildCommentDto> children;
 
 	public ParentsCommentDto createParentCommentDto(Comments comments) {
 		this.commentsId = comments.getId();
@@ -30,11 +30,11 @@ public class ParentsCommentDto {
 		this.authorId = comments.getUser().getId();
 		this.author = comments.getUser().getUsername();
 		this.authorProfileLink = comments.getUser().getProfile();
-		this.child = new ArrayList<>();
+		this.children = new ArrayList<>();
 		return this;
 	}
 
 	public void addChildComment(ChildCommentDto dto) {
-		child.add(dto);
+		children.add(dto);
 	}
 }

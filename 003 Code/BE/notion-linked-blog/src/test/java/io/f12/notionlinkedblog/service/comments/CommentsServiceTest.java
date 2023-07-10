@@ -89,8 +89,8 @@ class CommentsServiceTest {
 				ParentsCommentDto parentsCommentDto = commentsDto.get(0);
 
 				//then
-				assertThat(parentsCommentDto.getChild()).size().isEqualTo(1);
-				assertThat(parentsCommentDto.getChild().get(0).getComment()).isEqualTo(content2);
+				assertThat(parentsCommentDto.getChildren()).size().isEqualTo(1);
+				assertThat(parentsCommentDto.getChildren().get(0).getComment()).isEqualTo(content2);
 				assertThat(parentsCommentDto.getComment()).isEqualTo(content1);
 
 			}
