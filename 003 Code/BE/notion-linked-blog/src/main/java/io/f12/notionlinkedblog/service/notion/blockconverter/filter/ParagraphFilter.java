@@ -21,7 +21,7 @@ public class ParagraphFilter {
 			CheckAnnotations letterShape = new CheckAnnotations(text);
 			stringBuilder.append(letterShape.applyAnnotations(text));
 		}
-		stringBuilder.append("\n");
+		stringBuilder.append("\n\n");
 		return stringBuilder.toString();
 	}
 
