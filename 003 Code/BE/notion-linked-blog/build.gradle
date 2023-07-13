@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.3'
     implementation 'org.springdoc:springdoc-openapi-security:1.6.3'
     implementation("com.github.seratch:notion-sdk-jvm-core:${notionSdkVersion}")
-    implementation("com.github.seratch:notion-sdk-jvm-okhttp4:${notionSdkVersion}")
+//    implementation("com.github.seratch:notion-sdk-jvm-okhttp4:${notionSdkVersion}")
     testImplementation 'org.projectlombok:lombok:1.18.22'
 
     compileOnly 'org.projectlombok:lombok'
