@@ -1,0 +1,22 @@
+package io.f12.notionlinkedblog.service.notion.blockconverter.type;
+
+public class NotionBlockType {
+	public static class Block {
+		public static final String BOOKMARK = "bookmark";
+		public static final String PARAGRAPH = "paragraph";
+		public static final String H1 = "heading_1";
+		public static final String H2 = "heading_2";
+		public static final String H3 = "heading_3";
+		public static final String BULLETED_LIST_ITEM = "bulleted_list_item";
+		public static final String TABLE = "table";
+		public static final String QUOTE = "quote";
+		public static final String DIVIDER = "divider";
+		public static final String TODO = "to_do";
+		public static final String NUMBERED_LIST_ITEM = "numbered_list_item";
+		public static final String CALLOUT = "callout";
+		public static final String TOGGLE_BLOCK = "toggle";
+		public static final String CODE_BLOCK = "code";
+		public static final String CHILD_PAGE = "child_page";
+	}
+
+}

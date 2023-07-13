@@ -1,6 +1,9 @@
 package io.f12.notionlinkedblog.service.notion.blockconverter;
 
+import static io.f12.notionlinkedblog.service.notion.blockconverter.type.NotionBlockType.Block.*;
+
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BulletedListItemFilter;
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.DivideFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingOneFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingThreeFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingTwoFilter;
@@ -29,20 +32,22 @@ public class NotionBlockConverter {
 	}
 
 	public void doFilter() {
-		if (type == "paragraph") {
+		if (type == PARAGRAPH) {
 			stringBuilder.append(ParagraphFilter.builder().block(block).build().doFilter());
-		} else if (type == "heading_1") {
+		} else if (type == H1) {
 			stringBuilder.append(HeadingOneFilter.builder().block(block).build().doFilter());
-		} else if (type == "heading_2") {
+		} else if (type == H2) {
 			stringBuilder.append(HeadingTwoFilter.builder().block(block).build().doFilter());
-		} else if (type == "heading_3") {
+		} else if (type == H3) {
 			stringBuilder.append(HeadingThreeFilter.builder().block(block).build().doFilter());
-		} else if (type == "bulleted_list_item") {
+		} else if (type == BULLETED_LIST_ITEM) {
 			stringBuilder.append(BulletedListItemFilter.builder().block(block).build().doFilter());
-		} else if (type == "table") {
+		} else if (type == TABLE) {
 			stringBuilder.append(TableFilter.builder().block(block).notionClient(notionClient).build().doFilter());
-		} else if (type == "quote") {
+		} else if (type == QUOTE) {
 			stringBuilder.append(QuoteFilter.builder().block(block).build().doFilter());
+		} else if (type == DIVIDER) {
+			stringBuilder.append(DivideFilter.builder().build().doFilter());
 		}
 		log.info(" - toString()\n{}", stringBuilder.toString());
 	}
