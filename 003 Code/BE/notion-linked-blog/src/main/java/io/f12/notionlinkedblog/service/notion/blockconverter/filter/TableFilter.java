@@ -2,18 +2,20 @@ package io.f12.notionlinkedblog.service.notion.blockconverter.filter;
 
 import java.util.List;
 
-import io.f12.notionlinkedblog.service.notion.NotionService;
 import io.f12.notionlinkedblog.service.notion.blockconverter.CheckAnnotations;
-import io.f12.notionlinkedblog.service.notion.blockconverter.NotionBlockConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
+import notion.api.v1.model.blocks.Blocks;
 import notion.api.v1.model.pages.PageProperty;
+import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @AllArgsConstructor
 @Builder
 public class TableFilter {
 	private Block block;
+	private final NotionClient notionClient;
 
 	public String doFilter() {
 		int tableWidth = block.asTable().getTable().getTableWidth();
@@ -22,10 +24,10 @@ public class TableFilter {
 	}
 
 	private String internalFunction(String id, int width) {
-		List<Block> results = new NotionService().reRequestTable(id, width);
+		List<Block> results = reRequestTable(id, width, notionClient);
+
 		int row = results.get(0).asTableRow().getTableRow().getCells().size();
 		StringBuilder stringBuilder = new StringBuilder();
-		NotionBlockConverter notionBlockConverter = new NotionBlockConverter();
 
 		for (int i = 0; i < width + 1; i++) {
 			stringBuilder.append("|");
@@ -47,6 +49,18 @@ public class TableFilter {
 			stringBuilder.append("\n");
 		}
 		return stringBuilder.toString();
+	}
+
+	private List<Block> reRequestTable(String id, int width, NotionClient client) {
+		Blocks blocks;
+		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
+			= new RetrieveBlockChildrenRequest(id);
+		try {
+			blocks = client.retrieveBlockChildren(retrieveBlockChildrenRequest);
+		} finally {
+			client.close();
+		}
+		return blocks.getResults();
 	}
 
 }
