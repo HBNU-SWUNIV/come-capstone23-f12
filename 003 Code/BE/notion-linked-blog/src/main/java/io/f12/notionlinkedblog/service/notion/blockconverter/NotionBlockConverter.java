@@ -10,6 +10,7 @@ import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingTwoFi
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ParagraphFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.QuoteFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.TableFilter;
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ToDoFilter;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
@@ -48,6 +49,8 @@ public class NotionBlockConverter {
 			stringBuilder.append(QuoteFilter.builder().block(block).build().doFilter());
 		} else if (type == DIVIDER) {
 			stringBuilder.append(DivideFilter.builder().build().doFilter());
+		} else if (type == TODO) {
+			stringBuilder.append(ToDoFilter.builder().block(block).build().doFilter());
 		}
 		log.info(" - toString()\n{}", stringBuilder.toString());
 	}

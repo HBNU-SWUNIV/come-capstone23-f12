@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.Blocks;
-import notion.api.v1.model.blocks.ParagraphBlock;
-import notion.api.v1.model.pages.PageProperty;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @Service
@@ -22,26 +20,6 @@ public class NotionService {
 	private final NotionDevComponent notionDevComponent;
 
 	public String test() {
-		Blocks blocks;
-		NotionClient client = new NotionClient();
-		client.setToken("secret_AzYyixQsvIQCSvgcVhuCvWoNk17xYLlwuREu6iklR2S");
-		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest =
-			new RetrieveBlockChildrenRequest("696290e4edac4c77b0917df853bc309c");
-		try {
-			blocks = client.retrieveBlockChildren(retrieveBlockChildrenRequest);
-		} finally {
-			client.close();
-		}
-
-		List<Block> results = blocks.getResults();
-		Block block = results.get(0);
-		ParagraphBlock paragraph = block.asParagraph();
-		List<PageProperty.RichText> texts = paragraph.getParagraph().getRichText();
-
-		return blocks.toString();
-	}
-
-	public String test2() {
 		return retrieveBlocksFromPage("Test-Fin-696290e4edac4c77b0917df853bc309c");
 	}
 
