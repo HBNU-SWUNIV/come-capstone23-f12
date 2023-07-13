@@ -5,6 +5,7 @@ import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingOneFi
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingThreeFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingTwoFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ParagraphFilter;
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.QuoteFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.TableFilter;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
@@ -13,7 +14,7 @@ import notion.api.v1.model.blocks.Block;
 @Slf4j
 public class NotionBlockConverter {
 
-	private StringBuilder stringBuilder = new StringBuilder();
+	private final StringBuilder stringBuilder = new StringBuilder();
 	private Block block;
 	private String type;
 	private NotionClient notionClient;
@@ -40,6 +41,8 @@ public class NotionBlockConverter {
 			stringBuilder.append(BulletedListItemFilter.builder().block(block).build().doFilter());
 		} else if (type == "table") {
 			stringBuilder.append(TableFilter.builder().block(block).notionClient(notionClient).build().doFilter());
+		} else if (type == "quote") {
+			stringBuilder.append(QuoteFilter.builder().block(block).build().doFilter());
 		}
 		log.info(" - toString()\n{}", stringBuilder.toString());
 	}
