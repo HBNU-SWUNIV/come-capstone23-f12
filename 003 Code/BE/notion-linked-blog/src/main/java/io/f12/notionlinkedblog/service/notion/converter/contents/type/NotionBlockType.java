@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.service.notion.blockconverter.type;
+package io.f12.notionlinkedblog.service.notion.converter.contents.type;
 
 public class NotionBlockType {
 	public static class Block {

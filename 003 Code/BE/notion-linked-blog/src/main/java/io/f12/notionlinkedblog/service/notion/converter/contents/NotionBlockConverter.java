@@ -1,20 +1,20 @@
-package io.f12.notionlinkedblog.service.notion.blockconverter;
+package io.f12.notionlinkedblog.service.notion.converter.contents;
 
-import static io.f12.notionlinkedblog.service.notion.blockconverter.type.NotionBlockType.Block.*;
+import static io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType.Block.*;
 
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BookmarkFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BulletedListItemFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.CodeBlockFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.DivideFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingOneFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingThreeFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingTwoFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.NumberedListItemFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ParagraphFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.QuoteFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.TableFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ToDoFilter;
-import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ToggleBlockFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.BookmarkFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.BulletedListItemFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.CodeBlockFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.DivideFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingOneFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingThreeFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingTwoFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.NumberedListItemFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ParagraphFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.QuoteFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.TableFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ToDoFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ToggleBlockFilter;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;

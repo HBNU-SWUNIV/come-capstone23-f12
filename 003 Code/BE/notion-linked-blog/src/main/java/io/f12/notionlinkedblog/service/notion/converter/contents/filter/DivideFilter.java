@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.service.notion.blockconverter.filter;
+package io.f12.notionlinkedblog.service.notion.converter.contents.filter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
