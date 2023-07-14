@@ -14,6 +14,7 @@ import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ParagraphFil
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.QuoteFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.TableFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ToDoFilter;
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.ToggleBlockFilter;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
@@ -60,8 +61,11 @@ public class NotionBlockConverter {
 			stringBuilder.append(CodeBlockFilter.builder().block(block).build().doFilter());
 		} else if (type == BOOKMARK) {
 			stringBuilder.append(BookmarkFilter.builder().block(block).build().doFilter());
+		} else if (type == TOGGLE_BLOCK) {
+			stringBuilder.append(
+				ToggleBlockFilter.builder().block(block).notionClient(notionClient).build().doFilter());
 		}
-		log.info(" - toString()\n{}", stringBuilder.toString());
+		log.info(" - toString()\n{}", stringBuilder);
 	}
 
 	@Override
