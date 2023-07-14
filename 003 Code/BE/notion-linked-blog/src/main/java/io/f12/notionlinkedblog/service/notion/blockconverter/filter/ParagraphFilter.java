@@ -23,6 +23,9 @@ public class ParagraphFilter {
 		}
 
 		stringBuilder.append("\n\n");
+		if (texts.size() == 0) {
+			stringBuilder.append("</br>").append("\n\n");
+		}
 		return stringBuilder.toString();
 	}
 
