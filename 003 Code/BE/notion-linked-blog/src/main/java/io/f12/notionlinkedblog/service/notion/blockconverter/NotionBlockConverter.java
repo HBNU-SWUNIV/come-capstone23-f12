@@ -3,6 +3,7 @@ package io.f12.notionlinkedblog.service.notion.blockconverter;
 import static io.f12.notionlinkedblog.service.notion.blockconverter.type.NotionBlockType.Block.*;
 
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BulletedListItemFilter;
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.CodeBlockFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.DivideFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingOneFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.HeadingThreeFilter;
@@ -54,6 +55,8 @@ public class NotionBlockConverter {
 			stringBuilder.append(ToDoFilter.builder().block(block).build().doFilter());
 		} else if (type == NUMBERED_LIST_ITEM) {
 			stringBuilder.append(NumberedListItemFilter.builder().block(block).build().doFilter());
+		} else if (type == CODE_BLOCK) {
+			stringBuilder.append(CodeBlockFilter.builder().block(block).build().doFilter());
 		}
 		log.info(" - toString()\n{}", stringBuilder.toString());
 	}
