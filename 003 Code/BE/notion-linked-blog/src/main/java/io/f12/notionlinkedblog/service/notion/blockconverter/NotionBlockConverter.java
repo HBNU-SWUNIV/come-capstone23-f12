@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.service.notion.blockconverter;
 
 import static io.f12.notionlinkedblog.service.notion.blockconverter.type.NotionBlockType.Block.*;
 
+import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BookmarkFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.BulletedListItemFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.CodeBlockFilter;
 import io.f12.notionlinkedblog.service.notion.blockconverter.filter.DivideFilter;
@@ -57,6 +58,8 @@ public class NotionBlockConverter {
 			stringBuilder.append(NumberedListItemFilter.builder().block(block).build().doFilter());
 		} else if (type == CODE_BLOCK) {
 			stringBuilder.append(CodeBlockFilter.builder().block(block).build().doFilter());
+		} else if (type == BOOKMARK) {
+			stringBuilder.append(BookmarkFilter.builder().block(block).build().doFilter());
 		}
 		log.info(" - toString()\n{}", stringBuilder.toString());
 	}
