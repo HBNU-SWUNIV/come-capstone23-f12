@@ -24,12 +24,6 @@ public class ToggleBlockFilter implements NotionFilter {
 
 	@Override
 	public String doFilter(Block block, NotionClient client) {
-		// 		<details>
-		//     <summary>토글 접기/펼치기</summary>
-		//     <div>
-		// 			test
-		// 		</div>
-		// </details>
 		String id = block.asToggle().getId();
 		List<PageProperty.RichText> texts = block.asToggle().getToggle().getRichText();
 		StringBuilder stringBuilder = new StringBuilder();
@@ -42,7 +36,7 @@ public class ToggleBlockFilter implements NotionFilter {
 		stringBuilder.append(internalFilter(id, client)).append("\n");
 		stringBuilder.append("</div>\n").append("</details>");
 
-		return stringBuilder + "\n";
+		return stringBuilder + "\n\n";
 	}
 
 	private String internalFilter(String id, NotionClient client) {
