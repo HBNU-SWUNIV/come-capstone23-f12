@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.BookmarkFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.BulletedListItemFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.CallOutBlockFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ChildPageFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.CodeBlockFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.DivideFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingOneFilter;
@@ -45,6 +46,7 @@ public class NotionBlockConverter {
 		filterList.add(new CodeBlockFilter());
 		filterList.add(new DivideFilter());
 		filterList.add(new CallOutBlockFilter());
+		filterList.add(new ChildPageFilter());
 	}
 
 	public String doFilter(Block block, NotionClient client) {
