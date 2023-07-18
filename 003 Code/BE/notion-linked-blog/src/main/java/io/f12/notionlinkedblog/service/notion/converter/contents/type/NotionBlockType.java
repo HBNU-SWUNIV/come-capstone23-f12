@@ -17,6 +17,8 @@ public class NotionBlockType {
 		public static final String TOGGLE_BLOCK = "toggle";
 		public static final String CODE_BLOCK = "code";
 		public static final String CHILD_PAGE = "child_page";
+		public static final String EQUATION = "equation";
+		public static final String IMAGE = "image";
 	}
 
 }

@@ -14,6 +14,7 @@ import io.f12.notionlinkedblog.service.notion.converter.contents.filter.DivideFi
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingOneFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingThreeFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingTwoFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ImageFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.NotionFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.NumberedListItemFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ParagraphFilter;
@@ -47,6 +48,7 @@ public class NotionBlockConverter {
 		filterList.add(new DivideFilter());
 		filterList.add(new CallOutBlockFilter());
 		filterList.add(new ChildPageFilter());
+		filterList.add(new ImageFilter());
 	}
 
 	public String doFilter(Block block, NotionClient client) {

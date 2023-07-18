@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.service.notion.converter.contents;
 
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class CheckAnnotations {
 		this.underline = richText.getAnnotations().getUnderline();
 		this.code = richText.getAnnotations().getCode();
 		this.color = richText.getAnnotations().getColor();
-		this.equation = richText.getType().toString() == "equation";
+		this.equation = richText.getType().toString() == NotionBlockType.Block.EQUATION;
 	}
 
 	public String applyAnnotations(PageProperty.RichText text) {
