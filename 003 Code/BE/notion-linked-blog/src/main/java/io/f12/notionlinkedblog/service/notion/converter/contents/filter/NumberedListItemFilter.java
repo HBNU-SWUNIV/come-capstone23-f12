@@ -28,6 +28,6 @@ public class NumberedListItemFilter implements NotionFilter {
 			CheckAnnotations letterShape = new CheckAnnotations(text);
 			stringBuilder.append(letterShape.applyAnnotations(text));
 		}
-		return stringBuilder + "\n";
+		return stringBuilder + "\n\n";
 	}
 }
