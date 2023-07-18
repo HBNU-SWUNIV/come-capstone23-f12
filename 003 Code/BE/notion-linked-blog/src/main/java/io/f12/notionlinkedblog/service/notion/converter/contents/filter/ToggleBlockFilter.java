@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.f12.notionlinkedblog.service.notion.converter.contents.CheckAnnotations;
 import io.f12.notionlinkedblog.service.notion.converter.contents.NotionBlockConverter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import notion.api.v1.NotionClient;
@@ -14,11 +15,15 @@ import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @AllArgsConstructor
 @Builder
-public class ToggleBlockFilter {
-	private Block block;
-	private final NotionClient notionClient;
+public class ToggleBlockFilter implements NotionFilter {
 
-	public String doFilter() {
+	@Override
+	public boolean isAcceptable(Block block) {
+		return block.getType().getValue().equals(NotionBlockType.Block.TOGGLE_BLOCK);
+	}
+
+	@Override
+	public String doFilter(Block block, NotionClient client) {
 		// 		<details>
 		//     <summary>토글 접기/펼치기</summary>
 		//     <div>
@@ -34,31 +39,28 @@ public class ToggleBlockFilter {
 			stringBuilder.append(letterShape.applyAnnotations(text));
 		}
 		stringBuilder.append("</summary>\n").append("<div>\n");
-		stringBuilder.append(internalFilter(id)).append("\n");
+		stringBuilder.append(internalFilter(id, client)).append("\n");
 		stringBuilder.append("</div>\n").append("</details>");
 
 		return stringBuilder + "\n";
 	}
 
-	private String internalFilter(String id) {
-		List<Block> blocks = reRequestContents(id);
+	private String internalFilter(String id, NotionClient client) {
+		List<Block> blocks = reRequestContents(id, client);
 		NotionBlockConverter converter = new NotionBlockConverter();
-		converter.setNotionClient(notionClient);
+		StringBuilder stringBuilder = new StringBuilder();
 		for (Block block : blocks) {
-			converter.setType(block);
-			converter.doFilter();
+			stringBuilder.append(converter.doFilter(block, client));
 		}
-		return converter.toString();
+		return stringBuilder.toString();
 	}
 
-	private List<Block> reRequestContents(String id) {
+	private List<Block> reRequestContents(String id, NotionClient client) {
 		Blocks blocks;
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
 			= new RetrieveBlockChildrenRequest(id);
-		try {
-			blocks = notionClient.retrieveBlockChildren(retrieveBlockChildrenRequest);
-		} finally {
-			notionClient.close();
+		try (client) {
+			blocks = client.retrieveBlockChildren(retrieveBlockChildrenRequest);
 		}
 		return blocks.getResults();
 	}

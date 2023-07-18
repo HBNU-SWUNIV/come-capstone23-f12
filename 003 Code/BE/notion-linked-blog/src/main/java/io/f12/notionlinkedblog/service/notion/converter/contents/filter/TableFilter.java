@@ -3,6 +3,7 @@ package io.f12.notionlinkedblog.service.notion.converter.contents.filter;
 import java.util.List;
 
 import io.f12.notionlinkedblog.service.notion.converter.contents.CheckAnnotations;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import notion.api.v1.NotionClient;
@@ -13,18 +14,22 @@ import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @AllArgsConstructor
 @Builder
-public class TableFilter {
-	private Block block;
-	private final NotionClient notionClient;
+public class TableFilter implements NotionFilter {
 
-	public String doFilter() {
-		int tableWidth = block.asTable().getTable().getTableWidth();
-		String id = block.getId();
-		return internalFunction(id, tableWidth) + "\n";
+	@Override
+	public boolean isAcceptable(Block block) {
+		return block.getType().getValue().equals(NotionBlockType.Block.TABLE);
 	}
 
-	private String internalFunction(String id, int width) {
-		List<Block> results = reRequestTable(id, width, notionClient);
+	@Override
+	public String doFilter(Block block, NotionClient client) {
+		int tableWidth = block.asTable().getTable().getTableWidth();
+		String id = block.getId();
+		return internalFunction(id, tableWidth, client) + "\n";
+	}
+
+	private String internalFunction(String id, int width, NotionClient notionClient) {
+		List<Block> results = reRequestTable(id, notionClient);
 
 		int row = results.get(0).asTableRow().getTableRow().getCells().size();
 		StringBuilder stringBuilder = new StringBuilder();
@@ -32,9 +37,7 @@ public class TableFilter {
 		for (int i = 0; i < width + 1; i++) {
 			stringBuilder.append("|");
 			if (i == 1) {
-				for (int j = 0; j < row; j++) {
-					stringBuilder.append("--|");
-				}
+				stringBuilder.append("--|".repeat(row));
 				stringBuilder.append("\n|");
 			}
 			Block selectBlock = results.get(i);
@@ -51,14 +54,12 @@ public class TableFilter {
 		return stringBuilder.toString();
 	}
 
-	private List<Block> reRequestTable(String id, int width, NotionClient client) {
+	private List<Block> reRequestTable(String id, NotionClient client) {
 		Blocks blocks;
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
 			= new RetrieveBlockChildrenRequest(id);
-		try {
+		try (client) {
 			blocks = client.retrieveBlockChildren(retrieveBlockChildrenRequest);
-		} finally {
-			client.close();
 		}
 		return blocks.getResults();
 	}
