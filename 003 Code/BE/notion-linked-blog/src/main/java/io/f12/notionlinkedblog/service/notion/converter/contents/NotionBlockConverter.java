@@ -65,10 +65,10 @@ public class NotionBlockConverter {
 		filterList.add(new HeadingTwoFilter());
 		filterList.add(new HeadingThreeFilter());
 		filterList.add(new BulletedListItemFilter(deep));
-		filterList.add(new NumberedListItemFilter());
+		filterList.add(new NumberedListItemFilter(deep));
 		filterList.add(new QuoteFilter());
 		filterList.add(new TableFilter());
-		filterList.add(new ToDoFilter());
+		filterList.add(new ToDoFilter(deep));
 		filterList.add(new ToggleBlockFilter());
 		filterList.add(new BookmarkFilter());
 		filterList.add(new CodeBlockFilter());

@@ -7,6 +7,7 @@ import io.f12.notionlinkedblog.service.notion.converter.contents.NotionBlockConv
 import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.Blocks;
@@ -14,6 +15,7 @@ import notion.api.v1.model.pages.PageProperty;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ToggleBlockFilter implements NotionFilter {
 
@@ -27,12 +29,14 @@ public class ToggleBlockFilter implements NotionFilter {
 		String id = block.asToggle().getId();
 		List<PageProperty.RichText> texts = block.asToggle().getToggle().getRichText();
 		StringBuilder stringBuilder = new StringBuilder();
+
 		stringBuilder.append("<details>\n").append("<summary>");
 		for (PageProperty.RichText text : texts) {
 			CheckAnnotations letterShape = new CheckAnnotations(text);
 			stringBuilder.append(letterShape.applyAnnotations(text));
 		}
 		stringBuilder.append("</summary>\n").append("<div>\n");
+		stringBuilder.append("　");
 		stringBuilder.append(internalFilter(id, client)).append("\n");
 		stringBuilder.append("</div>\n").append("</details>");
 
