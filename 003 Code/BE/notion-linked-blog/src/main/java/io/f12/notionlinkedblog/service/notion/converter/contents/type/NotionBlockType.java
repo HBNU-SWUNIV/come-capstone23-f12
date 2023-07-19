@@ -19,6 +19,10 @@ public class NotionBlockType {
 		public static final String CHILD_PAGE = "child_page";
 		public static final String EQUATION = "equation";
 		public static final String IMAGE = "image";
+		public static final String FILE = "file";
+		public static final String LINK_PREVIEW = "link_preview";
+		public static final String PDF = "pdf";
+		public static final String SYNCED_BLOCK = "synced_block";
 	}
 
 }

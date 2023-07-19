@@ -11,14 +11,18 @@ import io.f12.notionlinkedblog.service.notion.converter.contents.filter.CallOutB
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ChildPageFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.CodeBlockFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.DivideFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.FileFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingOneFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingThreeFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.HeadingTwoFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ImageFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.LinkPreviewFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.NotionFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.NumberedListItemFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ParagraphFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.PdfFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.QuoteFilter;
+import io.f12.notionlinkedblog.service.notion.converter.contents.filter.SyncedBlockFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.TableFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ToDoFilter;
 import io.f12.notionlinkedblog.service.notion.converter.contents.filter.ToggleBlockFilter;
@@ -49,6 +53,10 @@ public class NotionBlockConverter {
 		filterList.add(new CallOutBlockFilter());
 		filterList.add(new ChildPageFilter());
 		filterList.add(new ImageFilter());
+		filterList.add(new FileFilter());
+		filterList.add(new LinkPreviewFilter());
+		filterList.add(new PdfFilter());
+		filterList.add(new SyncedBlockFilter());
 	}
 
 	public String doFilter(Block block, NotionClient client) {
