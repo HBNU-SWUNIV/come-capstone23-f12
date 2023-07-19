@@ -1,5 +1,10 @@
 package io.f12.notionlinkedblog.service.notion.converter.contents.filter;
 
+import java.io.File;
+import java.net.URL;
+
+import org.apache.commons.io.FileUtils;
+
 import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
@@ -13,12 +18,32 @@ public class ImageFilter implements NotionFilter {
 	@Override
 	public String doFilter(Block block, NotionClient client) {
 		String type = block.asImage().getImage().getType();
-		String url = null;
+		String systemPath = System.getProperty("user.dir");
+		File file = null;
+		String urlString = null;
 		if (type.equals("file")) {
-			url = block.asImage().getImage().getFile().getUrl();
+			urlString = block.asImage().getImage().getFile().getUrl();
+			String imageName = urlToImageName(urlString);
+
+			try {
+				file = new File(systemPath + "\\" + imageName);
+				FileUtils.copyURLToFile(new URL(urlString), file);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		} else {
-			url = block.asImage().getImage().getExternal().getUrl();
+			urlString = block.asImage().getImage().getExternal().getUrl();
 		}
-		return "![]" + "(" + url + ")\n\n";
+		//TODO: 추후 Post 에 image 를 넣는 기능 추가 후 기능 추가
+
+		return "![]" + "(" + urlString + ")\n\n";
+	}
+
+	private String urlToImageName(String urlString) {
+		String[] split1 = urlString.split("/");
+		String second = split1[split1.length - 1];
+
+		String[] split2 = second.split("\\?");
+		return split2[0];
 	}
 }
