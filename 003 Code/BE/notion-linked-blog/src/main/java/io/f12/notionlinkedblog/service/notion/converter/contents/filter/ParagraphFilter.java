@@ -7,7 +7,7 @@ import io.f12.notionlinkedblog.service.notion.converter.contents.NotionBlockConv
 import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.ParagraphBlock;
@@ -15,7 +15,7 @@ import notion.api.v1.model.pages.PageProperty;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ParagraphFilter implements NotionFilter {
 
@@ -36,7 +36,7 @@ public class ParagraphFilter implements NotionFilter {
 			CheckAnnotations letterShape = new CheckAnnotations(text);
 			stringBuilder.append(letterShape.applyAnnotations(text));
 		}
-		stringBuilder.append("\n\n");
+		stringBuilder.append("  ").append("\n\n");
 		if (paragraph.getHasChildren()) {
 			if (deep == null) {
 				stringBuilder.append(getChildren(paragraph.getId(), client, 1));
@@ -50,7 +50,10 @@ public class ParagraphFilter implements NotionFilter {
 
 	private String getChildren(String id, NotionClient client, Integer deep) {
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest = new RetrieveBlockChildrenRequest(id);
-		List<Block> results = client.retrieveBlockChildren(retrieveBlockChildrenRequest).getResults();
+		List<Block> results = null;
+		try (client) {
+			results = client.retrieveBlockChildren(retrieveBlockChildrenRequest).getResults();
+		}
 		NotionBlockConverter notionBlockConverter = new NotionBlockConverter(deep);
 		StringBuilder stringBuilder = new StringBuilder();
 

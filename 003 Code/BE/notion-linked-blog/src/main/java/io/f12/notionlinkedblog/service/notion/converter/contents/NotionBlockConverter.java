@@ -64,7 +64,7 @@ public class NotionBlockConverter {
 		filterList.add(new HeadingOneFilter());
 		filterList.add(new HeadingTwoFilter());
 		filterList.add(new HeadingThreeFilter());
-		filterList.add(new BulletedListItemFilter());
+		filterList.add(new BulletedListItemFilter(deep));
 		filterList.add(new NumberedListItemFilter());
 		filterList.add(new QuoteFilter());
 		filterList.add(new TableFilter());
