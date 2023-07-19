@@ -34,10 +34,33 @@ import notion.api.v1.model.blocks.Block;
 @Component
 public class NotionBlockConverter {
 
-	List<NotionFilter> filterList = new ArrayList<>();
+	private final List<NotionFilter> filterList = new ArrayList<>();
 
 	public NotionBlockConverter() {
 		filterList.add(new ParagraphFilter());
+		filterList.add(new HeadingOneFilter());
+		filterList.add(new HeadingTwoFilter());
+		filterList.add(new HeadingThreeFilter());
+		filterList.add(new BulletedListItemFilter());
+		filterList.add(new NumberedListItemFilter());
+		filterList.add(new QuoteFilter());
+		filterList.add(new TableFilter());
+		filterList.add(new ToDoFilter());
+		filterList.add(new ToggleBlockFilter());
+		filterList.add(new BookmarkFilter());
+		filterList.add(new CodeBlockFilter());
+		filterList.add(new DivideFilter());
+		filterList.add(new CallOutBlockFilter());
+		filterList.add(new ChildPageFilter());
+		filterList.add(new ImageFilter());
+		filterList.add(new FileFilter());
+		filterList.add(new LinkPreviewFilter());
+		filterList.add(new PdfFilter());
+		filterList.add(new SyncedBlockFilter());
+	}
+
+	public NotionBlockConverter(Integer deep) {
+		filterList.add(new ParagraphFilter(deep));
 		filterList.add(new HeadingOneFilter());
 		filterList.add(new HeadingTwoFilter());
 		filterList.add(new HeadingThreeFilter());
