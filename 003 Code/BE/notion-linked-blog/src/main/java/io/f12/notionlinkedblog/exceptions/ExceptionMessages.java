@@ -19,4 +19,8 @@ public class ExceptionMessages {
 		public static final String COMMENT_NOT_EXIST = "존재하지 않는 댓글 입니다.";
 		public static final String NOT_COMMENT_OWNER = "작성자와 변경자가 상이합니다";
 	}
+
+	public static class FileExceptionsMessages {
+		public static final String FILE_NOT_EXIST = "파일이 존재하지 않습니다.";
+	}
 }

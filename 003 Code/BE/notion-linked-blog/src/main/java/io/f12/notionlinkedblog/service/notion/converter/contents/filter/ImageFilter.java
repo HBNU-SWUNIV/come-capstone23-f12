@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
+import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
@@ -21,9 +22,10 @@ public class ImageFilter implements NotionFilter {
 		String systemPath = System.getProperty("user.dir");
 		File file = null;
 		String urlString = null;
+		String imageName = null;
 		if (type.equals("file")) {
 			urlString = block.asImage().getImage().getFile().getUrl();
-			String imageName = urlToImageName(urlString);
+			imageName = urlToImageName(urlString);
 
 			try {
 				file = new File(systemPath + "\\" + imageName);
@@ -34,9 +36,7 @@ public class ImageFilter implements NotionFilter {
 		} else {
 			urlString = block.asImage().getImage().getExternal().getUrl();
 		}
-		//TODO: 추후 Post 에 image 를 넣는 기능 추가 후 기능 추가
-
-		return "![]" + "(" + urlString + ")\n\n";
+		return "![]" + "(" + Endpoint.Local.LOCAL_ADDRESS + Endpoint.Api.REQUEST_IMAGE + "/" + imageName + ")\n\n";
 	}
 
 	private String urlToImageName(String urlString) {

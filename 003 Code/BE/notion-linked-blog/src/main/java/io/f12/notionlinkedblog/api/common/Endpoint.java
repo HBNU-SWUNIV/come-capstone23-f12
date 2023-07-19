@@ -1,6 +1,10 @@
 package io.f12.notionlinkedblog.api.common;
 
 public class Endpoint {
+	public static class Local {
+		public static final String LOCAL_ADDRESS = "localhost:8080";
+	}
+
 	public static class Api {
 		public static final String LOGIN_WITH_EMAIL = "/api/login/email";
 		public static final String LOGOUT = "/api/logout";
@@ -12,5 +16,7 @@ public class Endpoint {
 		public static final String EMAIL = "/api/email";
 		public static final String REQUEST_THUMBNAIL_IMAGE = "/api/posts/thumbnail/";
 		public static final String REQUEST_PROFILE_IMAGE = "/api/users/profile/";
+		public static final String REQUEST_FILE = "/api/download";
+		public static final String REQUEST_IMAGE = "/api/image";
 	}
 }

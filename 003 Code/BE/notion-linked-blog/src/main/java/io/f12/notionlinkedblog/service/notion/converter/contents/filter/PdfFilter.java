@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
 
+import io.f12.notionlinkedblog.api.common.Endpoint;
 import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
@@ -29,8 +30,11 @@ public class PdfFilter implements NotionFilter {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		//TODO: []() 사용시 내부 파일을 url 로 변경시켜주는 메소드 필요, 혹은 임베드해서 보여줄 방법 선택
-		return "[" + fileName + "]" + "(" + url + ")" + "\n\n";
+
+		// return "[" + fileName + "]" + "(" + url + ")" + "\n\n";
+		return "[" + fileName + "]" + "(" + Endpoint.Local.LOCAL_ADDRESS + Endpoint.Api.REQUEST_FILE + "/" + fileName
+			+ ")"
+			+ "\n\n";
 	}
 
 	private String urlToFileName(String urlString) {
