@@ -32,27 +32,57 @@ public class CheckAnnotations {
 
 	public String applyAnnotations(PageProperty.RichText text) {
 		String returnText = text.getPlainText();
+		StringBuilder stringBuilder = new StringBuilder(returnText);
 		if (returnText.isBlank()) {
 			return returnText;
 		}
+		applyGrammar(stringBuilder);
+		applyColor(stringBuilder);
+		return stringBuilder.toString();
+	}
+
+	private void applyColor(StringBuilder stringBuilder) {
+		String value = color.getValue();
+		if (value == "default") {
+			return;
+		}
+		if (value.contains("_")) { //backGround Color
+			String[] split = value.split("_");
+			String coverStart = "<span style=\"background-color:" + split[0] + "\">";
+			stringBuilder.insert(0, coverStart);
+			stringBuilder.append("</span>");
+		} else { //color
+			String coverStart = "<span style=\"color:" + value + "\">";
+			stringBuilder.insert(0, coverStart);
+			stringBuilder.append("</span>");
+		}
+
+	}
+
+	private void applyGrammar(StringBuilder stringBuilder) {
 		if (code) {
-			returnText = "`" + returnText + "`";
+			stringBuilder.insert(0, "`");
+			stringBuilder.append("`");
 		}
 		if (bold) {
-			returnText = "**" + returnText + "**";
+			stringBuilder.insert(0, "**");
+			stringBuilder.append("**");
 		}
 		if (italic) {
-			returnText = "*" + returnText + "*";
+			stringBuilder.insert(0, "*");
+			stringBuilder.append("*");
 		}
 		if (strikethrough) {
-			returnText = "~~" + returnText + "~~";
+			stringBuilder.insert(0, "~~");
+			stringBuilder.append("~~");
 		}
 		if (underline) {
-			returnText = "<u>" + returnText + "</u>";
+			stringBuilder.insert(0, "<u>");
+			stringBuilder.append("</u>");
 		}
 		if (equation) {
-			returnText = "$" + returnText + "$";
+			stringBuilder.insert(0, "$");
+			stringBuilder.append("$");
 		}
-		return returnText;
 	}
 }

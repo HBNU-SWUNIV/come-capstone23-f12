@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.api.common;
 
 public class Endpoint {
 	public static class Local {
-		public static final String LOCAL_ADDRESS = "localhost:8080";
+		public static final String LOCAL_ADDRESS = "http://localhost:8080";
 	}
 
 	public static class Api {
