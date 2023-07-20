@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.exceptions;
+package io.f12.notionlinkedblog.exceptions.message;
 
 public class ExceptionMessages {
 	public static class UserExceptionsMessages {
@@ -26,5 +26,9 @@ public class ExceptionMessages {
 
 	public static class UserValidateMessages {
 		public static final String USER_NOT_MATCH = "동일한 사용자가 아닙니다.";
+	}
+
+	public static class NotionValidateMessages {
+		public static final String DATA_ALREADY_EXIST = "이미 연동한 데이터 입니다.";
 	}
 }

@@ -1,7 +1,8 @@
 package io.f12.notionlinkedblog.service.notion;
 
-import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
-import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserValidateMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import io.f12.notionlinkedblog.domain.notion.Notion;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.exceptions.AlreadyExistException;
 import io.f12.notionlinkedblog.repository.notion.NotionDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
@@ -37,8 +39,13 @@ public class NotionService {
 	private final NotionBlockConverter notionBlockConverter;
 
 	public PostSearchDto saveNotionPageToBlog(String path, Long userId) {
-		String title = getTitle(path);
-		String content = getContent(path);
+		String convertPath = convertPathToId(path);
+		Notion notion = notionDataRepository.findByPathValue(convertPath).orElse(null);
+		if (notion != null) {
+			throw new AlreadyExistException(DATA_ALREADY_EXIST);
+		}
+		String title = getTitle(convertPath);
+		String content = getContent(convertPath);
 
 		User user = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -51,7 +58,7 @@ public class NotionService {
 			.isPublic(true)
 			.build());
 		notionDataRepository.save(Notion.builder()
-			.notionId(path)
+			.notionId(convertPath)
 			.post(savePost)
 			.build());
 
@@ -71,7 +78,6 @@ public class NotionService {
 	}
 
 	public PostSearchDto editNotionPageToBlog(Long userId, Long postId) {
-		// Post post = postDataRepository.findWithNotion(postId);
 		Post post = postDataRepository.findWithNotion(postId);
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
@@ -97,9 +103,8 @@ public class NotionService {
 
 	private String getTitle(String fullPath) {
 		Block block;
-		String blockId = convertPathToId(fullPath);
 		NotionClient client = createClientInDev();
-		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(blockId);
+		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(fullPath);
 		try (client) {
 			block = client.retrieveBlock(retrieveBlockRequest);
 		}
@@ -109,11 +114,10 @@ public class NotionService {
 
 	private String getContent(String fullPath) {
 		Blocks blocks;
-		String blockId = convertPathToId(fullPath);
 		NotionClient client = createClientInDev();
 		StringBuilder stringBuilder = new StringBuilder();
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
-			= new RetrieveBlockChildrenRequest(blockId);
+			= new RetrieveBlockChildrenRequest(fullPath);
 		try {
 			blocks = client.retrieveBlockChildren(retrieveBlockChildrenRequest);
 		} finally {

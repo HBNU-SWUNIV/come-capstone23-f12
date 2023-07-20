@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.domain.notion;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -32,6 +33,7 @@ public class Notion {
 	private Post post;
 
 	@NotNull
+	@Column(unique = true)
 	private String notionId;
 
 }
