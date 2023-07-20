@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.f12.notionlinkedblog.service.notion.converter.contents.CheckAnnotations;
 import io.f12.notionlinkedblog.service.notion.converter.contents.ChildrenConverter;
-import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class ParagraphFilter implements NotionFilter {
 
 	@Override
 	public boolean isAcceptable(Block block) {
-		return block.getType().getValue().equals(NotionBlockType.Block.PARAGRAPH);
+		return block.getType().getValue().equals(NotionType.BlockType.PARAGRAPH);
 	}
 
 	@Override

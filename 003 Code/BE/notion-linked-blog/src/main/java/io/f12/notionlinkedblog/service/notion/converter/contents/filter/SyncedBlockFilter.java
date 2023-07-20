@@ -3,7 +3,7 @@ package io.f12.notionlinkedblog.service.notion.converter.contents.filter;
 import java.util.List;
 
 import io.f12.notionlinkedblog.service.notion.converter.contents.NotionBlockConverter;
-import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.Blocks;
@@ -12,7 +12,7 @@ import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 public class SyncedBlockFilter implements NotionFilter {
 	@Override
 	public boolean isAcceptable(Block block) {
-		return block.getType().getValue().equals(NotionBlockType.Block.SYNCED_BLOCK);
+		return block.getType().getValue().equals(NotionType.BlockType.SYNCED_BLOCK);
 	}
 
 	@Override

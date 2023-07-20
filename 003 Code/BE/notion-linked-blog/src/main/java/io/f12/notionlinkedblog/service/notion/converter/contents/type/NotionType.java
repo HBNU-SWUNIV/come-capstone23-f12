@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.service.notion.converter.contents.type;
 
-public class NotionBlockType {
-	public static class Block {
+public class NotionType {
+	public static class BlockType {
 		public static final String BOOKMARK = "bookmark";
 		public static final String PARAGRAPH = "paragraph";
 		public static final String H1 = "heading_1";

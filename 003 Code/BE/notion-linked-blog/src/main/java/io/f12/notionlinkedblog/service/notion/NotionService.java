@@ -28,6 +28,10 @@ public class NotionService {
 		return getContent("Test-Fin-696290e4edac4c77b0917df853bc309c");
 	}
 
+	public String test2() {
+		return getContent("Test-2-HasChild-4d789b4eb02f46a0a9fe3488d669fb3f");
+	}
+
 	// public void saveNotionPage(String path, Long userId) {
 	// 	String title = getTitle(path);
 	// 	String content = getContent(path);
@@ -44,7 +48,7 @@ public class NotionService {
 	// }
 
 	// private String getTitle(String fullPath) {
-	// 	Block block;
+	// 	BlockType block;
 	// 	String blockId = convertPathToId(fullPath);
 	// 	NotionClient client = createClientInDev();
 	// 	RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(blockId);

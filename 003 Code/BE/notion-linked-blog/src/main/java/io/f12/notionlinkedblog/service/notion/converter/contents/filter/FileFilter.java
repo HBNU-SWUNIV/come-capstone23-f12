@@ -8,14 +8,14 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
-import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 
 public class FileFilter implements NotionFilter {
 	@Override
 	public boolean isAcceptable(Block block) {
-		return block.getType().getValue().equals(NotionBlockType.Block.FILE);
+		return block.getType().getValue().equals(NotionType.BlockType.FILE);
 	}
 
 	@Override

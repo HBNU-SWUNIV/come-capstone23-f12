@@ -6,14 +6,14 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
-import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionType;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 
 public class ImageFilter implements NotionFilter {
 	@Override
 	public boolean isAcceptable(Block block) {
-		return block.getType().getValue().equals(NotionBlockType.Block.IMAGE);
+		return block.getType().getValue().equals(NotionType.BlockType.IMAGE);
 	}
 
 	@Override
@@ -36,7 +36,8 @@ public class ImageFilter implements NotionFilter {
 		} else {
 			urlString = block.asImage().getImage().getExternal().getUrl();
 		}
-		return "![]" + "(" + Endpoint.Local.LOCAL_ADDRESS + Endpoint.Api.REQUEST_IMAGE + "/" + imageName + ")\n\n";
+		return "![]" + "(" + Endpoint.Local.LOCAL_ADDRESS + Endpoint.Api.REQUEST_IMAGE + "/" + imageName
+			+ ")\n\n";
 	}
 
 	private String urlToImageName(String urlString) {

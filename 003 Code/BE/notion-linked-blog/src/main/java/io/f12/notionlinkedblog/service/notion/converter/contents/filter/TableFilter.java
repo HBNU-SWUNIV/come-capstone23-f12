@@ -3,7 +3,7 @@ package io.f12.notionlinkedblog.service.notion.converter.contents.filter;
 import java.util.List;
 
 import io.f12.notionlinkedblog.service.notion.converter.contents.CheckAnnotations;
-import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionBlockType;
+import io.f12.notionlinkedblog.service.notion.converter.contents.type.NotionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import notion.api.v1.NotionClient;
@@ -18,7 +18,7 @@ public class TableFilter implements NotionFilter {
 
 	@Override
 	public boolean isAcceptable(Block block) {
-		return block.getType().getValue().equals(NotionBlockType.Block.TABLE);
+		return block.getType().getValue().equals(NotionType.BlockType.TABLE);
 	}
 
 	@Override
