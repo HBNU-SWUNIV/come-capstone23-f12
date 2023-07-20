@@ -23,4 +23,8 @@ public class ExceptionMessages {
 	public static class FileExceptionsMessages {
 		public static final String FILE_NOT_EXIST = "파일이 존재하지 않습니다.";
 	}
+
+	public static class UserValidateMessages {
+		public static final String USER_NOT_MATCH = "동일한 사용자가 아닙니다.";
+	}
 }
