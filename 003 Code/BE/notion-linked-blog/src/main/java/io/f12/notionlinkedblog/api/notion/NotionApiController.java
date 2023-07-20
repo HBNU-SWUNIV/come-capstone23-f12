@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api.notion;
 
-import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserValidateMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 import static org.springframework.http.MediaType.*;
 
 import org.springframework.http.HttpStatus;
