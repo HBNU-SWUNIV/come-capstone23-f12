@@ -1,9 +1,19 @@
 package io.f12.notionlinkedblog.service.notion;
 
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserValidateMessages.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import io.f12.notionlinkedblog.domain.notion.Notion;
+import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
+import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.repository.notion.NotionDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.service.notion.converter.contents.NotionBlockConverter;
@@ -13,6 +23,7 @@ import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.Blocks;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
+import notion.api.v1.request.blocks.RetrieveBlockRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -20,47 +31,81 @@ import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 public class NotionService {
 
 	private final NotionDevComponent notionDevComponent;
+	private final NotionDataRepository notionDataRepository;
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
 	private final NotionBlockConverter notionBlockConverter;
 
-	public String test() {
-		return getContent("Test-Fin-696290e4edac4c77b0917df853bc309c");
+	public PostSearchDto saveNotionPageToBlog(String path, Long userId) {
+		String title = getTitle(path);
+		String content = getContent(path);
+
+		User user = userDataRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		Post savePost = postDataRepository.save(Post.builder()
+			.user(user)
+			.title(title)
+			.content(content)
+			.viewCount(0L)
+			.popularity(0.0)
+			.isPublic(true)
+			.build());
+		notionDataRepository.save(Notion.builder()
+			.notionId(path)
+			.post(savePost)
+			.build());
+
+		return PostSearchDto.builder()
+			.postId(savePost.getId())
+			.title(savePost.getTitle())
+			.content(savePost.getContent())
+			.viewCount(savePost.getViewCount())
+			.likes(0)
+			.requestThumbnailLink(savePost.getStoredThumbnailPath())
+			.description(savePost.getDescription())
+			.createdAt(LocalDateTime.now())
+			.countOfComments(0)
+			.author(user.getUsername())
+			.isLiked(false)
+			.build();
 	}
 
-	public String test2() {
-		return getContent("Test-2-HasChild-4d789b4eb02f46a0a9fe3488d669fb3f");
+	public PostSearchDto editNotionPageToBlog(Long userId, Long postId) {
+		// Post post = postDataRepository.findWithNotion(postId);
+		Post post = postDataRepository.findWithNotion(postId);
+		Long postUserId = post.getUser().getId();
+		checkSameUser(postUserId, userId);
+
+		String content = getContent(post.getNotion().getNotionId());
+		String title = getTitle(post.getNotion().getNotionId());
+		post.editPost(title, content);
+
+		return PostSearchDto.builder()
+			.postId(post.getId())
+			.title(post.getTitle())
+			.content(post.getContent())
+			.viewCount(post.getViewCount())
+			.likes(post.getLikes().size())
+			.requestThumbnailLink(post.getStoredThumbnailPath())
+			.description(post.getDescription())
+			.createdAt(post.getCreatedAt())
+			.countOfComments(post.getComments().size())
+			.author(post.getUser().getUsername())
+			.isLiked(false)
+			.build();
 	}
 
-	// public void saveNotionPage(String path, Long userId) {
-	// 	String title = getTitle(path);
-	// 	String content = getContent(path);
-	//
-	// 	User user = userDataRepository.findById(userId)
-	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-	//
-	// 	// Post.builder()
-	// 	// 	.user(user)
-	// 	// 	.title(title)
-	// 	// 	.content(content)
-	// 	// 	.
-	//
-	// }
+	private String getTitle(String fullPath) {
+		Block block;
+		String blockId = convertPathToId(fullPath);
+		NotionClient client = createClientInDev();
+		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(blockId);
+		try (client) {
+			block = client.retrieveBlock(retrieveBlockRequest);
+		}
 
-	// private String getTitle(String fullPath) {
-	// 	BlockType block;
-	// 	String blockId = convertPathToId(fullPath);
-	// 	NotionClient client = createClientInDev();
-	// 	RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(blockId);
-	//
-	// 	try {
-	// 		block = client.retrieveBlock(retrieveBlockRequest);
-	// 	} finally {
-	// 		client.close();
-	// 	}
-	//
-	// 	return block.asChildPage().getChildPage().getTitle();
-	// }
+		return block.asChildPage().getChildPage().getTitle();
+	}
 
 	private String getContent(String fullPath) {
 		Blocks blocks;
@@ -93,5 +138,11 @@ public class NotionService {
 		String internalSecret = notionDevComponent.getInternalSecret();
 		client.setToken(internalSecret);
 		return client;
+	}
+
+	private void checkSameUser(Long id1, Long id2) {
+		if (!id1.equals(id2)) {
+			throw new AccessDeniedException(USER_NOT_MATCH);
+		}
 	}
 }
