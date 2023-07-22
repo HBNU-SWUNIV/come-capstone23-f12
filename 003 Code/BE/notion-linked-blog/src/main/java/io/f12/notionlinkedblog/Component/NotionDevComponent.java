@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.service.notion;
+package io.f12.notionlinkedblog.Component;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotionDevComponent {
-	@Value("${external.notionSecret}")
+	@Value("${external.dev.notionSecret}")
 	private String internalSecret;
 }
