@@ -19,4 +19,8 @@ public class Endpoint {
 		public static final String REQUEST_FILE = "/api/download";
 		public static final String REQUEST_IMAGE = "/api/image";
 	}
+
+	public static class NotionAuth {
+		public static final String NOTION_CODE_TO_ACCESS_TOKEN = "https://api.notion.com/v1/oauth/token";
+	}
 }
