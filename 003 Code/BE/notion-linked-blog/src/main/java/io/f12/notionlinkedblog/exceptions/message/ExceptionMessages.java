@@ -30,5 +30,9 @@ public class ExceptionMessages {
 
 	public static class NotionValidateMessages {
 		public static final String DATA_ALREADY_EXIST = "이미 연동한 데이터 입니다.";
+		public static final String NOT_ALLOW_ACCESS = "연동에 실패하였습니다.";
+		public static final String TOKEN_AVAILABILITY_FAILURE = "토큰 고유값이 일치하지 않습니다.";
+		public static final String ACCESS_TOKEN_INVALID = "토큰이 존재하지 않습니다";
+
 	}
 }
