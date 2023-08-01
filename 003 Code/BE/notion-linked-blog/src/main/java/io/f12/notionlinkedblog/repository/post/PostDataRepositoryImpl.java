@@ -45,7 +45,7 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 		return queryFactory.select(post.id)
 			.from(post)
 			.where(post.isPublic.isTrue())
-			.orderBy(post.createdAt.asc())
+			.orderBy(post.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -121,6 +121,22 @@ public class PostDataRepositoryImpl implements PostRepositoryCustom {
 			.distinct()
 			.fetch();
 
+	}
+
+	@Override
+	public Post findWithNotion(Long id) {
+		return queryFactory.select(post)
+			.from(post)
+			.leftJoin(post.notion)
+			.fetchJoin()
+			.leftJoin(post.user)
+			.fetchJoin()
+			.leftJoin(post.likes)
+			.fetchJoin()
+			.leftJoin(post.comments)
+			.fetchJoin()
+			.where(post.id.eq(id))
+			.fetchOne();
 	}
 
 }
