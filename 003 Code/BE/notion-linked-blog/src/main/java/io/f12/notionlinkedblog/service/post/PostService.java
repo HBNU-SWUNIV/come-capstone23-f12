@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,8 @@ public class PostService {
 	private final UserDataRepository userDataRepository;
 	private final LikeDataRepository likeDataRepository;
 	private final int pageSize = 20;
+	@Value("${server.url}")
+	private String serverUrl;
 
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
 		Boolean isPublic, MultipartFile multipartFile) throws IOException {
@@ -56,6 +59,7 @@ public class PostService {
 		String fullPath = null;
 		String newName = null;
 		String requestThumbnailLink = null;
+		String avatar;
 
 		if (multipartFile != null) {
 			fullPath = getSavedDirectory(multipartFile, systemPath, fileName);
@@ -88,6 +92,7 @@ public class PostService {
 			.description(savedPost.getDescription())
 			.createdAt(savedPost.getCreatedAt())
 			.author(savedPost.getUser().getUsername())
+			.avatar(getAvatarRequestUrl(userId))
 			.build();
 	}
 
@@ -149,6 +154,7 @@ public class PostService {
 			.countOfComments(commentsSize)
 			.author(post.getUser().getUsername())
 			.likes(likeSize)
+			.avatar(getAvatarRequestUrl(post.getUser().getId()))
 			.build();
 	}
 
@@ -245,6 +251,7 @@ public class PostService {
 				.createdAt(p.getCreatedAt())
 				.countOfComments(commentsSize)
 				.author(p.getUser().getUsername())
+				.avatar(getAvatarRequestUrl(p.getUser().getId()))
 				.build();
 		}).collect(Collectors.toList());
 	}
@@ -271,5 +278,9 @@ public class PostService {
 	private String getSavedDirectory(MultipartFile multipartFile, String systemPath, String fileName) {
 		return
 			systemPath + "\\" + fileName + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+	}
+
+	private String getAvatarRequestUrl(Long userId) {
+		return serverUrl + Endpoint.Api.USER + "/profile/" + userId;
 	}
 }
