@@ -1,6 +1,5 @@
 package io.f12.notionlinkedblog.service.post;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.PostExceptionsMessages.IMAGE_NOT_EXIST;
 import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
 import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
@@ -29,6 +28,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
@@ -217,7 +217,7 @@ public class PostService {
 	public File readImageFile(String imageName) throws MalformedURLException {
 		String thumbnailPathWithName = postDataRepository.findThumbnailPathWithName(imageName);
 		if (thumbnailPathWithName == null) {
-			throw new IllegalArgumentException(IMAGE_NOT_EXIST);
+			throw new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.IMAGE_NOT_EXIST);
 		}
 		return new File(thumbnailPathWithName);
 	}
