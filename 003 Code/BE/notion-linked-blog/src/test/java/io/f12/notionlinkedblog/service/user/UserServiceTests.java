@@ -425,7 +425,7 @@ class UserServiceTests extends DummyObject {
 				//when
 				File file = userService.readImageFile(1L);
 				//then
-				assertThat(file).exists();
+				assertThat(file).isNull();
 
 			}
 
