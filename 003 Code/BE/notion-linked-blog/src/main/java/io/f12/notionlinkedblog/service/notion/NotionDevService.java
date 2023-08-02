@@ -31,7 +31,7 @@ import notion.api.v1.request.blocks.RetrieveBlockRequest;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotionService {
+public class NotionDevService {
 
 	private final NotionDevComponent notionDevComponent;
 	private final NotionDataRepository notionDataRepository;
@@ -39,14 +39,14 @@ public class NotionService {
 	private final UserDataRepository userDataRepository;
 	private final NotionBlockConverter notionBlockConverter;
 
-	public PostSearchDto saveNotionPageToBlog(String path, Long userId) {
+	public PostSearchDto saveNotionPageToBlogDev(String path, Long userId) {
 		String convertPath = convertPathToId(path);
 		Notion notion = notionDataRepository.findByPathValue(convertPath).orElse(null);
 		if (notion != null) {
 			throw new AlreadyExistException(DATA_ALREADY_EXIST);
 		}
-		String title = getTitle(convertPath);
-		String content = getContent(convertPath);
+		String title = getTitleDev(convertPath);
+		String content = getContentDev(convertPath);
 
 		User user = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -78,13 +78,13 @@ public class NotionService {
 			.build();
 	}
 
-	public PostSearchDto editNotionPageToBlog(Long userId, Long postId) {
+	public PostSearchDto editNotionPageToBlogDev(Long userId, Long postId) {
 		Post post = postDataRepository.findWithNotion(postId);
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
 
-		String content = getContent(post.getNotion().getNotionId());
-		String title = getTitle(post.getNotion().getNotionId());
+		String content = getContentDev(post.getNotion().getNotionId());
+		String title = getTitleDev(post.getNotion().getNotionId());
 		post.editPost(title, content);
 
 		return PostSearchDto.builder()
@@ -102,7 +102,7 @@ public class NotionService {
 			.build();
 	}
 
-	private String getTitle(String fullPath) {
+	private String getTitleDev(String fullPath) {
 		Block block;
 		NotionClient client = createClientInDev();
 		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(fullPath);
@@ -113,7 +113,7 @@ public class NotionService {
 		return block.asChildPage().getChildPage().getTitle();
 	}
 
-	private String getContent(String fullPath) {
+	private String getContentDev(String fullPath) {
 		Blocks blocks;
 		NotionClient client = createClientInDev();
 		StringBuilder stringBuilder = new StringBuilder();
