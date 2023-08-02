@@ -15,7 +15,7 @@ import io.f12.notionlinkedblog.domain.notion.Notion;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.exceptions.AlreadyExistException;
+import io.f12.notionlinkedblog.exceptions.exception.AlreadyExistException;
 import io.f12.notionlinkedblog.repository.notion.NotionDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
