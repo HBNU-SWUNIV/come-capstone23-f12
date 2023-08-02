@@ -64,7 +64,7 @@ public class NotionApiController {
 		@ApiResponse(responseCode = "200", description = "포스트 수정 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchDto.class,
-					description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시")))
+					description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시 모든 내용을 대체")))
 	})
 	public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {
