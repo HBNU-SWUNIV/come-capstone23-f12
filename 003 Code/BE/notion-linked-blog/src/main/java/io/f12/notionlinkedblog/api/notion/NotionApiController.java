@@ -22,6 +22,7 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.notion.NotionDevService;
+import io.f12.notionlinkedblog.service.notion.NotionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotionApiController {
 
-	private final NotionDevService notionService;
+	private final NotionService notionService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -52,7 +53,7 @@ public class NotionApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto getNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
+		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto){
 		checkSameUser(notionToBlogDto.getUserId(), loginUser);
 		return notionService.saveNotionPageToBlog(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
 	}
@@ -64,10 +65,10 @@ public class NotionApiController {
 		@ApiResponse(responseCode = "200", description = "포스트 수정 성공",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchDto.class,
-					description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시 모든 내용을 대체")))
+					description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시")))
 	})
 	public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {
+		@RequestBody @Validated UpdateNotionPageInfoDto infoDto){
 		checkSameUser(infoDto.getUserId(), loginUser);
 		return notionService.editNotionPageToBlog(infoDto.getUserId(), infoDto.getPostId());
 	}
