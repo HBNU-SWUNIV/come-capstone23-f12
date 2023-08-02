@@ -21,7 +21,7 @@ import io.f12.notionlinkedblog.domain.notion.dto.UpdateNotionPageInfoDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
-import io.f12.notionlinkedblog.service.notion.NotionService;
+import io.f12.notionlinkedblog.service.notion.NotionDevService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,8 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotionApiController {
 
-	// private final NotionDevService notionDevService;
-	private final NotionService notionService;
+	private final NotionDevService notionService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -55,7 +54,7 @@ public class NotionApiController {
 	public PostSearchDto getNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
 		checkSameUser(notionToBlogDto.getUserId(), loginUser);
-		return notionService.saveNotionPageToBlogDev(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
+		return notionService.saveNotionPageToBlog(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
 	}
 
 	@PutMapping
@@ -70,7 +69,7 @@ public class NotionApiController {
 	public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {
 		checkSameUser(infoDto.getUserId(), loginUser);
-		return notionService.editNotionPageToBlogDev(infoDto.getUserId(), infoDto.getPostId());
+		return notionService.editNotionPageToBlog(infoDto.getUserId(), infoDto.getPostId());
 	}
 
 	private void checkSameUser(Long id, LoginUser loginUser) {

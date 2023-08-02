@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import io.f12.notionlinkedblog.Component.NotionDevComponent;
+import io.f12.notionlinkedblog.component.NotionDevComponent;
 import io.f12.notionlinkedblog.domain.notion.Notion;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
