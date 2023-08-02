@@ -18,5 +18,8 @@ public interface UserDataRepository extends JpaRepository<User, Long> {
 			+ "WHERE u.id = :id")
 	Optional<UserSearchDto> findUserById(@Param("id") Long id);
 
+	@Query("SELECT u FROM User u left join fetch u.notionOauth where u.id= :id")
+	Optional<User> findUserByIdForNotionAuthToken(@Param("id") Long id);
+
 	Optional<User> findByEmail(final String email);
 }
