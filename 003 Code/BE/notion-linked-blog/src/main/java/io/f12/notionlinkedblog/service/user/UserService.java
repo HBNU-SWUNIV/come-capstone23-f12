@@ -48,7 +48,18 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public UserSearchDto getUserInfo(Long id) {
-		return userDataRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		User user = userDataRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		return UserSearchDto.builder()
+			.id(user.getId())
+			.username(user.getUsername())
+			.email(user.getEmail())
+			.introduction(user.getIntroduction())
+			.blogTitle(user.getBlogTitle())
+			.githubLink(user.getGithubLink())
+			.instagramLink(user.getInstagramLink())
+			.notionCertificate(user.getNotionOauth() != null)
+			.build();
 	}
 
 	public void editBasicUserInfo(Long id, UserBasicInfoEditDto editDto) {
