@@ -181,7 +181,7 @@ public class UserApiController {
 	@Operation(summary = "userId 에 해당하는 회원의 프로파일 이미지 가져오기", description = "userId에 해당하는 사용자의 프로파일 이미지를 가져옵니다")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "이미지 조회 성공", content = @Content(mediaType = "image/*")),
-		@ApiResponse(responseCode = "200", description = "이미지 미 존재",
+		@ApiResponse(responseCode = "204", description = "이미지 미 존재, 미존재시 \"프로필 이미지가 존재하지 않습니다.\" 라는 Json 리턴",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = NoUserProfileDto.class))),
 		@ApiResponse(responseCode = "404", description = "이미지 미 존재",

@@ -113,7 +113,7 @@ public class DefaultRestControllerAdvice {
 	}
 
 	@ExceptionHandler(NoProfileImageException.class)
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public NoUserProfileDto handleNoProfileImageException(NoProfileImageException ex) {
 		return NoUserProfileDto.builder()
 			.status(PROFILE_IMAGE_NOT_EXIST)
