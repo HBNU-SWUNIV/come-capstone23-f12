@@ -21,7 +21,6 @@ import io.f12.notionlinkedblog.domain.notion.dto.UpdateNotionPageInfoDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
-import io.f12.notionlinkedblog.service.notion.NotionDevService;
 import io.f12.notionlinkedblog.service.notion.NotionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,9 +52,9 @@ public class NotionApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public PostSearchDto getNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto){
+		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
 		checkSameUser(notionToBlogDto.getUserId(), loginUser);
-		return notionService.saveNotionPageToBlog(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
+		return notionService.saveNotionPageToBlogDev(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
 	}
 
 	@PutMapping
@@ -68,9 +67,9 @@ public class NotionApiController {
 					description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시")))
 	})
 	public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated UpdateNotionPageInfoDto infoDto){
+		@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {
 		checkSameUser(infoDto.getUserId(), loginUser);
-		return notionService.editNotionPageToBlog(infoDto.getUserId(), infoDto.getPostId());
+		return notionService.editNotionPageToBlogDev(infoDto.getUserId(), infoDto.getPostId());
 	}
 
 	private void checkSameUser(Long id, LoginUser loginUser) {
