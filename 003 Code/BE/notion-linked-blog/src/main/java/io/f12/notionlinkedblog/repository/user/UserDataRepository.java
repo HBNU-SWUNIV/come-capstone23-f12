@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.dto.response.UserSearchDto;
 
 public interface UserDataRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u left join fetch u.notionOauth WHERE u.id = :id")
