@@ -10,13 +10,12 @@ import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import io.f12.notionlinkedblog.component.OAtuh.NotionOAuthComponent;
+import io.f12.notionlinkedblog.component.NotionDevComponent;
 import io.f12.notionlinkedblog.domain.notion.Notion;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.exceptions.exception.AlreadyExistException;
-import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.repository.notion.NotionDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
@@ -34,20 +33,20 @@ import notion.api.v1.request.blocks.RetrieveBlockRequest;
 @Slf4j
 public class NotionService {
 
-	private final NotionOAuthComponent notionOAuthComponent;
+	private final NotionDevComponent notionDevComponent;
 	private final NotionDataRepository notionDataRepository;
 	private final PostDataRepository postDataRepository;
 	private final UserDataRepository userDataRepository;
 	private final NotionBlockConverter notionBlockConverter;
 
-	public PostSearchDto saveNotionPageToBlogDev(String path, Long userId) throws NotionAuthenticationException {
+	public PostSearchDto saveNotionPageToBlog(String path, Long userId) {
 		String convertPath = convertPathToId(path);
 		Notion notion = notionDataRepository.findByPathValue(convertPath).orElse(null);
 		if (notion != null) {
 			throw new AlreadyExistException(DATA_ALREADY_EXIST);
 		}
-		String title = getTitle(convertPath, userId);
-		String content = getContent(convertPath, userId);
+		String title = getTitle(convertPath);
+		String content = getContent(convertPath);
 
 		User user = userDataRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -79,13 +78,13 @@ public class NotionService {
 			.build();
 	}
 
-	public PostSearchDto editNotionPageToBlogDev(Long userId, Long postId) throws NotionAuthenticationException {
+	public PostSearchDto editNotionPageToBlog(Long userId, Long postId) {
 		Post post = postDataRepository.findWithNotion(postId);
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
 
-		String content = getContent(post.getNotion().getNotionId(), userId);
-		String title = getTitle(post.getNotion().getNotionId(), userId);
+		String content = getContent(post.getNotion().getNotionId());
+		String title = getTitle(post.getNotion().getNotionId());
 		post.editPost(title, content);
 
 		return PostSearchDto.builder()
@@ -103,10 +102,9 @@ public class NotionService {
 			.build();
 	}
 
-	// private 매소드
-	private String getTitle(String fullPath, Long userId) throws NotionAuthenticationException {
+	private String getTitle(String fullPath) {
 		Block block;
-		NotionClient client = createClient(userId);
+		NotionClient client = createClientInDev();
 		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(fullPath);
 		try (client) {
 			block = client.retrieveBlock(retrieveBlockRequest);
@@ -115,9 +113,9 @@ public class NotionService {
 		return block.asChildPage().getChildPage().getTitle();
 	}
 
-	private String getContent(String fullPath, Long userId) throws NotionAuthenticationException {
+	private String getContent(String fullPath) {
 		Blocks blocks;
-		NotionClient client = createClient(userId);
+		NotionClient client = createClientInDev();
 		StringBuilder stringBuilder = new StringBuilder();
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
 			= new RetrieveBlockChildrenRequest(fullPath);
