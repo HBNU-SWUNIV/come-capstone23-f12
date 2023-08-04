@@ -27,6 +27,7 @@ import io.f12.notionlinkedblog.domain.PostTimeEntity;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.notion.Notion;
+import io.f12.notionlinkedblog.domain.notion.SyncedPages;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
 import lombok.AccessLevel;
@@ -66,6 +67,9 @@ public class Post extends PostTimeEntity {
 
 	@OneToOne(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private Notion notion;
+
+	@OneToOne(mappedBy = "post", cascade = CascadeType.REMOVE)
+	private SyncedPages syncedPages;
 
 	@NotBlank
 	private String title;
