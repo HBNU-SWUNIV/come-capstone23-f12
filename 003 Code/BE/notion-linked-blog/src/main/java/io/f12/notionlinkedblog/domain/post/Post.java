@@ -109,6 +109,10 @@ public class Post extends PostTimeEntity {
 		this.popularity = popularity;
 	}
 
+	public void setSyncedPages(SyncedPages syncedPages) {
+		this.syncedPages = syncedPages;
+	}
+
 	public void editPost(String title, String content) { // 비어있는 데이터는 예외처리
 		if (StringUtils.hasText(title)) {
 			this.title = title;
