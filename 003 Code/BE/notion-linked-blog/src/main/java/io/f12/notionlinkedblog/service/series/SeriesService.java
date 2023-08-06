@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.service.series;
 
-import static io.f12.notionlinkedblog.exceptions.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.util.ArrayList;
 import java.util.List;
