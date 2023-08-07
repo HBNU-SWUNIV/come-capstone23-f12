@@ -187,13 +187,27 @@ public class PostService {
 	}
 
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
-	public void editPostContent(Long postId, Long userId, PostEditDto postEditDto) {
+	public PostSearchDto editPostContent(Long postId, Long userId, PostEditDto postEditDto) {
 		Post changedPost = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(changedPost.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent());
+
+		return PostSearchDto.builder()
+			.isLiked(false)
+			.postId(changedPost.getId())
+			.title(changedPost.getTitle())
+			.content(changedPost.getContent())
+			.viewCount(changedPost.getViewCount())
+			.likes(0)
+			.requestThumbnailLink(Endpoint.Api.REQUEST_THUMBNAIL_IMAGE + changedPost.getThumbnailName())
+			.description(changedPost.getDescription())
+			.createdAt(changedPost.getCreatedAt())
+			.author(changedPost.getUser().getUsername())
+			.avatar(getAvatarRequestUrl(userId))
+			.build();
 	}
 
 	public void likeStatusChange(Long postId, Long userId) {
