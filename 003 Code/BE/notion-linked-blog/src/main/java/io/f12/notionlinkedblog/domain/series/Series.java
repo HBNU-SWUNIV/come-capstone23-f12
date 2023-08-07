@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -36,10 +37,11 @@ public class Series {
 	@NotNull
 	private User user;
 
-	@OneToMany(mappedBy = "series", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "series", cascade = CascadeType.PERSIST)
 	private List<Post> post = new ArrayList<>();
 
 	@NotNull
+	@Setter
 	private String title;
 
 	@Builder
@@ -53,5 +55,10 @@ public class Series {
 	public void addPost(Post post) {
 		this.post.add(post);
 		post.setSeries(this);
+	}
+
+	public void removePost(Post post) {
+		this.post.remove(post);
+		post.setSeries(null);
 	}
 }

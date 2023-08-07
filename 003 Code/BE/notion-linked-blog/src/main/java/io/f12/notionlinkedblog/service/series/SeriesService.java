@@ -1,5 +1,7 @@
 package io.f12.notionlinkedblog.service.series;
 
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.SeriesExceptionMessages.*;
 import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.request.SeriesCreateDto;
+import io.f12.notionlinkedblog.domain.series.dto.request.SeriesRemoveDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.SeriesCreateResponseDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.UserSeriesDto;
 import io.f12.notionlinkedblog.domain.user.User;
@@ -53,6 +56,18 @@ public class SeriesService {
 		return SeriesCreateResponseDto.builder()
 			.seriesId(savedSeries.getId())
 			.build();
+	}
+
+	public void removeSeries(SeriesRemoveDto removeDto) {
+		Series series = seriesDataRepository.findSeriesById(removeDto.getSeriesId())
+			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
+
+		List<Post> post = series.getPost();
+		for (int i = post.size() - 1; i >= 0; i--) {
+			Post p = post.get(i);
+			series.removePost(p);
+		}
+		seriesDataRepository.delete(series);
 	}
 
 	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
@@ -137,6 +152,28 @@ public class SeriesService {
 			.postsInfo(postDtos)
 			.build();
 
+	}
+
+	public void addPostTo(Long seriesId, Long postId) {
+		Series series = seriesDataRepository.findSeriesById(seriesId)
+			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
+		Post post = postDataRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
+		series.addPost(post);
+	}
+
+	public void removePostFrom(Long seriesId, Long postId) {
+		Series series = seriesDataRepository.findSeriesById(seriesId)
+			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
+		Post post = postDataRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
+		series.removePost(post);
+	}
+
+	public void editTitle(Long id, String title) {
+		Series series = seriesDataRepository.findSeriesById(id)
+			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
+		series.setTitle(title);
 	}
 
 	// 내부 사용 매서드

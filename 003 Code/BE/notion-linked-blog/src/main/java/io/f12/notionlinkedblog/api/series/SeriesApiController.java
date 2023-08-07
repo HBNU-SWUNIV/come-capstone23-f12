@@ -4,13 +4,17 @@ import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserE
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
@@ -18,6 +22,9 @@ import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.request.SeriesCreateDto;
+import io.f12.notionlinkedblog.domain.series.dto.request.SeriesPostRemoveDto;
+import io.f12.notionlinkedblog.domain.series.dto.request.SeriesRemoveDto;
+import io.f12.notionlinkedblog.domain.series.dto.request.TitleEditDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.SeriesCreateResponseDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.UserSeriesDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
@@ -53,6 +60,18 @@ public class SeriesApiController {
 		@RequestBody SeriesCreateDto seriesCreateDto) {
 		checkSameUser(seriesCreateDto.getUserId(), loginUser);
 		return seriesService.createSeries(seriesCreateDto);
+	}
+
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "시리즈 삭제", description = "시리즈를 삭제합니다")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "삭제 성공")
+	})
+	public void removeSeries(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody SeriesRemoveDto seriesRemoveDto) {
+		checkSameUser(seriesRemoveDto.getUserId(), loginUser);
+		seriesService.removeSeries(seriesRemoveDto);
 	}
 
 	@GetMapping("/{userId}")
@@ -111,6 +130,35 @@ public class SeriesApiController {
 	public SeriesDetailSearchDto seriesDetailSearchOrderByAsc(
 		@PathVariable("id") Long id, @PathVariable("page") Integer page) {
 		return seriesService.getDetailSeriesInfoOrderByAsc(id, page);
+	}
+
+	@DeleteMapping("/post")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@Operation(summary = "시리즈에서 포스트를 제외", description = "시리즈에 등록된 포스트를 제외합니다")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "변경 성공",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = SeriesPostRemoveDto.class)))
+	})
+	public void removePostFromSeries(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody SeriesPostRemoveDto removeDto) {
+		checkSameUser(removeDto.getUserId(), loginUser);
+		seriesService.removePostFrom(removeDto.getSeriesId(), removeDto.getPostId());
+	}
+
+	@PutMapping("/{series_id}/title")
+	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "시리즈의 타이틀 변경", description = "시리즈 이름을 변경합니다")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "변경 성공",
+			content = @Content(mediaType = "application/json",
+				schema = @Schema(implementation = TitleEditDto.class)))
+	})
+	public void editSeriesTitle(@PathVariable(name = "series_id") Long seriesId,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody TitleEditDto editDto) {
+		checkSameUser(editDto.getUserId(), loginUser);
+		seriesService.editTitle(seriesId, editDto.getTitle());
 	}
 
 	private void checkSameUser(Long id, LoginUser loginUser) {
