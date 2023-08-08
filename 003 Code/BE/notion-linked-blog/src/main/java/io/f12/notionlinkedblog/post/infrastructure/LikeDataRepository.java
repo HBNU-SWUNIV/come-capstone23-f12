@@ -10,14 +10,17 @@ import org.springframework.stereotype.Repository;
 
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
+import io.f12.notionlinkedblog.post.service.port.LikeRepository;
 
 @Repository
-public interface LikeDataRepository extends JpaRepository<Like, Long> {
+public interface LikeDataRepository extends JpaRepository<Like, Long>, LikeRepository {
+	@Override
 	@Query("SELECT NEW io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto(u.id,p.id,l.id) "
 		+ "FROM Like l join l.user u join l.post p "
 		+ "WHERE u.id = :userId AND p.id = :postId")
 	Optional<LikeSearchDto> findByUserIdAndPostId(@Param("userId") Long userId, @Param("postId") Long postId);
 
+	@Override
 	@Modifying
 	@Query("DELETE FROM Like l WHERE l.id = :id")
 	void removeById(@Param("id") Long likeId);

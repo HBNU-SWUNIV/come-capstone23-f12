@@ -19,6 +19,7 @@ import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.post.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
@@ -30,7 +31,7 @@ class LikeDataRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private LikeDataRepository likeDataRepository;
+	private LikeRepository likeRepository;
 	@Autowired
 	private EntityManager entityManager;
 
@@ -73,7 +74,7 @@ class LikeDataRepositoryTest {
 		//given
 		int count = 50;
 		for (int i = 0; i < count; i++) {
-			Like save = likeDataRepository.save(Like.builder()
+			Like save = likeRepository.save(Like.builder()
 				.post(post)
 				.user(user)
 				.build()
@@ -108,7 +109,7 @@ class LikeDataRepositoryTest {
 		//given
 		int count = 50;
 		for (int i = 0; i < count; i++) {
-			Like save = likeDataRepository.save(Like.builder()
+			Like save = likeRepository.save(Like.builder()
 				.post(post)
 				.user(user)
 				.build()

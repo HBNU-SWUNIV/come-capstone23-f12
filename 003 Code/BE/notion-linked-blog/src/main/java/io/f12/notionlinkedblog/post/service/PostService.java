@@ -29,7 +29,7 @@ import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
+import io.f12.notionlinkedblog.post.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -45,7 +45,7 @@ public class PostService {
 	private final PostRepository postRepository;
 	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
-	private final LikeDataRepository likeDataRepository;
+	private final LikeRepository likeRepository;
 	private final int pageSize = 20;
 	@Value("${server.url}")
 	private String serverUrl;
@@ -140,7 +140,7 @@ public class PostService {
 			commentsSize = post.getComments().size();
 		}
 		if (userId != null) {
-			likeInfo = likeDataRepository.findByUserIdAndPostId(userId, postId)
+			likeInfo = likeRepository.findByUserIdAndPostId(userId, postId)
 				.orElse(null);
 		}
 
@@ -218,12 +218,12 @@ public class PostService {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-		Optional<LikeSearchDto> dto = likeDataRepository.findByUserIdAndPostId(userId, postId);
+		Optional<LikeSearchDto> dto = likeRepository.findByUserIdAndPostId(userId, postId);
 
 		if (dto.isPresent()) {
-			likeDataRepository.removeById(dto.get().getLikeId());
+			likeRepository.removeById(dto.get().getLikeId());
 		} else {
-			likeDataRepository.save(Like.builder()
+			likeRepository.save(Like.builder()
 				.user(user)
 				.post(post)
 				.build());
