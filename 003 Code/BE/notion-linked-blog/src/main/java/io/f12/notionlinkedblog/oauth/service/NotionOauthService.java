@@ -28,7 +28,7 @@ import io.f12.notionlinkedblog.domain.oauth.NotionOauth;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthDataRepository;
+import io.f12.notionlinkedblog.oauth.service.port.NotionOauthRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NotionOauthService {
 	private final NotionOAuthComponent notionOAuthComponent;
 	private final UserRepository userRepository;
-	private final NotionOauthDataRepository notionOauthDataRepository;
+	private final NotionOauthRepository notionOauthRepository;
 
 	public NotionOAuthLinkDto getNotionAuthSite() {
 		return NotionOAuthLinkDto.builder()
@@ -60,7 +60,7 @@ public class NotionOauthService {
 
 	@Transactional
 	public void removeAccessToken(Long userId) {
-		notionOauthDataRepository.deleteNotionOauthByUserId(userId);
+		notionOauthRepository.deleteNotionOauthByUserId(userId);
 	}
 
 	private void saveToken(NotionAccessTokenDto notionAccessTokenDto, Long userId, User user, boolean exist) throws
@@ -75,7 +75,7 @@ public class NotionOauthService {
 	private void changeExistAccessCode(NotionAccessTokenDto notionAccessTokenDto, Long userId)
 		throws TokenAvailabilityFailureException {
 
-		NotionOauth authenticationObject = notionOauthDataRepository.findNotionOauthByUserId(userId)
+		NotionOauth authenticationObject = notionOauthRepository.findNotionOauthByUserId(userId)
 			.orElseThrow(() -> new IllegalDatabaseStateException(ACCESS_TOKEN_INVALID));
 
 		if (!Objects.equals(authenticationObject.getBotId(), notionAccessTokenDto.getBotId())) {
@@ -85,7 +85,7 @@ public class NotionOauthService {
 	}
 
 	private void saveNewAccessCode(NotionAccessTokenDto notionAccessTokenDto, User user) {
-		NotionOauth save = notionOauthDataRepository.save(
+		NotionOauth save = notionOauthRepository.save(
 			NotionOauth.builder()
 				.botId(notionAccessTokenDto.getBotId())
 				.accessToken(notionAccessTokenDto.getAccessToken())
@@ -94,7 +94,7 @@ public class NotionOauthService {
 	}
 
 	private boolean isExist(Long userId) {
-		return notionOauthDataRepository.findNotionOauthByUserId(userId).isPresent();
+		return notionOauthRepository.findNotionOauthByUserId(userId).isPresent();
 	}
 
 	private NotionAccessTokenDto authNotion(String code) {
