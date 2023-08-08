@@ -25,7 +25,6 @@ import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.dto.UserWithoutPassword;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingFailureResponseDto;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingSuccessResponseDto;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,8 +36,8 @@ public final class LoginStatusCheckingFilter extends OncePerRequestFilter {
 	private final RequestMatcher loginStatusCheckingRequestMatcher = new AntPathRequestMatcher(LOGIN_STATUS, "GET");
 	private final UserRepository userRepository;
 
-	public LoginStatusCheckingFilter(UserDataRepository userDataRepository) {
-		this.userRepository = userDataRepository;
+	public LoginStatusCheckingFilter(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Override

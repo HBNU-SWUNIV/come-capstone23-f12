@@ -33,7 +33,7 @@ import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
+import io.f12.notionlinkedblog.post.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -55,7 +55,7 @@ class PostServiceTest {
 	@Mock
 	UserRepository userRepository;
 	@Mock
-	LikeDataRepository likeDataRepository;
+	LikeRepository likeRepository;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -358,7 +358,7 @@ class PostServiceTest {
 					//Mock
 					given(postRepository.findById(fakeId))
 						.willReturn(Optional.ofNullable(testPost));
-					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
+					given(likeRepository.findByUserIdAndPostId(fakeId, fakeId))
 						.willReturn(Optional.ofNullable(likeSearchDto));
 					//when
 					PostSearchDto postDto = postService.getPostDtoById(fakeId, fakeId);
@@ -403,7 +403,7 @@ class PostServiceTest {
 					//Mock
 					given(postRepository.findById(fakeId))
 						.willReturn(Optional.ofNullable(testPost));
-					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
+					given(likeRepository.findByUserIdAndPostId(fakeId, fakeId))
 						.willReturn(Optional.empty());
 					//when
 					PostSearchDto postDto = postService.getPostDtoById(fakeId, fakeId);
@@ -790,7 +790,7 @@ class PostServiceTest {
 					.willReturn(Optional.of(post));
 				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
-				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
+				given(likeRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
 					.willReturn(Optional.empty());
 				//when
 				postService.likeStatusChange(fakePostId, fakeUserId);
@@ -826,7 +826,7 @@ class PostServiceTest {
 					.willReturn(Optional.of(post));
 				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
-				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
+				given(likeRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
 					.willReturn(Optional.of(dto));
 				//when
 				postService.likeStatusChange(fakePostId, fakeUserId);

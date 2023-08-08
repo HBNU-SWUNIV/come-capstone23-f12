@@ -24,7 +24,7 @@ import io.f12.notionlinkedblog.domain.series.dto.response.UserSeriesDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SeriesService {
 
 	private final SeriesRepository seriesRepository;
-	private final PostDataRepository postDataRepository;
+	private final PostRepository postRepository;
 	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
 
@@ -159,7 +159,7 @@ public class SeriesService {
 	public void addPostTo(Long seriesId, Long postId) {
 		Series series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		series.addPost(post);
 	}
@@ -167,7 +167,7 @@ public class SeriesService {
 	public void removePostFrom(Long seriesId, Long postId) {
 		Series series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		series.removePost(post);
 	}

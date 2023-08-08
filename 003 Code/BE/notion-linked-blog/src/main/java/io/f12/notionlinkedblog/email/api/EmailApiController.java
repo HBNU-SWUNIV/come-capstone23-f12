@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import io.f12.notionlinkedblog.web.argumentresolver.email.Email;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class EmailApiController {
 	public static final String redisCookieName = "x-redis-id";
 	public static final String emailVerifiedAttr = "emailVerified";
 	private final EmailSignupService emailSignupService;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 
 	@PostMapping("/code")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -69,7 +69,7 @@ public class EmailApiController {
 	}
 
 	private void checkDuplicateEmail(final String email) {
-		Optional<User> user = userDataRepository.findByEmail(email);
+		Optional<User> user = userRepository.findByEmail(email);
 		if (user.isPresent()) {
 			throw new IllegalArgumentException(EMAIL_ALREADY_EXIST);
 		}

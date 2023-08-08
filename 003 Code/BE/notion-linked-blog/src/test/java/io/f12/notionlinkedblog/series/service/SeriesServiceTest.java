@@ -22,9 +22,8 @@ import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
-import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 
 @ExtendWith(MockitoExtension.class)
 class SeriesServiceTest {
@@ -33,12 +32,10 @@ class SeriesServiceTest {
 	SeriesService seriesService;
 
 	@Mock
-	PostDataRepository postDataRepository;
-	@Mock
 	QuerydslPostRepository querydslPostRepository;
 
 	@Mock
-	SeriesDataRepository seriesDataRepository;
+	SeriesRepository seriesRepository;
 
 	@DisplayName("시리즈 정보 간단 조회")
 	@Nested
@@ -97,7 +94,7 @@ class SeriesServiceTest {
 			series.addPost(postC);
 
 			//mock
-			given(seriesDataRepository.findSeriesById(fakeId))
+			given(seriesRepository.findSeriesById(fakeId))
 				.willReturn(Optional.of(series));
 			//when
 			SeriesSimpleSearchDto simpleSeriesInfo = seriesService.getSimpleSeriesInfo(fakeId);

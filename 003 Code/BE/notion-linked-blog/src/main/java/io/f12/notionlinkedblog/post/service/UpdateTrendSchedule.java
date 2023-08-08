@@ -10,14 +10,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UpdateTrendSchedule {
-	private final PostDataRepository postDataRepository;
+	private final PostRepository postRepository;
 
 	/**
 	 * 현재 비 개인화 알고리즘을 통한 추천
@@ -25,7 +25,7 @@ public class UpdateTrendSchedule {
 	 */
 	@Scheduled(fixedDelay = 3600000) // 1시간 (임시 설정)
 	public void updateTrendIndex() {
-		List<Post> posts = postDataRepository.findByPostIdForTrend();
+		List<Post> posts = postRepository.findByPostIdForTrend();
 		for (Post post : posts) {
 			int likes = post.getLikes().size();
 			Long timeNow = localDateTimeToLong(LocalDateTime.now());

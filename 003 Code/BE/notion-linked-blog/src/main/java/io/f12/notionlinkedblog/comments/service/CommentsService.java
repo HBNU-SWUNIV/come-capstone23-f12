@@ -21,7 +21,7 @@ import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentsService {
 	private final CommentsRepository commentsRepository;
 
-	private final PostDataRepository postDataRepository;
+	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 
 	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
@@ -43,7 +43,7 @@ public class CommentsService {
 	}
 
 	public CommentEditDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.USER_NOT_EXIST));
