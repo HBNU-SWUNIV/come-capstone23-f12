@@ -18,7 +18,7 @@ import io.f12.notionlinkedblog.domain.notion.SyncedPages;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
-import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesDataRepository;
+import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class NotionService {
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final NotionBlockConverter notionBlockConverter;
-	private final SyncedPagesDataRepository syncedPagesDataRepository;
+	private final SyncedPagesRepository syncedPagesRepository;
 
 	public void setNotionLinkPages(String path, Long userId) {
 		User user = userRepository.findUserById(userId)
@@ -50,7 +50,7 @@ public class NotionService {
 			.pageId(pathToId)
 			.user(user)
 			.build();
-		syncedPagesDataRepository.save(syncedPages);
+		syncedPagesRepository.save(syncedPages);
 	}
 
 	//아래 도메인 으로 묶기
@@ -146,7 +146,7 @@ public class NotionService {
 				.likes(new ArrayList<>())
 				.viewCount(0L)
 				.build());
-			SyncedPages syncedPages = syncedPagesDataRepository.save(SyncedPages.builder()
+			SyncedPages syncedPages = syncedPagesRepository.save(SyncedPages.builder()
 				.pageId(pageId)
 				.user(user)
 				.post(post)
