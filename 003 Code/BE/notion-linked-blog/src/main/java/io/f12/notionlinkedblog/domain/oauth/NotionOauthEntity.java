@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "notion_oauth")
-public class NotionOauth {
+public class NotionOauthEntity {
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -30,7 +30,7 @@ public class NotionOauth {
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	@NotNull
-	private User user;
+	private UserEntity user;
 
 	@Column(unique = true)
 	private String accessToken;

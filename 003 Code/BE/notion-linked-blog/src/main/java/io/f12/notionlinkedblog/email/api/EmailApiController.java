@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import io.f12.notionlinkedblog.web.argumentresolver.email.Email;
@@ -69,7 +69,7 @@ public class EmailApiController {
 	}
 
 	private void checkDuplicateEmail(final String email) {
-		Optional<User> user = userRepository.findByEmail(email);
+		Optional<UserEntity> user = userRepository.findByEmail(email);
 		if (user.isPresent()) {
 			throw new IllegalArgumentException(EMAIL_ALREADY_EXIST);
 		}

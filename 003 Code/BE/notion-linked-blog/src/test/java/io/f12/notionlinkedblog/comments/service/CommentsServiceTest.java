@@ -17,12 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
-import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
@@ -50,13 +50,13 @@ class CommentsServiceTest {
 			void dataExist() {
 				//given
 				Long fakePostId = 1L;
-				List<Comments> returnComments = new ArrayList<>();
-				User user = User.builder()
+				List<CommentsEntity> returnComments = new ArrayList<>();
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@test.com")
 					.password(passwordEncoder.encode("1234"))
 					.build();
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
@@ -64,14 +64,14 @@ class CommentsServiceTest {
 				String content1 = "testComment1";
 				String content2 = "testComment2";
 
-				Comments parent = Comments.builder()
+				CommentsEntity parent = CommentsEntity.builder()
 					.content(content1)
 					.user(user)
 					.post(post)
 					.depth(0)
 					.build();
 
-				Comments child = Comments.builder()
+				CommentsEntity child = CommentsEntity.builder()
 					.content(content2)
 					.user(user)
 					.parent(parent)
@@ -100,8 +100,8 @@ class CommentsServiceTest {
 			void noData() {
 				//given
 				Long fakePostId = 1L;
-				List<Comments> returnComments = new ArrayList<>();
-				User user = User.builder()
+				List<CommentsEntity> returnComments = new ArrayList<>();
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
@@ -127,18 +127,18 @@ class CommentsServiceTest {
 			//given
 			Long fakePostId = 1L;
 			Long fakeUserId = 1L;
-			User user = User.builder()
+			UserEntity user = UserEntity.builder()
 				.username("tester")
 				.email("test@test.com")
 				.password("test123")
 				.build();
-			Post post = Post.builder()
+			PostEntity post = PostEntity.builder()
 				.user(user)
 				.title("testTitle")
 				.content("testContent")
 				.build();
 			String content = "testComment1";
-			Comments comments = Comments.builder()
+			CommentsEntity comments = CommentsEntity.builder()
 				.content(content)
 				.user(user)
 				.post(post)
@@ -153,7 +153,7 @@ class CommentsServiceTest {
 				.willReturn(Optional.ofNullable(post));
 			given(userRepository.findById(fakeUserId))
 				.willReturn(Optional.ofNullable(user));
-			given(commentsRepository.save(any(Comments.class)))
+			given(commentsRepository.save(any(CommentsEntity.class)))
 				.willReturn(comments);
 			//when
 			CommentEditDto commentDto = commentsService.createComments(fakePostId, fakeUserId, createCommentDto);
@@ -173,20 +173,20 @@ class CommentsServiceTest {
 			//given
 			Long fakeCommentId = 1L;
 			Long fakeUserId = 1L;
-			User user = User.builder()
+			UserEntity user = UserEntity.builder()
 				.id(fakeUserId)
 				.username("tester")
 				.email("test@test.com")
 				.password("test123")
 				.build();
-			Post post = Post.builder()
+			PostEntity post = PostEntity.builder()
 				.user(user)
 				.title("testTitle")
 				.content("testContent")
 				.build();
 			String content = "testComment1";
 			String editContent = "editComment";
-			Comments comments = Comments.builder()
+			CommentsEntity comments = CommentsEntity.builder()
 				.content(content)
 				.user(user)
 				.depth(0)
@@ -211,20 +211,20 @@ class CommentsServiceTest {
 			Long fakeCommentId = 1L;
 			Long fakeUserId = 1L;
 			Long fakePostId = 1L;
-			User user = User.builder()
+			UserEntity user = UserEntity.builder()
 				.id(fakeUserId)
 				.username("tester")
 				.email("test@test.com")
 				.password("test123")
 				.build();
-			Post post = Post.builder()
+			PostEntity post = PostEntity.builder()
 				.id(fakePostId)
 				.user(user)
 				.title("testTitle")
 				.content("testContent")
 				.build();
 			String content = "testComment1";
-			Comments comments = Comments.builder()
+			CommentsEntity comments = CommentsEntity.builder()
 				.id(fakeCommentId)
 				.content(content)
 				.user(user)

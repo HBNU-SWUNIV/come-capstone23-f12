@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ActiveProfiles("test")
@@ -34,10 +34,14 @@ class UserRepositoryTests {
 			@Test
 			void findByEmail() {
 				//given
-				User testUser = User.builder().email("test@gmail.com").username("test").password("password").build();
+				UserEntity testUser = UserEntity.builder()
+					.email("test@gmail.com")
+					.username("test")
+					.password("password")
+					.build();
 
 				//when
-				Optional<User> foundUser = userRepository.findByEmail(testUser.getEmail());
+				Optional<UserEntity> foundUser = userRepository.findByEmail(testUser.getEmail());
 
 				//then
 				assertThat(foundUser.isEmpty()).isTrue();
@@ -51,13 +55,21 @@ class UserRepositoryTests {
 			@Test
 			void findByEmail() {
 				//given
-				User existUser = User.builder().email("test@gmail.com").username("test").password("password").build();
+				UserEntity existUser = UserEntity.builder()
+					.email("test@gmail.com")
+					.username("test")
+					.password("password")
+					.build();
 				userRepository.save(existUser);
 
-				User newUser = User.builder().email("test@gmail.com").username("test").password("password").build();
+				UserEntity newUser = UserEntity.builder()
+					.email("test@gmail.com")
+					.username("test")
+					.password("password")
+					.build();
 
 				//when
-				Optional<User> foundUser = userRepository.findByEmail(newUser.getEmail());
+				Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
 				//then
 				assertThat(foundUser.isPresent()).isTrue();

@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
-import io.f12.notionlinkedblog.domain.likes.Like;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.likes.LikeEntity;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -38,19 +38,19 @@ class LikeDataRepositoryTest {
 	String title = "testTitle";
 	String content = "testContent";
 
-	private User user;
-	private Post post;
+	private UserEntity user;
+	private PostEntity post;
 
 	@BeforeEach
 	void init() {
-		User savedUser = User.builder()
+		UserEntity savedUser = UserEntity.builder()
 			.username("tester")
 			.email("test@test.com")
 			.password("nope")
 			.build();
 		user = userRepository.save(savedUser);
 
-		Post savedPost = Post.builder()
+		PostEntity savedPost = PostEntity.builder()
 			.title(title)
 			.content(content)
 			.user(user)
@@ -67,14 +67,14 @@ class LikeDataRepositoryTest {
 		entityManager.createNativeQuery("ALTER SEQUENCE post_seq RESTART WITH 1").executeUpdate();
 	}
 
-	@DisplayName("Like 존재시 Post 데이터 조회")
+	@DisplayName("LikeEntity 존재시 PostEntity 데이터 조회")
 	@Test
 	void getPostWhenLikeExist() {
 
 		//given
 		int count = 50;
 		for (int i = 0; i < count; i++) {
-			Like save = likeRepository.save(Like.builder()
+			LikeEntity save = likeRepository.save(LikeEntity.builder()
 				.post(post)
 				.user(user)
 				.build()
@@ -83,13 +83,13 @@ class LikeDataRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 		//when
-		Post getPost = postRepository.findById(post.getId())
+		PostEntity getPost = postRepository.findById(post.getId())
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		// //then
 		assertThat(getPost.getLikes().size()).isEqualTo(count);
 	}
 
-	@DisplayName("Like 미존재시 Post 데이터 조회")
+	@DisplayName("LikeEntity 미존재시 PostEntity 데이터 조회")
 	@Test
 	void getPostWhenLikeNonExist() {
 		//given
@@ -97,7 +97,7 @@ class LikeDataRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 		//when
-		Post getPost = postRepository.findById(post.getId())
+		PostEntity getPost = postRepository.findById(post.getId())
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		//then
 		assertThat(getPost.getLikes()).size().isEqualTo(count);
@@ -109,14 +109,14 @@ class LikeDataRepositoryTest {
 		//given
 		int count = 50;
 		for (int i = 0; i < count; i++) {
-			Like save = likeRepository.save(Like.builder()
+			LikeEntity save = likeRepository.save(LikeEntity.builder()
 				.post(post)
 				.user(user)
 				.build()
 			);
 		}
 
-		Post savedPost = Post.builder()
+		PostEntity savedPost = PostEntity.builder()
 			.title(title)
 			.content(content)
 			.user(user)
@@ -128,9 +128,9 @@ class LikeDataRepositoryTest {
 		entityManager.clear();
 
 		// when
-		List<Post> posts = postRepository.findByPostIdForTrend();
-		Post postA = posts.get(0);
-		Post postB = posts.get(1);
+		List<PostEntity> posts = postRepository.findByPostIdForTrend();
+		PostEntity postA = posts.get(0);
+		PostEntity postB = posts.get(1);
 
 		//then
 		assertThat(posts).size().isEqualTo(2);

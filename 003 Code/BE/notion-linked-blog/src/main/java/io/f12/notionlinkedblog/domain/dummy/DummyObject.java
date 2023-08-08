@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.domain.dummy;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 
 public class DummyObject {
@@ -13,8 +13,8 @@ public class DummyObject {
 			.build();
 	}
 
-	protected User newMockUser(Long id, String username, String email) {
-		return User.builder()
+	protected UserEntity newMockUser(Long id, String username, String email) {
+		return UserEntity.builder()
 			.id(id)
 			.username(username)
 			.email(email)

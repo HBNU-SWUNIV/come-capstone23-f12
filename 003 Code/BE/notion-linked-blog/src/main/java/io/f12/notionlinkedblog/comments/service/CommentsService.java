@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
-import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ChildCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class CommentsService {
 	private final UserRepository userRepository;
 
 	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
-		List<Comments> comments = commentsRepository.findByPostId(postId);
+		List<CommentsEntity> comments = commentsRepository.findByPostId(postId);
 		HashMap<Long, ParentsCommentDto> parentsMap = new HashMap<>();
 		Queue<ChildCommentDto> childQueue = new LinkedList<>();
 		convertCommentsToDto(comments, parentsMap, childQueue);
@@ -43,18 +43,18 @@ public class CommentsService {
 	}
 
 	public CommentEditDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
-		User user = userRepository.findById(userId)
+		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.USER_NOT_EXIST));
 
-		Comments parentComment = null;
+		CommentsEntity parentComment = null;
 		if (isChild(commentDto)) {
 			parentComment = commentsRepository.findById(commentDto.getParentCommentId())
 				.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		}
 
-		Comments builtComments = Comments.builder()
+		CommentsEntity builtComments = CommentsEntity.builder()
 			.post(post)
 			.content(commentDto.getComment())
 			.user(user)
@@ -62,7 +62,7 @@ public class CommentsService {
 			.parent(parentComment)
 			.build();
 
-		Comments savedComments = commentsRepository.save(builtComments);
+		CommentsEntity savedComments = commentsRepository.save(builtComments);
 
 		CommentEditDto builtReturnDto = convertCommentsToCommentEditDto(savedComments, user);
 
@@ -74,9 +74,9 @@ public class CommentsService {
 	}
 
 	public CommentEditDto editComment(Long commentId, Long userId, String contents) {
-		Comments comments = commentsRepository.findById(commentId)
+		CommentsEntity comments = commentsRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
-		User user = comments.getUser();
+		UserEntity user = comments.getUser();
 
 		checkIsAuthor(userId, comments);
 		comments.editComments(contents);
@@ -84,7 +84,7 @@ public class CommentsService {
 	}
 
 	public void removeComment(Long commentId, Long userId) {
-		Comments comments = commentsRepository.findById(commentId)
+		CommentsEntity comments = commentsRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		checkIsAuthor(userId, comments);
 		commentsRepository.deleteById(commentId);
@@ -96,7 +96,7 @@ public class CommentsService {
 		return Objects.equals(sessionUserId, databaseUserId);
 	}
 
-	private static boolean isParent(Comments comments) {
+	private static boolean isParent(CommentsEntity comments) {
 		return comments.getDepth() == 0;
 	}
 
@@ -104,9 +104,9 @@ public class CommentsService {
 		return commentDto.getDepth().equals(1);
 	}
 
-	private void convertCommentsToDto(List<Comments> comments,
+	private void convertCommentsToDto(List<CommentsEntity> comments,
 		HashMap<Long, ParentsCommentDto> parentsMap, Queue<ChildCommentDto> childQueue) {
-		for (Comments comment : comments) {
+		for (CommentsEntity comment : comments) {
 			if (isParent(comment)) {
 				parentsMap.put(comment.getId(), createParentsCommentDto(comment));
 			} else {
@@ -126,7 +126,7 @@ public class CommentsService {
 		return new ArrayList<>(parentsMap.values());
 	}
 
-	private static CommentEditDto convertCommentsToCommentEditDto(Comments comments, User user) {
+	private static CommentEditDto convertCommentsToCommentEditDto(CommentsEntity comments, UserEntity user) {
 		return CommentEditDto.builder()
 			.commentId(comments.getId())
 			.comment(comments.getContent())
@@ -138,18 +138,18 @@ public class CommentsService {
 			.build();
 	}
 
-	private void checkIsAuthor(Long userId, Comments comments) {
+	private void checkIsAuthor(Long userId, CommentsEntity comments) {
 		if (!isSameUser(userId, comments.getUser().getId())) {
 			throw new IllegalStateException(NOT_COMMENT_OWNER);
 		}
 	}
 
-	private ParentsCommentDto createParentsCommentDto(Comments comment) {
+	private ParentsCommentDto createParentsCommentDto(CommentsEntity comment) {
 		ParentsCommentDto parentsCommentDto = new ParentsCommentDto();
 		return parentsCommentDto.createParentCommentDto(comment);
 	}
 
-	private ChildCommentDto createChildCommentDto(Comments comment) {
+	private ChildCommentDto createChildCommentDto(CommentsEntity comment) {
 		ChildCommentDto childCommentDto = new ChildCommentDto();
 		return childCommentDto.createChildCommentDto(comment);
 	}

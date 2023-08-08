@@ -3,16 +3,16 @@ package io.f12.notionlinkedblog.post.service.port;
 import java.util.List;
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
 
 public interface PostRepository {
-	Optional<Post> findById(Long id);
+	Optional<PostEntity> findById(Long id);
 
-	List<Post> findByPostIdForTrend();
+	List<PostEntity> findByPostIdForTrend();
 
 	String findThumbnailPathWithName(String name);
 
-	Post save(Post post);
+	PostEntity save(PostEntity post);
 
 	void deleteById(Long id);
 

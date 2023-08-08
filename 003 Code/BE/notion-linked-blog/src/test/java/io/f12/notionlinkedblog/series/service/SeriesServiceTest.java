@@ -17,11 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.series.Series;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 
@@ -49,20 +49,20 @@ class SeriesServiceTest {
 			Long fakePostBId = 2L;
 			Long fakePostCId = 3L;
 
-			User user = User.builder()
+			UserEntity user = UserEntity.builder()
 				.id(fakeId)
 				.username("tester")
 				.email("test@test.com")
 				.password("test123")
 				.build();
 
-			Series series = Series.builder()
+			SeriesEntity series = SeriesEntity.builder()
 				.id(fakeId)
 				.title("testSeries")
 				.post(new ArrayList<>())
 				.build();
 
-			Post postA = Post.builder()
+			PostEntity postA = PostEntity.builder()
 				.user(user)
 				.title("titleA")
 				.content("contentA")
@@ -71,7 +71,7 @@ class SeriesServiceTest {
 				.series(series)
 				.build();
 
-			Post postB = Post.builder()
+			PostEntity postB = PostEntity.builder()
 				.user(user)
 				.title("titleB")
 				.content("contentB")
@@ -80,7 +80,7 @@ class SeriesServiceTest {
 				.series(series)
 				.build();
 
-			Post postC = Post.builder()
+			PostEntity postC = PostEntity.builder()
 				.user(user)
 				.title("titleC")
 				.content("contentC")
@@ -122,20 +122,20 @@ class SeriesServiceTest {
 				Long fakePostBId = 2L;
 				Long fakePostCId = 3L;
 
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
 					.build();
 
-				Series series = Series.builder()
+				SeriesEntity series = SeriesEntity.builder()
 					.id(fakeId)
 					.title("testSeries")
 					.post(new ArrayList<>())
 					.build();
 
-				Post postA = Post.builder()
+				PostEntity postA = PostEntity.builder()
 					.user(user)
 					.title("titleA")
 					.content("contentA")
@@ -144,7 +144,7 @@ class SeriesServiceTest {
 					.series(series)
 					.build();
 
-				Post postB = Post.builder()
+				PostEntity postB = PostEntity.builder()
 					.user(user)
 					.title("titleB")
 					.content("contentB")
@@ -153,7 +153,7 @@ class SeriesServiceTest {
 					.series(series)
 					.build();
 
-				Post postC = Post.builder()
+				PostEntity postC = PostEntity.builder()
 					.user(user)
 					.title("titleC")
 					.content("contentC")
@@ -170,7 +170,7 @@ class SeriesServiceTest {
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
 				ids.add(fakePostCId);
-				List<Post> posts = new LinkedList<>();
+				List<PostEntity> posts = new LinkedList<>();
 				posts.add(postA);
 				posts.add(postB);
 				posts.add(postC);
@@ -204,20 +204,20 @@ class SeriesServiceTest {
 				Long fakePostBId = 2L;
 				Long fakePostCId = 3L;
 
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
 					.password("test123")
 					.build();
 
-				Series series = Series.builder()
+				SeriesEntity series = SeriesEntity.builder()
 					.id(fakeId)
 					.title("testSeries")
 					.post(new ArrayList<>())
 					.build();
 
-				Post postA = Post.builder()
+				PostEntity postA = PostEntity.builder()
 					.user(user)
 					.title("titleA")
 					.content("contentA")
@@ -226,7 +226,7 @@ class SeriesServiceTest {
 					.series(series)
 					.build();
 
-				Post postB = Post.builder()
+				PostEntity postB = PostEntity.builder()
 					.user(user)
 					.title("titleB")
 					.content("contentB")
@@ -235,7 +235,7 @@ class SeriesServiceTest {
 					.series(series)
 					.build();
 
-				Post postC = Post.builder()
+				PostEntity postC = PostEntity.builder()
 					.user(user)
 					.title("titleC")
 					.content("contentC")
@@ -252,7 +252,7 @@ class SeriesServiceTest {
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
 				ids.add(fakePostCId);
-				List<Post> posts = new LinkedList<>();
+				List<PostEntity> posts = new LinkedList<>();
 				posts.add(postA);
 				posts.add(postB);
 				posts.add(postC);

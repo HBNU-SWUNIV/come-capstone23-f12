@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.common.PagingInfo;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.series.Series;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.request.SeriesCreateDto;
 import io.f12.notionlinkedblog.domain.series.dto.request.SeriesRemoveDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.SeriesCreateResponseDto;
 import io.f12.notionlinkedblog.domain.series.dto.response.UserSeriesDto;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
@@ -44,16 +44,16 @@ public class SeriesService {
 	private static final int pagingSize = 10;
 
 	public SeriesCreateResponseDto createSeries(SeriesCreateDto createDto) {
-		User user = userRepository.findById(createDto.getUserId())
+		UserEntity user = userRepository.findById(createDto.getUserId())
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-		Series series = Series.builder()
+		SeriesEntity series = SeriesEntity.builder()
 			.user(user)
 			.title(createDto.getSeriesTitle())
 			.post(new ArrayList<>())
 			.build();
 
-		Series savedSeries = seriesRepository.save(series);
+		SeriesEntity savedSeries = seriesRepository.save(series);
 
 		return SeriesCreateResponseDto.builder()
 			.seriesId(savedSeries.getId())
@@ -61,19 +61,19 @@ public class SeriesService {
 	}
 
 	public void removeSeries(SeriesRemoveDto removeDto) {
-		Series series = seriesRepository.findSeriesById(removeDto.getSeriesId())
+		SeriesEntity series = seriesRepository.findSeriesById(removeDto.getSeriesId())
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 
-		List<Post> post = series.getPost();
+		List<PostEntity> post = series.getPost();
 		for (int i = post.size() - 1; i >= 0; i--) {
-			Post p = post.get(i);
+			PostEntity p = post.get(i);
 			series.removePost(p);
 		}
 		seriesRepository.delete(series);
 	}
 
 	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
-		List<Series> series = userRepository.findSeriesByUserId(userId)
+		List<SeriesEntity> series = userRepository.findSeriesByUserId(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST))
 			.getSeries();
 
@@ -86,10 +86,10 @@ public class SeriesService {
 	}
 
 	public SeriesSimpleSearchDto getSimpleSeriesInfo(Long seriesId) {
-		Series series = seriesRepository.findSeriesById(seriesId)
+		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException("잘못된 seriesId 입니다."));
 
-		List<Post> post = series.getPost();
+		List<PostEntity> post = series.getPost();
 		List<SimplePostDto> simplePosts = postToSimplePost(post);
 
 		return SeriesSimpleSearchDto.builder()
@@ -103,8 +103,8 @@ public class SeriesService {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
 		List<Long> postIds = querydslPostRepository.findIdsBySeriesIdDesc(seriesId, pageRequest);
-		List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
-		Series series = posts.get(0).getSeries();
+		List<PostEntity> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
+		SeriesEntity series = posts.get(0).getSeries();
 
 		List<PostForDetailSeries> postDtos = posts.stream().map(p -> {
 			return PostForDetailSeries.builder()
@@ -131,8 +131,8 @@ public class SeriesService {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
 		List<Long> postIds = querydslPostRepository.findIdsBySeriesIdAsc(seriesId, pageRequest);
-		List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
-		Series series = posts.get(0).getSeries();
+		List<PostEntity> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
+		SeriesEntity series = posts.get(0).getSeries();
 
 		List<PostForDetailSeries> postDtos = posts.stream().map(p -> {
 			return PostForDetailSeries.builder()
@@ -157,29 +157,29 @@ public class SeriesService {
 	}
 
 	public void addPostTo(Long seriesId, Long postId) {
-		Series series = seriesRepository.findSeriesById(seriesId)
+		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		series.addPost(post);
 	}
 
 	public void removePostFrom(Long seriesId, Long postId) {
-		Series series = seriesRepository.findSeriesById(seriesId)
+		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		series.removePost(post);
 	}
 
 	public void editTitle(Long id, String title) {
-		Series series = seriesRepository.findSeriesById(id)
+		SeriesEntity series = seriesRepository.findSeriesById(id)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 		series.setTitle(title);
 	}
 
 	// 내부 사용 매서드
-	private List<SimplePostDto> postToSimplePost(List<Post> post) {
+	private List<SimplePostDto> postToSimplePost(List<PostEntity> post) {
 		return post.stream().map(p -> SimplePostDto.builder()
 			.postId(p.getId())
 			.postTitle(p.getTitle())

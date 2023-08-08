@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.login.email.EmailLoginUserRequestDto;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
@@ -41,7 +41,7 @@ class AjaxEmailPasswordAuthenticationFilterTests extends DummyObject {
 	@BeforeEach
 	void setup() {
 		userRepository.deleteAll();
-		userRepository.save(User.builder()
+		userRepository.save(UserEntity.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234")).build());

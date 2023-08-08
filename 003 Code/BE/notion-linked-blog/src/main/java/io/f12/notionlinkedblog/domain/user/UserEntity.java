@@ -16,12 +16,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import io.f12.notionlinkedblog.domain.BaseTimeEntity;
-import io.f12.notionlinkedblog.domain.comments.Comments;
-import io.f12.notionlinkedblog.domain.likes.Like;
-import io.f12.notionlinkedblog.domain.notion.SyncedPages;
-import io.f12.notionlinkedblog.domain.oauth.NotionOauth;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.series.Series;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
+import io.f12.notionlinkedblog.domain.likes.LikeEntity;
+import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.domain.oauth.NotionOauthEntity;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
@@ -39,29 +39,29 @@ import lombok.NoArgsConstructor;
 	sequenceName = "user_seq",
 	allocationSize = 1
 )
-public class User extends BaseTimeEntity {
+public class UserEntity extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
 	private Long id;
 
 	@OneToMany(mappedBy = "user")
-	private List<Post> posts = new ArrayList<>();
+	private List<PostEntity> posts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Comments> comments = new ArrayList<>();
+	private List<CommentsEntity> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Like> likes = new ArrayList<>();
+	private List<LikeEntity> likes = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Series> series = new ArrayList<>();
+	private List<SeriesEntity> series = new ArrayList<>();
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-	private NotionOauth notionOauth;
+	private NotionOauthEntity notionOauth;
 
 	@OneToMany(mappedBy = "user")
-	private List<SyncedPages> syncedPages;
+	private List<SyncedPagesEntity> syncedPages;
 
 	@Column(nullable = false)
 	private String username;
@@ -76,7 +76,7 @@ public class User extends BaseTimeEntity {
 	private String instagramLink;
 
 	@Builder
-	public User(Long id, String username, String email, String password, String profile, String introduction,
+	public UserEntity(Long id, String username, String email, String password, String profile, String introduction,
 		String blogTitle, String githubLink, String instagramLink) {
 		this.id = id;
 		this.username = username;

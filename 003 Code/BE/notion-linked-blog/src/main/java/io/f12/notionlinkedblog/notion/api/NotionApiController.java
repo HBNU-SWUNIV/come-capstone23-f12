@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.notion.service.NotionService;
+import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -51,7 +51,7 @@ public class NotionApiController {
 	// 	@ApiResponse(responseCode = "200", description = "포스트 수정 성공",
 	// 		content = @Content(mediaType = APPLICATION_JSON_VALUE,
 	// 			schema = @Schema(implementation = PostSearchDto.class,
-	// 				description = "PostId 에 해당하는 사용자의 Post 를 노션과 업데이트, 업데이트시 모든 내용을 대체")))
+	// 				description = "PostId 에 해당하는 사용자의 PostEntity 를 노션과 업데이트, 업데이트시 모든 내용을 대체")))
 	// })
 	// public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 	// 	@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {

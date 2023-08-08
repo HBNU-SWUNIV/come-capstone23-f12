@@ -2,10 +2,10 @@ package io.f12.notionlinkedblog.notion.service.port;
 
 import java.util.List;
 
-import io.f12.notionlinkedblog.domain.notion.SyncedPages;
+import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
 
 public interface SyncedPagesRepository {
-	List<SyncedPages> findAll();
+	List<SyncedPagesEntity> findAll();
 
-	SyncedPages save(SyncedPages syncedPages);
+	SyncedPagesEntity save(SyncedPagesEntity syncedPages);
 }

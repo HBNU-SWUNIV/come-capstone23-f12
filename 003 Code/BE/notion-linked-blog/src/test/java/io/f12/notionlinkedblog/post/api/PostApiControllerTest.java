@@ -32,8 +32,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
@@ -61,18 +61,18 @@ class PostApiControllerTest {
 	@MockBean
 	private PostService postService;
 
-	private User testUser;
-	private Post testPost;
+	private UserEntity testUser;
+	private PostEntity testPost;
 
 	@BeforeEach
 	void init() {
-		testUser = userRepository.save(User.builder()
+		testUser = userRepository.save(UserEntity.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
 			.build()
 		);
-		testPost = postRepository.save(Post.builder()
+		testPost = postRepository.save(PostEntity.builder()
 			.user(testUser)
 			.title("testTitle")
 			.isPublic(true)
@@ -279,7 +279,7 @@ class PostApiControllerTest {
 				Integer pageNumber = 1;
 				String url = Endpoint.Api.POST + "/newest/" + pageNumber;
 
-				postRepository.save(Post.builder()
+				postRepository.save(PostEntity.builder()
 					.user(testUser)
 					.title("testTitle 2")
 					.isPublic(true)
@@ -301,7 +301,7 @@ class PostApiControllerTest {
 					//given
 					String url = Endpoint.Api.POST + "/newest/";
 
-					postRepository.save(Post.builder()
+					postRepository.save(PostEntity.builder()
 						.user(testUser)
 						.title("testTitle 2")
 						.isPublic(true)
@@ -326,7 +326,7 @@ class PostApiControllerTest {
 				Integer pageNumber = 1;
 				String url = Endpoint.Api.POST + "/trend/" + pageNumber;
 
-				postRepository.save(Post.builder()
+				postRepository.save(PostEntity.builder()
 					.user(testUser)
 					.title("testTitle 2")
 					.isPublic(true)
@@ -348,7 +348,7 @@ class PostApiControllerTest {
 					//given
 					String url = Endpoint.Api.POST + "/trend/";
 
-					postRepository.save(Post.builder()
+					postRepository.save(PostEntity.builder()
 						.user(testUser)
 						.title("testTitle 2")
 						.isPublic(true)
@@ -405,7 +405,7 @@ class PostApiControllerTest {
 		void successCase() throws Exception {
 			//given
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
-			User user = userRepository.findUserById(testUser.getId())
+			UserEntity user = userRepository.findUserById(testUser.getId())
 				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();

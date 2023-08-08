@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class ParentsCommentDto {
 	private String authorProfileLink;
 	private List<ChildCommentDto> children;
 
-	public ParentsCommentDto createParentCommentDto(Comments comments) {
+	public ParentsCommentDto createParentCommentDto(CommentsEntity comments) {
 		this.commentsId = comments.getId();
 		this.comment = comments.getContent();
 		this.createdAt = comments.getCreatedAt();

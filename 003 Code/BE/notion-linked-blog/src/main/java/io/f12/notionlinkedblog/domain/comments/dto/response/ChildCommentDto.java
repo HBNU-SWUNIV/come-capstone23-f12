@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.domain.comments.dto.response;
 
 import java.time.LocalDateTime;
 
-import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class ChildCommentDto { //7
 	private String author;
 	private String authorProfileLink;
 
-	public ChildCommentDto createChildCommentDto(Comments comments) {
+	public ChildCommentDto createChildCommentDto(CommentsEntity comments) {
 		this.commentsId = comments.getId();
 		this.comment = comments.getContent();
 		this.parentCommentId = comments.getParent().getId();

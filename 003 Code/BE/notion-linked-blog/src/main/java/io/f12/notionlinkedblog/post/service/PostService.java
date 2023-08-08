@@ -21,10 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
-import io.f12.notionlinkedblog.domain.likes.Like;
+import io.f12.notionlinkedblog.domain.likes.LikeEntity;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
@@ -52,7 +52,7 @@ public class PostService {
 
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
 		Boolean isPublic, MultipartFile multipartFile) throws IOException {
-		User findUser = userRepository.findById(userId)
+		UserEntity findUser = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String systemPath = System.getProperty("user.dir");
@@ -70,7 +70,7 @@ public class PostService {
 			requestThumbnailLink = Endpoint.Api.REQUEST_THUMBNAIL_IMAGE + newName;
 		}
 
-		Post post = Post.builder()
+		PostEntity post = PostEntity.builder()
 			.user(findUser)
 			.title(title)
 			.content(content)
@@ -81,7 +81,7 @@ public class PostService {
 			.isPublic(isPublic)
 			.build();
 
-		Post savedPost = postRepository.save(post);
+		PostEntity savedPost = postRepository.save(post);
 
 		return PostSearchDto.builder()
 			.isLiked(false)
@@ -102,7 +102,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = querydslPostRepository.findPostIdsByTitle(dto.getParam(), paging);
-		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -113,7 +113,7 @@ public class PostService {
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
 		List<Long> ids = querydslPostRepository.findPostIdsByContent(dto.getParam(), paging);
-		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -121,7 +121,7 @@ public class PostService {
 	}
 
 	public PostSearchDto getPostDtoById(Long postId, Long userId) { //DONE
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		post.addViewCount();
 
@@ -163,7 +163,7 @@ public class PostService {
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) { //
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = querydslPostRepository.findLatestPostIdsByCreatedAtDesc(paging);
-		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
@@ -172,14 +172,14 @@ public class PostService {
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = querydslPostRepository.findPopularityPostIdsByViewCountAtDesc(paging);
-		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public void removePost(Long postId, Long userId) {
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(post.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
@@ -190,7 +190,7 @@ public class PostService {
 
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
 	public PostSearchDto editPostContent(Long postId, Long userId, PostEditDto postEditDto) {
-		Post changedPost = postRepository.findById(postId)
+		PostEntity changedPost = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(changedPost.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
@@ -213,9 +213,9 @@ public class PostService {
 	}
 
 	public void likeStatusChange(Long postId, Long userId) {
-		Post post = postRepository.findById(postId)
+		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-		User user = userRepository.findById(userId)
+		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		Optional<LikeSearchDto> dto = likeRepository.findByUserIdAndPostId(userId, postId);
@@ -223,7 +223,7 @@ public class PostService {
 		if (dto.isPresent()) {
 			likeRepository.removeById(dto.get().getLikeId());
 		} else {
-			likeRepository.save(Like.builder()
+			likeRepository.save(LikeEntity.builder()
 				.user(user)
 				.post(post)
 				.build());
@@ -239,7 +239,7 @@ public class PostService {
 	}
 
 	// 내부 사용 매서드
-	private List<PostSearchDto> convertPostToPostDto(List<Post> posts) {
+	private List<PostSearchDto> convertPostToPostDto(List<PostEntity> posts) {
 		return posts.stream().map(p -> {
 			String thumbnailLink = null;
 			Integer commentsSize = null;

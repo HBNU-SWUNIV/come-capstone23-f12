@@ -38,7 +38,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Series", description = "시리즈 API")
+@Tag(name = "SeriesEntity", description = "시리즈 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.SERIES)

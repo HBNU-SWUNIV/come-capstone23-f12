@@ -3,7 +3,7 @@ package io.f12.notionlinkedblog.user.domain.dto.signup;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +32,8 @@ public class UserSignupRequestDto {
 		this.password = password;
 	}
 
-	public User toEntity() {
-		return User.builder()
+	public UserEntity toEntity() {
+		return UserEntity.builder()
 			.username(username)
 			.email(email)
 			.password(password)

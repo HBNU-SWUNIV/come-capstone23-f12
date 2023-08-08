@@ -20,9 +20,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.series.Series;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
@@ -43,9 +43,9 @@ class PostDataRepositoryTest {
 	@Autowired
 	private SeriesRepository seriesRepository;
 
-	private User user;
-	private Post post;
-	private Series series;
+	private UserEntity user;
+	private PostEntity post;
+	private SeriesEntity series;
 
 	String title = "testTitle";
 	String content = "testContent";
@@ -54,21 +54,21 @@ class PostDataRepositoryTest {
 
 	@BeforeEach
 	void init() {
-		User savedUser = User.builder()
+		UserEntity savedUser = UserEntity.builder()
 			.username("tester")
 			.email("test@test.com")
 			.password("nope")
 			.build();
 		user = userRepository.save(savedUser);
 
-		Series savedSeries = Series.builder()
+		SeriesEntity savedSeries = SeriesEntity.builder()
 			.title("testSeries")
 			.user(user)
 			.post(new ArrayList<>())
 			.build();
 		series = seriesRepository.save(savedSeries);
 
-		Post savedPost = Post.builder()
+		PostEntity savedPost = PostEntity.builder()
 			.title(title)
 			.content(content)
 			.user(user)
@@ -106,12 +106,12 @@ class PostDataRepositoryTest {
 					//when
 					userRepository.findById(user.getId())
 						.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-					Post searchPost = postRepository.findById(post.getId())
+					PostEntity searchPost = postRepository.findById(post.getId())
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 					//then
-					assertThat(searchPost).extracting(Post::getTitle).isEqualTo(title);
-					assertThat(searchPost).extracting(Post::getContent).isEqualTo(content);
+					assertThat(searchPost).extracting(PostEntity::getTitle).isEqualTo(title);
+					assertThat(searchPost).extracting(PostEntity::getContent).isEqualTo(content);
 				}
 
 				@DisplayName("실패 케이스")
@@ -125,20 +125,20 @@ class PostDataRepositoryTest {
 						String content = "testContent";
 
 						//when
-						User savedUser = userRepository.findById(user.getId())
+						UserEntity savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-						Post post = Post.builder()
+						PostEntity post = PostEntity.builder()
 							.title(title)
 							.content(content)
 							.user(savedUser)
 							.isPublic(true)
 							.build();
-						Post save = postRepository.save(post);
+						PostEntity save = postRepository.save(post);
 						long searchId = save.getId() + 1;
 
 						//then
-						Optional<Post> postById = postRepository.findById(searchId);
+						Optional<PostEntity> postById = postRepository.findById(searchId);
 						assertThatThrownBy(() -> {
 							postById.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 						}).isInstanceOf(IllegalArgumentException.class)
@@ -148,7 +148,7 @@ class PostDataRepositoryTest {
 				}
 			}
 
-			@DisplayName("ID로 Post 조회")
+			@DisplayName("ID로 PostEntity 조회")
 			@Nested
 			class LookupPostById {
 
@@ -157,11 +157,11 @@ class PostDataRepositoryTest {
 				void successfulCase() {
 					//given
 					//when
-					Post searchPostById = postRepository.findById(post.getId())
+					PostEntity searchPostById = postRepository.findById(post.getId())
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 					//then
-					assertThat(searchPostById).extracting(Post::getTitle).isEqualTo(title);
-					assertThat(searchPostById).extracting(Post::getContent).isEqualTo(content);
+					assertThat(searchPostById).extracting(PostEntity::getTitle).isEqualTo(title);
+					assertThat(searchPostById).extracting(PostEntity::getContent).isEqualTo(content);
 
 				}
 
@@ -206,7 +206,8 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
 						List<Long> ids = querydslPostRepository.findPostIdsByTitle(example, paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(
+							ids);
 						//then
 						assertThat(posts).isEmpty();
 
@@ -219,8 +220,9 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
 						List<Long> ids = querydslPostRepository.findPostIdsByTitle(title, paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
-						Post post = posts.get(0);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(
+							ids);
+						PostEntity post = posts.get(0);
 
 						//then
 						assertThat(posts).size().isEqualTo(1);
@@ -233,10 +235,10 @@ class PostDataRepositoryTest {
 					@Test
 					void successfulCase_MultiData() {
 						//given
-						User savedUser = userRepository.findById(user.getId())
+						UserEntity savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 						for (int i = 0; i < 30; i++) {
-							Post savedPost = Post.builder()
+							PostEntity savedPost = PostEntity.builder()
 								.title(title + i)
 								.content(content)
 								.user(user)
@@ -249,10 +251,12 @@ class PostDataRepositoryTest {
 
 						//when
 						List<Long> ids1 = querydslPostRepository.findPostIdsByTitle(title, paging1);
-						List<Post> posts1 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids1);
+						List<PostEntity> posts1 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(
+							ids1);
 
 						List<Long> ids2 = querydslPostRepository.findPostIdsByTitle(title, paging2);
-						List<Post> posts2 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids2);
+						List<PostEntity> posts2 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(
+							ids2);
 						//then
 						assertThat(posts1).size().isEqualTo(20);
 						assertThat(posts2).size().isEqualTo(11);
@@ -274,9 +278,10 @@ class PostDataRepositoryTest {
 						String example = "NoData";
 						PageRequest paging = PageRequest.of(0, 20);
 						//when
-						// Slice<Post> postByContent = postRepository.findByContent(example, paging);
+						// Slice<PostEntity> postByContent = postRepository.findByContent(example, paging);
 						List<Long> ids = querydslPostRepository.findPostIdsByContent(example, paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(
+							ids);
 						//then
 						assertThat(posts).isEmpty();
 					}
@@ -289,8 +294,9 @@ class PostDataRepositoryTest {
 						//when
 
 						List<Long> ids = querydslPostRepository.findPostIdsByContent(content, paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
-						Post post = posts.get(0);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(
+							ids);
+						PostEntity post = posts.get(0);
 
 						//then
 						assertThat(posts).size().isEqualTo(1);
@@ -302,11 +308,11 @@ class PostDataRepositoryTest {
 					@Test
 					void successfulCase_MultiData() {
 						//given
-						User savedUser = userRepository.findById(user.getId())
+						UserEntity savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						for (int i = 0; i < 30; i++) {
-							Post savedPost = Post.builder()
+							PostEntity savedPost = PostEntity.builder()
 								.title(title + i)
 								.content(content + i)
 								.user(user)
@@ -318,10 +324,12 @@ class PostDataRepositoryTest {
 						PageRequest paging2 = PageRequest.of(1, 20);
 						//when
 						List<Long> ids1 = querydslPostRepository.findPostIdsByContent(content, paging1);
-						List<Post> posts1 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids1);
+						List<PostEntity> posts1 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(
+							ids1);
 
 						List<Long> ids2 = querydslPostRepository.findPostIdsByContent(content, paging2);
-						List<Post> posts2 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids2);
+						List<PostEntity> posts2 = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(
+							ids2);
 
 						//then
 						assertThat(posts1).size().isEqualTo(20);
@@ -338,14 +346,14 @@ class PostDataRepositoryTest {
 			@BeforeEach
 			void init() {
 				for (int i = 0; i < 10; i++) {
-					Post newPost = Post.builder()
+					PostEntity newPost = PostEntity.builder()
 						.title(title + " " + i)
 						.content(content)
 						.user(user)
 						.isPublic(true)
 						.createdAt(LocalDateTime.of(2023, 1, i + 1, 0, 0))
 						.build();
-					Post save = postRepository.save(newPost);
+					PostEntity save = postRepository.save(newPost);
 					// log.info("save.isEmpty: {}", save.getId());
 					series.addPost(save);
 				}
@@ -365,7 +373,8 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 3);
 						//when
 						List<Long> ids = querydslPostRepository.findLatestPostIdsByCreatedAtDesc(paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(
+							ids);
 						//then
 						assertThat(posts).size().isEqualTo(paging.getPageSize());
 					}
@@ -385,7 +394,8 @@ class PostDataRepositoryTest {
 						PageRequest paging = PageRequest.of(0, 3);
 						//when
 						List<Long> ids = querydslPostRepository.findPopularityPostIdsByViewCountAtDesc(paging);
-						List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+						List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(
+							ids);
 						//then
 						assertThat(posts).size().isEqualTo(paging.getPageSize());
 					}
@@ -408,7 +418,7 @@ class PostDataRepositoryTest {
 							PageRequest paging = PageRequest.of(0, 3);
 							//when
 							List<Long> ids = querydslPostRepository.findIdsBySeriesIdAsc(series.getId(), paging);
-							List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(ids);
+							List<PostEntity> posts = querydslPostRepository.findByIdsJoinWithSeries(ids);
 							//then
 							assertThat(posts).size().isEqualTo(paging.getPageSize());
 						}
@@ -428,7 +438,7 @@ class PostDataRepositoryTest {
 							PageRequest paging = PageRequest.of(0, 3);
 							//when
 							List<Long> ids = querydslPostRepository.findIdsBySeriesIdDesc(series.getId(), paging);
-							List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(ids);
+							List<PostEntity> posts = querydslPostRepository.findByIdsJoinWithSeries(ids);
 							//then
 							assertThat(posts).size().isEqualTo(paging.getPageSize());
 						}
@@ -452,12 +462,12 @@ class PostDataRepositoryTest {
 			void partialChange() {
 				//given
 				//when
-				Post editPost = postRepository.findById(post.getId())
+				PostEntity editPost = postRepository.findById(post.getId())
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost("", null);
 
-				Post editedPost = postRepository.findById(post.getId())
+				PostEntity editedPost = postRepository.findById(post.getId())
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(title);
@@ -472,12 +482,12 @@ class PostDataRepositoryTest {
 				String changedTitle = "changedTitle";
 				String changedContent = "changedContent";
 				//when
-				Post editPost = postRepository.findById(post.getId())
+				PostEntity editPost = postRepository.findById(post.getId())
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 
 				editPost.editPost(changedTitle, changedContent);
 
-				Post editedPost = postRepository.findById(post.getId())
+				PostEntity editedPost = postRepository.findById(post.getId())
 					.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 				//then
 				assertThat(editedPost).extracting("title").isEqualTo(changedTitle);

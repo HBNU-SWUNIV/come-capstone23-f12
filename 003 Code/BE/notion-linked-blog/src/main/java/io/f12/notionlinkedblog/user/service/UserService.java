@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
@@ -40,15 +40,16 @@ public class UserService {
 		checkEmailIsDuplicated(requestDto.getEmail());
 
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-		User newUser = requestDto.toEntity();
-		User savedUser = userRepository.save(newUser);
+		UserEntity newUser = requestDto.toEntity();
+		UserEntity savedUser = userRepository.save(newUser);
 
 		return savedUser.getId();
 	}
 
 	@Transactional(readOnly = true)
 	public UserSearchDto getUserInfo(Long id) {
-		User user = userRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		UserEntity user = userRepository.findUserById(id)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		return UserSearchDto.builder()
 			.id(user.getId())
@@ -63,28 +64,28 @@ public class UserService {
 	}
 
 	public void editBasicUserInfo(Long id, UserBasicInfoEditDto editDto) {
-		User findUser = userRepository.findById(id)
+		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public void editUserBlogTitleInfo(Long id, UserBlogTitleEditDto editDto) {
-		User findUser = userRepository.findById(id)
+		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public void editUserSocialInfo(Long id, UserSocialInfoEditDto editDto) {
-		User findUser = userRepository.findById(id)
+		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public ProfileSuccessEditDto editUserProfileImage(Long id, MultipartFile imageFile) throws IOException {
-		User findUser = userRepository.findById(id)
+		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String systemPath = System.getProperty("user.dir");
@@ -112,7 +113,7 @@ public class UserService {
 	}
 
 	public void removeUserProfileImage(Long id) {
-		User findUser = userRepository.findById(id)
+		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		try {
 			Files.delete(Path.of(findUser.getProfile()));
@@ -129,7 +130,7 @@ public class UserService {
 	}
 
 	public File readImageFile(Long userId) {
-		User editedUSer =
+		UserEntity editedUSer =
 			userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		if (editedUSer.getProfile() == null) {

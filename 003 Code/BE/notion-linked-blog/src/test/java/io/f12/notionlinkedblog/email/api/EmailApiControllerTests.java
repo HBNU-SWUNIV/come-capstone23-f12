@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
 import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
@@ -157,7 +157,7 @@ class EmailApiControllerTests {
 				//given
 				final String alreadyExistingEmail = "hello@gmail.com";
 				userRepository.save(
-					User.builder().email(alreadyExistingEmail).password("1234").username("hello").build());
+					UserEntity.builder().email(alreadyExistingEmail).password("1234").username("hello").build());
 
 				//when
 				ResultActions resultActions = mockMvc.perform(post("/api/email").content(alreadyExistingEmail));

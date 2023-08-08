@@ -18,8 +18,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.domain.PostTimeEntity;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ import lombok.NoArgsConstructor;
 	sequenceName = "comments_seq",
 	allocationSize = 1
 )
-public class Comments extends PostTimeEntity {
+public class CommentsEntity extends PostTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comments_seq_generator")
@@ -46,20 +46,20 @@ public class Comments extends PostTimeEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	@NotNull
-	private User user;
+	private UserEntity user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	@NotNull
-	private Post post;
+	private PostEntity post;
 	private String content;
 	@NotNull
 	private Integer depth; // 0 = parents, 1 = children
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
-	private Comments parent;
+	private CommentsEntity parent;
 	@OneToMany(mappedBy = "parent", orphanRemoval = true)
-	private List<Comments> children = new ArrayList<>();
+	private List<CommentsEntity> children = new ArrayList<>();
 
 	public void editComments(String content) {
 		if (StringUtils.hasText(content)) {
@@ -67,7 +67,7 @@ public class Comments extends PostTimeEntity {
 		}
 	}
 
-	public void addChildren(Comments children) {
+	public void addChildren(CommentsEntity children) {
 		this.children.add(children);
 	}
 }

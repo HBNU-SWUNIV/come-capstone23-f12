@@ -2,14 +2,14 @@ package io.f12.notionlinkedblog.series.service.port;
 
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.series.Series;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
 
 public interface SeriesRepository {
-	Optional<Series> findSeriesById(Long seriesId);
+	Optional<SeriesEntity> findSeriesById(Long seriesId);
 
-	Series save(Series series);
+	SeriesEntity save(SeriesEntity series);
 
-	void delete(Series series);
+	void delete(SeriesEntity series);
 
 	void deleteAll();
 }

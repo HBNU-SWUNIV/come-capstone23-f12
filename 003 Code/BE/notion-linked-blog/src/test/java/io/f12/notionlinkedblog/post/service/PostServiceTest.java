@@ -27,8 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
@@ -72,7 +72,7 @@ class PostServiceTest {
 			void haveEveryData() throws IOException {
 				//given
 				Long fakeId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
@@ -86,7 +86,7 @@ class PostServiceTest {
 				String description = "description";
 				Boolean isPublic = true;
 
-				Post returnPost = Post.builder()
+				PostEntity returnPost = PostEntity.builder()
 					.user(user)
 					.title(title)
 					.content(content)
@@ -100,7 +100,7 @@ class PostServiceTest {
 				MultipartFile mockMultipartFile = new MockMultipartFile(file.getName(), new FileInputStream(file));
 				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postRepository.save(any(Post.class)))
+				given(postRepository.save(any(PostEntity.class)))
 					.willReturn(returnPost);
 
 				//when
@@ -117,7 +117,7 @@ class PostServiceTest {
 			void withoutThumbnail() throws IOException {
 				//given
 				Long fakeId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeId)
 					.username("tester")
 					.email("test@test.com")
@@ -129,7 +129,7 @@ class PostServiceTest {
 				String description = "description";
 				Boolean isPublic = true;
 
-				Post returnPost = Post.builder()
+				PostEntity returnPost = PostEntity.builder()
 					.user(user)
 					.title(title)
 					.content(content)
@@ -137,7 +137,7 @@ class PostServiceTest {
 				//Mock
 				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postRepository.save(any(Post.class)))
+				given(postRepository.save(any(PostEntity.class)))
 					.willReturn(returnPost);
 
 				//when
@@ -197,7 +197,7 @@ class PostServiceTest {
 				String username = "tester";
 				String path = "path";
 
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username(username)
 					.email("test@gamil.com")
 					.password(passwordEncoder.encode("1234"))
@@ -205,7 +205,7 @@ class PostServiceTest {
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
-				Post post1 = Post.builder()
+				PostEntity post1 = PostEntity.builder()
 					.id(fakePostAId)
 					.user(user)
 					.title(title)
@@ -213,7 +213,7 @@ class PostServiceTest {
 					.thumbnailName(thumbnail)
 					.storedThumbnailPath(path)
 					.build();
-				Post post2 = Post.builder()
+				PostEntity post2 = PostEntity.builder()
 					.id(fakePostBId)
 					.user(user)
 					.title(title)
@@ -222,7 +222,7 @@ class PostServiceTest {
 				List<Long> ids = new ArrayList<>();
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
-				List<Post> postList = new ArrayList<>();
+				List<PostEntity> postList = new ArrayList<>();
 				postList.add(post1);
 				postList.add(post2);
 
@@ -263,7 +263,7 @@ class PostServiceTest {
 				String username = "tester";
 				String path = "path";
 
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username(username)
 					.email("test@gamil.com")
 					.password(passwordEncoder.encode("1234"))
@@ -276,7 +276,7 @@ class PostServiceTest {
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
-				Post post1 = Post.builder()
+				PostEntity post1 = PostEntity.builder()
 					.id(fakePostAId)
 					.user(user)
 					.title(title)
@@ -284,7 +284,7 @@ class PostServiceTest {
 					.thumbnailName(thumbnail)
 					.storedThumbnailPath(path)
 					.build();
-				Post post2 = Post.builder()
+				PostEntity post2 = PostEntity.builder()
 					.id(fakePostBId)
 					.user(user)
 					.title(title)
@@ -294,7 +294,7 @@ class PostServiceTest {
 				List<Long> ids = new ArrayList<>();
 				ids.add(fakePostAId);
 				ids.add(fakePostBId);
-				List<Post> postList = new ArrayList<>();
+				List<PostEntity> postList = new ArrayList<>();
 				postList.add(post1);
 				postList.add(post2);
 
@@ -336,13 +336,13 @@ class PostServiceTest {
 					String username = "tester";
 					String path = "path";
 
-					User user = User.builder()
+					UserEntity user = UserEntity.builder()
 						.username(username)
 						.email("test@gamil.com")
 						.password(passwordEncoder.encode("1234"))
 						.build();
 
-					Post testPost = Post.builder()
+					PostEntity testPost = PostEntity.builder()
 						.user(user)
 						.title(title)
 						.content(content)
@@ -381,13 +381,13 @@ class PostServiceTest {
 					String username = "tester";
 					String path = "path";
 
-					User user = User.builder()
+					UserEntity user = UserEntity.builder()
 						.username(username)
 						.email("test@gamil.com")
 						.password(passwordEncoder.encode("1234"))
 						.build();
 
-					Post testPost = Post.builder()
+					PostEntity testPost = PostEntity.builder()
 						.user(user)
 						.title(title)
 						.content(content)
@@ -447,13 +447,13 @@ class PostServiceTest {
 					String username = "tester";
 					String path = "path";
 
-					User user = User.builder()
+					UserEntity user = UserEntity.builder()
 						.username(username)
 						.email("test@gamil.com")
 						.password(passwordEncoder.encode("1234"))
 						.build();
 
-					Post testPost = Post.builder()
+					PostEntity testPost = PostEntity.builder()
 						.user(user)
 						.title(title)
 						.content(content)
@@ -484,7 +484,7 @@ class PostServiceTest {
 			void successCase() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeUserId)
 					.email("test@gmail.com")
 					.username("tester")
@@ -493,7 +493,7 @@ class PostServiceTest {
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
-				Post postA = Post.builder()
+				PostEntity postA = PostEntity.builder()
 					.id(fakePostAId)
 					.user(user)
 					.title("testTitle")
@@ -502,7 +502,7 @@ class PostServiceTest {
 					.storedThumbnailPath("path")
 					.user(user)
 					.build();
-				Post postB = Post.builder()
+				PostEntity postB = PostEntity.builder()
 					.id(fakePostBId)
 					.user(user)
 					.title("testTitle")
@@ -516,7 +516,7 @@ class PostServiceTest {
 				List<Long> postIds = new ArrayList<>();
 				postIds.add(fakePostAId);
 				postIds.add(fakePostBId);
-				List<Post> postList = new ArrayList<>();
+				List<PostEntity> postList = new ArrayList<>();
 				postList.add(postA);
 				postList.add(postB);
 
@@ -544,7 +544,7 @@ class PostServiceTest {
 			void successCase() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeUserId)
 					.email("test@gmail.com")
 					.username("tester")
@@ -553,14 +553,14 @@ class PostServiceTest {
 
 				Long fakePostAId = 1L;
 				Long fakePostBId = 2L;
-				Post postA = Post.builder()
+				PostEntity postA = PostEntity.builder()
 					.id(fakePostAId)
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
 					.user(user)
 					.build();
-				Post postB = Post.builder()
+				PostEntity postB = PostEntity.builder()
 					.id(fakePostBId)
 					.user(user)
 					.title("testTitle")
@@ -574,7 +574,7 @@ class PostServiceTest {
 				List<Long> postIds = new ArrayList<>();
 				postIds.add(fakePostAId);
 				postIds.add(fakePostBId);
-				List<Post> postList = new ArrayList<>();
+				List<PostEntity> postList = new ArrayList<>();
 				postList.add(postA);
 				postList.add(postB);
 
@@ -604,16 +604,16 @@ class PostServiceTest {
 			//given
 			Long fakeUserId = 1L;
 			Long fakePostId = 1L;
-			User user = User.builder()
+			UserEntity user = UserEntity.builder()
 				.id(fakeUserId)
 				.email("test@gmail.com")
 				.username("tester")
 				.password(passwordEncoder.encode("1234"))
 				.build();
 
-			Post returnPost = Post.builder()
+			PostEntity returnPost = PostEntity.builder()
 				.id(fakePostId)
-				.user(User.builder().username("tester").email("test@test.com").password("password").build())
+				.user(UserEntity.builder().username("tester").email("test@test.com").password("password").build())
 				.title("testTitle")
 				.content("testContent")
 				.user(user)
@@ -667,13 +667,13 @@ class PostServiceTest {
 					.content(editContent)
 					.build();
 
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeUserId)
 					.username("tester")
 					.email("test@test.com")
 					.password("password")
 					.build();
-				Post returnPost = Post.builder()
+				PostEntity returnPost = PostEntity.builder()
 					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
@@ -732,14 +732,14 @@ class PostServiceTest {
 					.content(editContent)
 					.build();
 
-				User writer = User.builder()
+				UserEntity writer = UserEntity.builder()
 					.id(fakeUserId)
 					.username("tester")
 					.email("test@test.com")
 					.password("password")
 					.build();
 
-				Post returnPost = Post.builder()
+				PostEntity returnPost = PostEntity.builder()
 					.user(writer)
 					.title("testTitle")
 					.content("testContent")
@@ -771,7 +771,7 @@ class PostServiceTest {
 			void likeTest() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeUserId)
 					.username("tester")
 					.email("test@gmail.com")
@@ -779,7 +779,7 @@ class PostServiceTest {
 					.build();
 
 				Long fakePostId = 1L;
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
@@ -801,7 +801,7 @@ class PostServiceTest {
 			void cancelLikeTest() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.id(fakeUserId)
 					.username("tester")
 					.email("test@gmail.com")
@@ -809,7 +809,7 @@ class PostServiceTest {
 					.build();
 
 				Long fakePostId = 1L;
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.id(fakePostId)
 					.user(user)
 					.title("testTitle")
@@ -841,14 +841,14 @@ class PostServiceTest {
 			void noExistUser() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
 
 				Long fakePostId = 1L;
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
@@ -872,14 +872,14 @@ class PostServiceTest {
 			void noExistPost() {
 				//given
 				Long fakeUserId = 1L;
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
 
 				Long fakePostId = 1L;
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.user(user)
 					.title("testTitle")
 					.content("testContent")
@@ -911,7 +911,7 @@ class PostServiceTest {
 			void thumbnailExist() throws MalformedURLException {
 				//given
 				String imageName = "thumbName";
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
@@ -935,12 +935,12 @@ class PostServiceTest {
 			void thumbnailExist() {
 				//given
 				String imageName = "thumbName";
-				User user = User.builder()
+				UserEntity user = UserEntity.builder()
 					.username("tester")
 					.email("test@gmail.com")
 					.password("1234")
 					.build();
-				Post post = Post.builder()
+				PostEntity post = PostEntity.builder()
 					.user(user)
 					.title("testTitle")
 					.content("testContent")

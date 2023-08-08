@@ -17,7 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
@@ -29,14 +29,14 @@ class UserDataRepositoryTest {
 	@Autowired
 	private EntityManager entityManager;
 
-	private User userA;
+	private UserEntity userA;
 
 	@DisplayName("유저 조회 테스트")
 	@Nested
 	class UserCheckTest {
 		@BeforeEach
 		void init() {
-			User user1 = User.builder()
+			UserEntity user1 = UserEntity.builder()
 				.username("username1")
 				.email("email1")
 				.password("password1")
@@ -55,17 +55,17 @@ class UserDataRepositoryTest {
 		void checkSpecificUserDto() {
 			//given
 
-			User user2 = User.builder()
+			UserEntity user2 = UserEntity.builder()
 				.username("username2")
 				.email("email2")
 				.password("password2")
 				.build();
-			User userB = userRepository.save(user2);
+			UserEntity userB = userRepository.save(user2);
 			//when
-			User findUserA = userRepository.findUserById(userA.getId()).orElseThrow(
+			UserEntity findUserA = userRepository.findUserById(userA.getId()).orElseThrow(
 				() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-			User findUserB = userRepository.findUserById(userB.getId()).orElseThrow(
+			UserEntity findUserB = userRepository.findUserById(userB.getId()).orElseThrow(
 				() -> new IllegalArgumentException(USER_NOT_EXIST));
 			//then
 			assertThat(findUserA).extracting("id").isEqualTo(userA.getId());
@@ -83,7 +83,7 @@ class UserDataRepositoryTest {
 			//given
 			Long wrongId = userA.getId() + 100;
 			//when, then
-			Optional<User> user = userRepository.findUserById(wrongId);
+			Optional<UserEntity> user = userRepository.findUserById(wrongId);
 			assertThatThrownBy(() -> {
 				user.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 			}).isInstanceOf(IllegalArgumentException.class)

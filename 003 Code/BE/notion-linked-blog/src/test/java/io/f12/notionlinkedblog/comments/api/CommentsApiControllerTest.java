@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.comments.Comments;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
@@ -47,29 +47,29 @@ class CommentsApiControllerTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	private User testUser;
-	private Post testPost;
-	private Comments testComment;
+	private UserEntity testUser;
+	private PostEntity testPost;
+	private CommentsEntity testComment;
 
 	@BeforeEach
 	void init() {
-		testUser = userRepository.save(User.builder()
+		testUser = userRepository.save(UserEntity.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
 			.build()
 		);
-		testPost = postRepository.save(Post.builder()
+		testPost = postRepository.save(PostEntity.builder()
 			.user(testUser)
 			.title("testTitle")
 			.isPublic(true)
 			.content("testContent").build());
-		testComment = commentsRepository.save(Comments.builder()
+		testComment = commentsRepository.save(CommentsEntity.builder()
 			.user(testUser)
 			.post(testPost)
 			.depth(0)
 			.content("testComments").build());
-		userRepository.save(User.builder()
+		userRepository.save(UserEntity.builder()
 			.email("test2@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))

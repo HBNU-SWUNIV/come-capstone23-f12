@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.dto.UserWithoutPassword;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingFailureResponseDto;
@@ -54,7 +54,7 @@ public final class LoginStatusCheckingFilter extends OncePerRequestFilter {
 					&& (authentication = securityContext.getAuthentication()) != null) {
 					log.info("SecurityContext is exists.");
 					LoginUser principal = (LoginUser)authentication.getPrincipal();
-					User user = userRepository.findById(principal.getUser().getId()).get();
+					UserEntity user = userRepository.findById(principal.getUser().getId()).get();
 					UserWithoutPassword userWithoutPassword = UserWithoutPassword.of(user);
 					LoginStatusCheckingSuccessResponseDto responseDto =
 						LoginStatusCheckingSuccessResponseDto.of(userWithoutPassword);

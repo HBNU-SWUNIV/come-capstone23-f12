@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.post.service.port;
 
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.likes.Like;
+import io.f12.notionlinkedblog.domain.likes.LikeEntity;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 
 public interface LikeRepository {
@@ -11,5 +11,5 @@ public interface LikeRepository {
 
 	void removeById(Long likeId);
 
-	Like save(Like like);
+	LikeEntity save(LikeEntity like);
 }

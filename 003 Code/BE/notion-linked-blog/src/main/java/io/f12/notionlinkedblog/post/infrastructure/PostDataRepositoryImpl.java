@@ -1,9 +1,9 @@
 package io.f12.notionlinkedblog.post.infrastructure;
 
-import static io.f12.notionlinkedblog.domain.likes.QLike.*;
-import static io.f12.notionlinkedblog.domain.post.QPost.*;
-import static io.f12.notionlinkedblog.domain.series.QSeries.*;
-import static io.f12.notionlinkedblog.domain.user.QUser.*;
+import static io.f12.notionlinkedblog.domain.likes.QLikeEntity.*;
+import static io.f12.notionlinkedblog.domain.post.QPostEntity.*;
+import static io.f12.notionlinkedblog.domain.series.QSeriesEntity.*;
+import static io.f12.notionlinkedblog.domain.user.QUserEntity.*;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +23,9 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 
 	@Override
 	public List<Long> findPostIdsByTitle(String title, Pageable pageable) {
-		return queryFactory.select(post.id)
-			.from(post)
-			.where(post.title.contains(title).and(post.isPublic.isTrue()))
+		return queryFactory.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.title.contains(title).and(postEntity.isPublic.isTrue()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -33,9 +33,9 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 
 	@Override
 	public List<Long> findPostIdsByContent(String content, Pageable pageable) {
-		return queryFactory.select(post.id)
-			.from(post)
-			.where(post.content.contains(content).and(post.isPublic.isTrue()))
+		return queryFactory.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.content.contains(content).and(postEntity.isPublic.isTrue()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -43,10 +43,10 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 
 	@Override
 	public List<Long> findLatestPostIdsByCreatedAtDesc(Pageable pageable) {
-		return queryFactory.select(post.id)
-			.from(post)
-			.where(post.isPublic.isTrue())
-			.orderBy(post.createdAt.asc())
+		return queryFactory.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.isPublic.isTrue())
+			.orderBy(postEntity.createdAt.asc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -54,37 +54,37 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 
 	@Override
 	public List<Long> findPopularityPostIdsByViewCountAtDesc(Pageable pageable) {
-		return queryFactory.select(post.id)
-			.from(post)
-			.where(post.isPublic.isTrue())
-			.orderBy(post.popularity.desc())
+		return queryFactory.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.isPublic.isTrue())
+			.orderBy(postEntity.popularity.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 	}
 
 	@Override
-	public List<Post> findByPostIdsJoinWithUserAndLikeOrderByLatest(List<Long> ids) {
-		return queryFactory.selectFrom(post)
-			.leftJoin(post.user, user)
+	public List<PostEntity> findByPostIdsJoinWithUserAndLikeOrderByLatest(List<Long> ids) {
+		return queryFactory.selectFrom(postEntity)
+			.leftJoin(postEntity.user, userEntity)
 			.fetchJoin()
-			.leftJoin(post.likes, like)
+			.leftJoin(postEntity.likes, likeEntity)
 			.fetchJoin()
-			.where(post.id.in(ids))
-			.orderBy(post.createdAt.asc())
+			.where(postEntity.id.in(ids))
+			.orderBy(postEntity.createdAt.asc())
 			.distinct()
 			.fetch();
 	}
 
 	@Override
-	public List<Post> findByPostIdsJoinWithUserAndLikeOrderByTrend(List<Long> ids) {
-		return queryFactory.selectFrom(post)
-			.leftJoin(post.user, user)
+	public List<PostEntity> findByPostIdsJoinWithUserAndLikeOrderByTrend(List<Long> ids) {
+		return queryFactory.selectFrom(postEntity)
+			.leftJoin(postEntity.user, userEntity)
 			.fetchJoin()
-			.leftJoin(post.likes, like)
+			.leftJoin(postEntity.likes, likeEntity)
 			.fetchJoin()
-			.where(post.id.in(ids))
-			.orderBy(post.popularity.desc())
+			.where(postEntity.id.in(ids))
+			.orderBy(postEntity.popularity.desc())
 			.distinct()
 			.fetch();
 	}
@@ -92,10 +92,10 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 	@Override
 	public List<Long> findIdsBySeriesIdDesc(Long seriesId, Pageable pageable) {
 		return queryFactory
-			.select(post.id)
-			.from(post)
-			.where(post.series.id.eq(seriesId).and(post.isPublic.isTrue()))
-			.orderBy(post.createdAt.desc())
+			.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.series.id.eq(seriesId).and(postEntity.isPublic.isTrue()))
+			.orderBy(postEntity.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -104,21 +104,21 @@ public class PostDataRepositoryImpl implements QuerydslPostRepository {
 	@Override
 	public List<Long> findIdsBySeriesIdAsc(Long seriesId, Pageable pageable) {
 		return queryFactory
-			.select(post.id)
-			.from(post)
-			.where(post.series.id.eq(seriesId).and(post.isPublic.isTrue()))
-			.orderBy(post.createdAt.asc())
+			.select(postEntity.id)
+			.from(postEntity)
+			.where(postEntity.series.id.eq(seriesId).and(postEntity.isPublic.isTrue()))
+			.orderBy(postEntity.createdAt.asc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 	}
 
 	@Override
-	public List<Post> findByIdsJoinWithSeries(List<Long> ids) {
-		return queryFactory.selectFrom(post)
-			.leftJoin(post.series, series)
+	public List<PostEntity> findByIdsJoinWithSeries(List<Long> ids) {
+		return queryFactory.selectFrom(postEntity)
+			.leftJoin(postEntity.series, seriesEntity)
 			.fetchJoin()
-			.where(post.id.in(ids))
+			.where(postEntity.id.in(ids))
 			.distinct()
 			.fetch();
 

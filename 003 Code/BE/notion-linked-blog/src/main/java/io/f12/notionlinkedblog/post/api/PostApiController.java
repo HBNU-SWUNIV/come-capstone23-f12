@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Post", description = "포스트 API")
+@Tag(name = "PostEntity", description = "포스트 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.POST)
@@ -53,7 +53,7 @@ public class PostApiController {
 	private final PostService postService;
 	private final SeriesService seriesService;
 
-	//TODO: 현재 Series 기능 미포함
+	//TODO: 현재 SeriesEntity 기능 미포함
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "포스트 생성", description = "포스트를 생성합니다, 시리즈에 등록할 경우 Series의 Id를 입력해야 합니다.")
@@ -192,9 +192,9 @@ public class PostApiController {
 
 	@PostMapping("/like/{postId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "해당하는 Post 에 Like 를 추가/삭제 합니다")
+	@Operation(summary = "해당하는 PostEntity 에 LikeEntity 를 추가/삭제 합니다")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "201", description = "Like 상태 변경 성공"),
+		@ApiResponse(responseCode = "201", description = "LikeEntity 상태 변경 성공"),
 	})
 	public void addLikeToPost(@PathVariable Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {

@@ -18,9 +18,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.series.Series;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -40,11 +40,11 @@ class SeriesDataRepositoryTest {
 	@Autowired
 	private EntityManager entityManager;
 
-	private User user;
-	private Series series;
-	private Post postA;
-	private Post postB;
-	private Post postC;
+	private UserEntity user;
+	private SeriesEntity series;
+	private PostEntity postA;
+	private PostEntity postB;
+	private PostEntity postC;
 
 	private final String titleA = "testTitleA";
 	private final String contentA = "testContentA";
@@ -61,7 +61,7 @@ class SeriesDataRepositoryTest {
 
 	@BeforeEach
 	void init() {
-		User savedUser = User.builder()
+		UserEntity savedUser = UserEntity.builder()
 			.id(1L)
 			.username("tester")
 			.email("test@test.com")
@@ -69,14 +69,14 @@ class SeriesDataRepositoryTest {
 			.build();
 		user = userRepository.save(savedUser);
 
-		Series savedSeries = Series.builder()
+		SeriesEntity savedSeries = SeriesEntity.builder()
 			.id(1L)
 			.user(user)
 			.title("testSeries")
 			.build();
 		series = seriesRepository.save(savedSeries);
 
-		Post savedPostA = Post.builder()
+		PostEntity savedPostA = PostEntity.builder()
 			.id(1L)
 			.title(titleA)
 			.content(contentA)
@@ -88,7 +88,7 @@ class SeriesDataRepositoryTest {
 			.createdAt(LocalDateTime.of(2023, 1, 1, 0, 0))
 			.build();
 		postA = postRepository.save(savedPostA);
-		Post savedPostB = Post.builder()
+		PostEntity savedPostB = PostEntity.builder()
 			.id(2L)
 			.title(titleB)
 			.content(contentB)
@@ -100,7 +100,7 @@ class SeriesDataRepositoryTest {
 			.createdAt(LocalDateTime.of(2023, 2, 1, 0, 0))
 			.build();
 		postB = postRepository.save(savedPostB);
-		Post savedPostC = Post.builder()
+		PostEntity savedPostC = PostEntity.builder()
 			.id(3L)
 			.title(titleC)
 			.content(contentC)
@@ -113,12 +113,12 @@ class SeriesDataRepositoryTest {
 			.build();
 		postC = postRepository.save(savedPostC);
 
-		List<Post> postList = new ArrayList<>();
+		List<PostEntity> postList = new ArrayList<>();
 		postList.add(postA);
 		postList.add(postB);
 		postList.add(postC);
 
-		List<Post> post = series.getPost();
+		List<PostEntity> post = series.getPost();
 		post = postList;
 
 		entityManager.flush();
@@ -142,7 +142,7 @@ class SeriesDataRepositoryTest {
 			//given
 			Long seriesId = series.getId();
 			//when
-			Series searchSeries = seriesRepository.findSeriesById(seriesId)
+			SeriesEntity searchSeries = seriesRepository.findSeriesById(seriesId)
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID"));
 
 			//then
@@ -161,7 +161,7 @@ class SeriesDataRepositoryTest {
 			Long seriesId = 0L;
 			//when
 			assertThatThrownBy(() -> {
-				Series searchSeries = seriesRepository.findSeriesById(seriesId)
+				SeriesEntity searchSeries = seriesRepository.findSeriesById(seriesId)
 					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID"));
 			}).isInstanceOf(IllegalArgumentException.class);
 

@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
-import io.f12.notionlinkedblog.domain.notion.SyncedPages;
+import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +23,9 @@ public class UpdateNotionSchedule {
 
 	@Scheduled(fixedDelay = 3600000) // 1시간 (임시 설정)
 	public void updateNotionData() throws NotionAuthenticationException {
-		List<SyncedPages> everyData = syncedPagesRepository.findAll();
+		List<SyncedPagesEntity> everyData = syncedPagesRepository.findAll();
 
-		for (SyncedPages data : everyData) {
+		for (SyncedPagesEntity data : everyData) {
 			Long userId = data.getUser().getId();
 			String pageId = data.getPageId();
 			LocalDateTime updateTime = data.getPost().getUpdatedAt();

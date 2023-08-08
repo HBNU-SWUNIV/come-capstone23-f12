@@ -24,11 +24,11 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.domain.PostTimeEntity;
-import io.f12.notionlinkedblog.domain.comments.Comments;
-import io.f12.notionlinkedblog.domain.likes.Like;
-import io.f12.notionlinkedblog.domain.notion.SyncedPages;
-import io.f12.notionlinkedblog.domain.series.Series;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
+import io.f12.notionlinkedblog.domain.likes.LikeEntity;
+import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.domain.series.SeriesEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,7 +43,7 @@ import lombok.NoArgsConstructor;
 	sequenceName = "post_seq",
 	allocationSize = 1
 )
-public class Post extends PostTimeEntity {
+public class PostEntity extends PostTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq_generator")
@@ -52,20 +52,20 @@ public class Post extends PostTimeEntity {
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	@NotNull
-	private User user;
+	private UserEntity user;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comments> comments = new ArrayList<>();
+	private List<CommentsEntity> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Like> likes = new ArrayList<>();
+	private List<LikeEntity> likes = new ArrayList<>();
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "series_id")
-	private Series series;
+	private SeriesEntity series;
 
 	@OneToOne(mappedBy = "post", cascade = CascadeType.REMOVE)
-	private SyncedPages syncedPages;
+	private SyncedPagesEntity syncedPages;
 
 	@NotBlank
 	private String title;
@@ -82,8 +82,9 @@ public class Post extends PostTimeEntity {
 	private Boolean isPublic = false;
 
 	@Builder
-	public Post(LocalDateTime createdAt, LocalDateTime updatedAt, Long id, User user,
-		List<Comments> comments, List<Like> likes, Series series, String title, String content, String thumbnailName,
+	public PostEntity(LocalDateTime createdAt, LocalDateTime updatedAt, Long id, UserEntity user,
+		List<CommentsEntity> comments, List<LikeEntity> likes, SeriesEntity series, String title, String content,
+		String thumbnailName,
 		String storedThumbnailPath, Long viewCount, Double popularity, String description, Boolean isPublic) {
 		super(createdAt, updatedAt);
 		this.id = id;
@@ -105,7 +106,7 @@ public class Post extends PostTimeEntity {
 		this.popularity = popularity;
 	}
 
-	public void setSyncedPages(SyncedPages syncedPages) {
+	public void setSyncedPages(SyncedPagesEntity syncedPages) {
 		this.syncedPages = syncedPages;
 	}
 
@@ -122,7 +123,7 @@ public class Post extends PostTimeEntity {
 		viewCount++;
 	}
 
-	public void setSeries(Series series) {
+	public void setSeries(SeriesEntity series) {
 		this.series = series;
 	}
 }

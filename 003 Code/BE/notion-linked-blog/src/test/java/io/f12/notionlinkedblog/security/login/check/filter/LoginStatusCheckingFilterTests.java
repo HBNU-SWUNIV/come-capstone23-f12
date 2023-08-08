@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.token.AjaxEmailPasswordAuthenticationToken;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -42,7 +42,7 @@ class LoginStatusCheckingFilterTests {
 	@BeforeEach
 	void setup() {
 		userRepository.deleteAll();
-		userRepository.save(User.builder()
+		userRepository.save(UserEntity.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234")).build());
@@ -63,7 +63,7 @@ class LoginStatusCheckingFilterTests {
 				// 로그인한 상태를 만들기 위한 세션 생성
 				MockHttpSession mockHttpSession = new MockHttpSession();
 
-				User user = userRepository.findByEmail("test@gmail.com").get();
+				UserEntity user = userRepository.findByEmail("test@gmail.com").get();
 				LoginUser loginUser = LoginUser.of(user, Set.of(new SimpleGrantedAuthority("ROLE_USER")));
 				Authentication authentication =
 					AjaxEmailPasswordAuthenticationToken.authenticated(loginUser, null, loginUser.getAuthorities());

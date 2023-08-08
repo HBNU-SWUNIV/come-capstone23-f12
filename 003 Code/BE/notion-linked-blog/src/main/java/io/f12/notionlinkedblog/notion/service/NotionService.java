@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
-import io.f12.notionlinkedblog.domain.notion.SyncedPages;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
@@ -42,11 +42,11 @@ public class NotionService {
 	private final SyncedPagesRepository syncedPagesRepository;
 
 	public void setNotionLinkPages(String path, Long userId) {
-		User user = userRepository.findUserById(userId)
+		UserEntity user = userRepository.findUserById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String pathToId = convertPathToId(path);
-		SyncedPages syncedPages = SyncedPages.builder()
+		SyncedPagesEntity syncedPages = SyncedPagesEntity.builder()
 			.pageId(pathToId)
 			.user(user)
 			.build();
@@ -63,9 +63,9 @@ public class NotionService {
 	// 	String title = getTitle(convertPath, userId);
 	// 	String content = getContent(convertPath, userId);
 	//
-	// 	User user = userRepository.findById(userId)
+	// 	UserEntity user = userRepository.findById(userId)
 	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-	// 	Post savePost = postRepository.save(Post.builder()
+	// 	PostEntity savePost = postRepository.save(PostEntity.builder()
 	// 		.user(user)
 	// 		.title(title)
 	// 		.content(content)
@@ -93,7 +93,7 @@ public class NotionService {
 	// 		.build();
 	// }
 
-	public void editNotionPageToBlog(Long userId, Post post) throws NotionAuthenticationException {
+	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
 
@@ -132,12 +132,12 @@ public class NotionService {
 
 	public void initEveryPages(List<String> pageIds, Long userId, String accessCode) throws
 		NotionAuthenticationException {
-		User user = userRepository.findById(userId)
+		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		for (String pageId : pageIds) {
 			String title = getTitleTemp(pageId, accessCode);
 			String content = getContentTemp(pageId, accessCode);
-			Post post = postRepository.save(Post.builder()
+			PostEntity post = postRepository.save(PostEntity.builder()
 				.user(user)
 				.title(title)
 				.content(content)
@@ -146,7 +146,7 @@ public class NotionService {
 				.likes(new ArrayList<>())
 				.viewCount(0L)
 				.build());
-			SyncedPages syncedPages = syncedPagesRepository.save(SyncedPages.builder()
+			SyncedPagesEntity syncedPages = syncedPagesRepository.save(SyncedPagesEntity.builder()
 				.pageId(pageId)
 				.user(user)
 				.post(post)

@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "series")
 @Getter
-public class Series {
+public class SeriesEntity {
 
 	@Id
 	@GeneratedValue
@@ -35,29 +35,29 @@ public class Series {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	@NotNull
-	private User user;
+	private UserEntity user;
 
 	@OneToMany(mappedBy = "series", cascade = CascadeType.PERSIST)
-	private List<Post> post = new ArrayList<>();
+	private List<PostEntity> post = new ArrayList<>();
 
 	@NotNull
 	@Setter
 	private String title;
 
 	@Builder
-	public Series(Long id, User user, List<Post> post, String title) {
+	public SeriesEntity(Long id, UserEntity user, List<PostEntity> post, String title) {
 		this.id = id;
 		this.user = user;
 		this.post = post;
 		this.title = title;
 	}
 
-	public void addPost(Post post) {
+	public void addPost(PostEntity post) {
 		this.post.add(post);
 		post.setSeries(this);
 	}
 
-	public void removePost(Post post) {
+	public void removePost(PostEntity post) {
 		this.post.remove(post);
 		post.setSeries(null);
 	}

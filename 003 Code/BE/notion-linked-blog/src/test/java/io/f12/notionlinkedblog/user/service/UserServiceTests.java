@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
@@ -59,7 +59,7 @@ class UserServiceTests extends DummyObject {
 					.password("1234")
 					.build();
 
-				User mockUser = newMockUser(1L, "test", "test@gmail.com");
+				UserEntity mockUser = newMockUser(1L, "test", "test@gmail.com");
 
 				// stub 1
 				given(userRepository.findByEmail(any())).willReturn(Optional.empty());
@@ -87,7 +87,7 @@ class UserServiceTests extends DummyObject {
 					.username("test")
 					.password("password")
 					.build();
-				User existUser = existUserDto.toEntity();
+				UserEntity existUser = existUserDto.toEntity();
 				userRepository.save(existUser);
 
 				UserSignupRequestDto newUserDto = UserSignupRequestDto.builder()
@@ -95,7 +95,7 @@ class UserServiceTests extends DummyObject {
 					.username("test")
 					.password("password")
 					.build();
-				User newUser = newUserDto.toEntity();
+				UserEntity newUser = newUserDto.toEntity();
 				given(userRepository.findByEmail(newUser.getEmail())).willReturn(Optional.of(existUser));
 
 				//then
@@ -121,13 +121,13 @@ class UserServiceTests extends DummyObject {
 					//given
 					Long fakeIdForA = 1L;
 					Long fakeIdForB = 2L;
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(fakeIdForA)
 						.email("test1@gmail.com")
 						.username("username1")
 						.password("password1")
 						.build();
-					User userB = User.builder()
+					UserEntity userB = UserEntity.builder()
 						.id(fakeIdForB)
 						.email("test2@gmail.com")
 						.username("username2")
@@ -135,12 +135,12 @@ class UserServiceTests extends DummyObject {
 						.build();
 
 					//Mock
-					User mockUserSearchDtoA = User.builder()
+					UserEntity mockUserSearchDtoA = UserEntity.builder()
 						.id(fakeIdForA)
 						.email("test1@gmail.com")
 						.username("username1")
 						.build();
-					User mockUserSearchDtoB = User.builder()
+					UserEntity mockUserSearchDtoB = UserEntity.builder()
 						.id(fakeIdForB)
 						.email("test2@gmail.com")
 						.username("username2")
@@ -192,7 +192,7 @@ class UserServiceTests extends DummyObject {
 				@Test
 				void successCase() {
 					//given
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(1L)
 						.email("test1@gmail.com")
 						.username("username1")
@@ -223,7 +223,7 @@ class UserServiceTests extends DummyObject {
 				@Test
 				void successCase() {
 					//given
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(1L)
 						.email("test1@gmail.com")
 						.username("username1")
@@ -251,7 +251,7 @@ class UserServiceTests extends DummyObject {
 				@Test
 				void successCase() {
 					//given
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(1L)
 						.email("test1@gmail.com")
 						.username("username1")
@@ -280,7 +280,7 @@ class UserServiceTests extends DummyObject {
 				@Test
 				void createProfileImage() throws IOException {
 					//given
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(1L)
 						.email("test1@gmail.com")
 						.username("username1")
@@ -318,7 +318,7 @@ class UserServiceTests extends DummyObject {
 
 					Files.copy(originFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-					User userA = User.builder()
+					UserEntity userA = UserEntity.builder()
 						.id(1L)
 						.email("test1@gmail.com")
 						.username("username1")
@@ -349,7 +349,7 @@ class UserServiceTests extends DummyObject {
 				void deleteUserTest() {
 					//given
 					Long removedUserId = 1L;
-					User removedUser = User.builder()
+					UserEntity removedUser = UserEntity.builder()
 						.id(removedUserId)
 						.email("changed@gmail.com")
 						.username("changedUsername")
@@ -392,7 +392,7 @@ class UserServiceTests extends DummyObject {
 			void getProfile() {
 				//given
 				String profilePath = "testImage.png";
-				User userA = User.builder()
+				UserEntity userA = UserEntity.builder()
 					.id(1L)
 					.email("test1@gmail.com")
 					.username("username1")
@@ -413,7 +413,7 @@ class UserServiceTests extends DummyObject {
 			@Test
 			void getDefaultProfile() {
 				//given
-				User userA = User.builder()
+				UserEntity userA = UserEntity.builder()
 					.id(1L)
 					.email("test1@gmail.com")
 					.username("username1")

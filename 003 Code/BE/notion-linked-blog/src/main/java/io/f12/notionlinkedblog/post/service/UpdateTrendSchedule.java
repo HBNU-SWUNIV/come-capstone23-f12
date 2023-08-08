@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +25,8 @@ public class UpdateTrendSchedule {
 	 */
 	@Scheduled(fixedDelay = 3600000) // 1시간 (임시 설정)
 	public void updateTrendIndex() {
-		List<Post> posts = postRepository.findByPostIdForTrend();
-		for (Post post : posts) {
+		List<PostEntity> posts = postRepository.findByPostIdForTrend();
+		for (PostEntity post : posts) {
 			int likes = post.getLikes().size();
 			Long timeNow = localDateTimeToLong(LocalDateTime.now());
 			Long createdTime = localDateTimeToLong(post.getCreatedAt());

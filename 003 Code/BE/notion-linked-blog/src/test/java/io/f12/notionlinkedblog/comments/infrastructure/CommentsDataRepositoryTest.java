@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.comments.Comments;
-import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
+import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
@@ -32,27 +32,27 @@ class CommentsDataRepositoryTest {
 	@Autowired
 	private CommentsRepository commentsRepository;
 
-	private User savedUser;
-	private Post savedPost;
-	private Comments savedComment;
+	private UserEntity savedUser;
+	private PostEntity savedPost;
+	private CommentsEntity savedComment;
 
 	@BeforeEach
 	void init() {
-		User user = User.builder()
+		UserEntity user = UserEntity.builder()
 			.username("tester")
 			.email("test@gamil.com")
 			.password("1234")
 			.build();
 		savedUser = userRepository.save(user);
 
-		Post post = Post.builder()
+		PostEntity post = PostEntity.builder()
 			.user(savedUser)
 			.title("testTitle")
 			.content("testContent")
 			.isPublic(true)
 			.build();
 		savedPost = postRepository.save(post);
-		Comments comments = Comments.builder()
+		CommentsEntity comments = CommentsEntity.builder()
 			.user(savedUser)
 			.post(savedPost)
 			.content("testComment")
@@ -76,7 +76,7 @@ class CommentsDataRepositoryTest {
 		@Test
 		void successCase() {
 			//given
-			Comments testComment2 = commentsRepository.save(Comments.builder()
+			CommentsEntity testComment2 = commentsRepository.save(CommentsEntity.builder()
 				.user(savedUser)
 				.post(savedPost)
 				.content("testComment2")
@@ -84,9 +84,9 @@ class CommentsDataRepositoryTest {
 				.build());
 
 			//when
-			List<Comments> comments = commentsRepository.findByPostId(savedPost.getId());
-			Comments comments1 = comments.get(0);
-			Comments comments2 = comments.get(1);
+			List<CommentsEntity> comments = commentsRepository.findByPostId(savedPost.getId());
+			CommentsEntity comments1 = comments.get(0);
+			CommentsEntity comments2 = comments.get(1);
 			//then
 			assertThat(comments).size().isEqualTo(2);
 			assertThat(comments1).extracting("content").isEqualTo(savedComment.getContent());

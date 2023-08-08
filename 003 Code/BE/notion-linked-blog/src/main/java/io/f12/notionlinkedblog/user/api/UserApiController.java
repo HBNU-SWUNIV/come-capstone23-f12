@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.user.api;
 
-import static io.f12.notionlinkedblog.email.api.EmailApiController.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.email.api.EmailApiController.*;
 import static org.springframework.http.MediaType.*;
 
 import java.io.File;
@@ -55,7 +55,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "User", description = "사용자 API")
+@Tag(name = "UserEntity", description = "사용자 API")
 @RequiredArgsConstructor
 @RequestMapping(Endpoint.Api.USER)
 @RestController
