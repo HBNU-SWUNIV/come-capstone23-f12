@@ -22,8 +22,9 @@ import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.post.PostDataRepository;
-import io.f12.notionlinkedblog.repository.series.SeriesDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
+import io.f12.notionlinkedblog.series.service.SeriesService;
 
 @ExtendWith(MockitoExtension.class)
 class SeriesServiceTest {

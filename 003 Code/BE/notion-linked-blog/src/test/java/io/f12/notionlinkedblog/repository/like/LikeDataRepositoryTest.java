@@ -19,8 +19,9 @@ import io.f12.notionlinkedblog.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.post.PostDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)

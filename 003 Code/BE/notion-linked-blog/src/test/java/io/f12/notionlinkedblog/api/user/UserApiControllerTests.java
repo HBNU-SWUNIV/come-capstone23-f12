@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api.user;
 
-import static io.f12.notionlinkedblog.api.EmailApiController.*;
+import static io.f12.notionlinkedblog.email.api.EmailApiController.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,15 +35,15 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserBlogTitleEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserSocialInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.response.UserSearchDto;
-import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
-import io.f12.notionlinkedblog.service.user.UserService;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
+import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.UserService;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)

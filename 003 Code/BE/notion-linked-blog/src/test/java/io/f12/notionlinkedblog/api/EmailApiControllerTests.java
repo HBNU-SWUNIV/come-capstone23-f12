@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
-import io.f12.notionlinkedblog.repository.redis.EmailVerificationTokenRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.email.infrastructure.redis.EmailVerificationTokenRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
-import io.f12.notionlinkedblog.service.EmailSignupService;
+import io.f12.notionlinkedblog.email.service.EmailSignupService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

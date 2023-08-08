@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.exception.EmailNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -26,12 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserBlogTitleEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.request.UserSocialInfoEditDto;
-import io.f12.notionlinkedblog.domain.user.dto.response.UserSearchDto;
-import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
+import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
+import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTests extends DummyObject {

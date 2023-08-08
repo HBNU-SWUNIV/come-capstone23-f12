@@ -28,14 +28,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
-import io.f12.notionlinkedblog.domain.post.dto.PostEditDto;
-import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
-import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
-import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
+import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
+import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
+import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
+import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
-import io.f12.notionlinkedblog.repository.post.PostDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.post.service.PostService;
+import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(MockitoExtension.class)

@@ -18,11 +18,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.domain.user.dto.login.email.EmailLoginUserRequestDto;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.user.domain.dto.login.email.EmailLoginUserRequestDto;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc

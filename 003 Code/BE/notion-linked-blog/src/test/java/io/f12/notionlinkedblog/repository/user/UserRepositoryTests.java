@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import io.f12.notionlinkedblog.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @ActiveProfiles("test")
 @Import(TestQuerydslConfiguration.class)

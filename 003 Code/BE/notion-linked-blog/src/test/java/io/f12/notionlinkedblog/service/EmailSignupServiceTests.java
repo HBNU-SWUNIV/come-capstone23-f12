@@ -13,7 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.f12.notionlinkedblog.domain.dummy.DummyObject;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
-import io.f12.notionlinkedblog.service.redis.EmailVerificationTokenService;
+import io.f12.notionlinkedblog.email.service.EmailSignupService;
+import io.f12.notionlinkedblog.email.service.redis.EmailVerificationTokenService;
 
 @ExtendWith(MockitoExtension.class)
 class EmailSignupServiceTests {

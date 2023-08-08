@@ -20,15 +20,15 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
-import io.f12.notionlinkedblog.repository.post.PostDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)

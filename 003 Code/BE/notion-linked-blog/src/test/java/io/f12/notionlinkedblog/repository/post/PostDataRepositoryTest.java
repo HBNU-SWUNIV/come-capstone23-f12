@@ -23,8 +23,9 @@ import io.f12.notionlinkedblog.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.series.SeriesDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @DataJpaTest

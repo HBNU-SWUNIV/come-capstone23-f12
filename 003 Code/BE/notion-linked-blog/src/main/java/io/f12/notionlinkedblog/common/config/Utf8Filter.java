@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.Endpoint;
 
 @WebFilter(filterName = "Utf8Filter", urlPatterns = {"/*"})
 public class Utf8Filter implements Filter {

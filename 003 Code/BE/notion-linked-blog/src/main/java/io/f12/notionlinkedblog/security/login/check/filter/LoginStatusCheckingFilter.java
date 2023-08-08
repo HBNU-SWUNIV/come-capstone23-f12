@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.security.login.check.filter;
 
-import static io.f12.notionlinkedblog.api.common.Endpoint.Api.*;
+import static io.f12.notionlinkedblog.common.Endpoint.Api.*;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.*;
 
 import java.io.IOException;
@@ -21,11 +21,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.dto.UserWithoutPassword;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingFailureResponseDto;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingSuccessResponseDto;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

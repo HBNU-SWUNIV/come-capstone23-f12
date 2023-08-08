@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.domain.series.dto;
 
 import java.util.List;
 
-import io.f12.notionlinkedblog.domain.post.dto.SimplePostDto;
+import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

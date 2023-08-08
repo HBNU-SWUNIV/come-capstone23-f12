@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.common.config;
 
-import static io.f12.notionlinkedblog.api.common.Endpoint.Api.*;
+import static io.f12.notionlinkedblog.common.Endpoint.Api.*;
 import static org.springframework.http.MediaType.*;
 
 import java.lang.reflect.Constructor;

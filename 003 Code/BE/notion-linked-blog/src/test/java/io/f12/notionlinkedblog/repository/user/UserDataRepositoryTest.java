@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)

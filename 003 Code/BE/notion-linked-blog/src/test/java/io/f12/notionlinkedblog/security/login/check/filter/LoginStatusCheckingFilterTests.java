@@ -22,11 +22,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.token.AjaxEmailPasswordAuthenticationToken;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc

@@ -16,15 +16,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import io.f12.notionlinkedblog.comments.service.CommentsService;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
-import io.f12.notionlinkedblog.repository.post.PostDataRepository;
-import io.f12.notionlinkedblog.repository.user.UserDataRepository;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CommentsServiceTest {
