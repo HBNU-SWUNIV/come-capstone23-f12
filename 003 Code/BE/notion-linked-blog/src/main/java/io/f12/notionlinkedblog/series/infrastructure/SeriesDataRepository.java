@@ -8,11 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.f12.notionlinkedblog.domain.series.Series;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 
 @Repository
-public interface SeriesDataRepository extends JpaRepository<Series, Long> {
+public interface SeriesDataRepository extends JpaRepository<Series, Long>, SeriesRepository {
 
 	@Query("SELECT s FROM Series s LEFT JOIN FETCH s.post WHERE s.id = :seriesId")
 	Optional<Series> findSeriesById(@Param("seriesId") Long seriesId);
-
 }

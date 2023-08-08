@@ -25,7 +25,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SeriesService {
 
-	private final SeriesDataRepository seriesDataRepository;
+	private final SeriesRepository seriesRepository;
 	private final PostDataRepository postDataRepository;
 	private final UserRepository userRepository;
 
@@ -51,7 +51,7 @@ public class SeriesService {
 			.post(new ArrayList<>())
 			.build();
 
-		Series savedSeries = seriesDataRepository.save(series);
+		Series savedSeries = seriesRepository.save(series);
 
 		return SeriesCreateResponseDto.builder()
 			.seriesId(savedSeries.getId())
@@ -59,7 +59,7 @@ public class SeriesService {
 	}
 
 	public void removeSeries(SeriesRemoveDto removeDto) {
-		Series series = seriesDataRepository.findSeriesById(removeDto.getSeriesId())
+		Series series = seriesRepository.findSeriesById(removeDto.getSeriesId())
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 
 		List<Post> post = series.getPost();
@@ -67,7 +67,7 @@ public class SeriesService {
 			Post p = post.get(i);
 			series.removePost(p);
 		}
-		seriesDataRepository.delete(series);
+		seriesRepository.delete(series);
 	}
 
 	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
@@ -84,7 +84,7 @@ public class SeriesService {
 	}
 
 	public SeriesSimpleSearchDto getSimpleSeriesInfo(Long seriesId) {
-		Series series = seriesDataRepository.findSeriesById(seriesId)
+		Series series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException("잘못된 seriesId 입니다."));
 
 		List<Post> post = series.getPost();
@@ -155,7 +155,7 @@ public class SeriesService {
 	}
 
 	public void addPostTo(Long seriesId, Long postId) {
-		Series series = seriesDataRepository.findSeriesById(seriesId)
+		Series series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
@@ -163,7 +163,7 @@ public class SeriesService {
 	}
 
 	public void removePostFrom(Long seriesId, Long postId) {
-		Series series = seriesDataRepository.findSeriesById(seriesId)
+		Series series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
@@ -171,7 +171,7 @@ public class SeriesService {
 	}
 
 	public void editTitle(Long id, String title) {
-		Series series = seriesDataRepository.findSeriesById(id)
+		Series series = seriesRepository.findSeriesById(id)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 		series.setTitle(title);
 	}

@@ -23,7 +23,7 @@ import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,7 @@ class PostDataRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private SeriesDataRepository seriesDataRepository;
+	private SeriesRepository seriesRepository;
 
 	private User user;
 	private Post post;
@@ -62,7 +62,7 @@ class PostDataRepositoryTest {
 			.user(user)
 			.post(new ArrayList<>())
 			.build();
-		series = seriesDataRepository.save(savedSeries);
+		series = seriesRepository.save(savedSeries);
 
 		Post savedPost = Post.builder()
 			.title(title)
@@ -79,7 +79,7 @@ class PostDataRepositoryTest {
 	@AfterEach
 	void clear() {
 		postDataRepository.deleteAll();
-		seriesDataRepository.deleteAll();
+		seriesRepository.deleteAll();
 		userRepository.deleteAll();
 	}
 

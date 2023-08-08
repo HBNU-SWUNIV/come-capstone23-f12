@@ -22,6 +22,7 @@ import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +36,7 @@ class SeriesDataRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private SeriesDataRepository seriesDataRepository;
+	private SeriesRepository seriesRepository;
 	@Autowired
 	private EntityManager entityManager;
 
@@ -73,7 +74,7 @@ class SeriesDataRepositoryTest {
 			.user(user)
 			.title("testSeries")
 			.build();
-		series = seriesDataRepository.save(savedSeries);
+		series = seriesRepository.save(savedSeries);
 
 		Post savedPostA = Post.builder()
 			.id(1L)
@@ -128,7 +129,7 @@ class SeriesDataRepositoryTest {
 	@AfterEach
 	void clear() {
 		postDataRepository.deleteAll();
-		seriesDataRepository.deleteAll();
+		seriesRepository.deleteAll();
 		userRepository.deleteAll();
 	}
 
@@ -141,7 +142,7 @@ class SeriesDataRepositoryTest {
 			//given
 			Long seriesId = series.getId();
 			//when
-			Series searchSeries = seriesDataRepository.findSeriesById(seriesId)
+			Series searchSeries = seriesRepository.findSeriesById(seriesId)
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID"));
 
 			//then
@@ -160,7 +161,7 @@ class SeriesDataRepositoryTest {
 			Long seriesId = 0L;
 			//when
 			assertThatThrownBy(() -> {
-				Series searchSeries = seriesDataRepository.findSeriesById(seriesId)
+				Series searchSeries = seriesRepository.findSeriesById(seriesId)
 					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID"));
 			}).isInstanceOf(IllegalArgumentException.class);
 
