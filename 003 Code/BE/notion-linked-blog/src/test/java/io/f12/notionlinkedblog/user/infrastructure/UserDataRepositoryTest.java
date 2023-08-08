@@ -18,13 +18,14 @@ import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)
 class UserDataRepositoryTest {
 
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private EntityManager entityManager;
 
@@ -40,12 +41,12 @@ class UserDataRepositoryTest {
 				.email("email1")
 				.password("password1")
 				.build();
-			userA = userDataRepository.save(user1);
+			userA = userRepository.save(user1);
 		}
 
 		@AfterEach
 		void clear() {
-			userDataRepository.deleteAll();
+			userRepository.deleteAll();
 			entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
 		}
 
@@ -59,12 +60,12 @@ class UserDataRepositoryTest {
 				.email("email2")
 				.password("password2")
 				.build();
-			User userB = userDataRepository.save(user2);
+			User userB = userRepository.save(user2);
 			//when
-			User findUserA = userDataRepository.findUserById(userA.getId()).orElseThrow(
+			User findUserA = userRepository.findUserById(userA.getId()).orElseThrow(
 				() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-			User findUserB = userDataRepository.findUserById(userB.getId()).orElseThrow(
+			User findUserB = userRepository.findUserById(userB.getId()).orElseThrow(
 				() -> new IllegalArgumentException(USER_NOT_EXIST));
 			//then
 			assertThat(findUserA).extracting("id").isEqualTo(userA.getId());
@@ -82,7 +83,7 @@ class UserDataRepositoryTest {
 			//given
 			Long wrongId = userA.getId() + 100;
 			//when, then
-			Optional<User> user = userDataRepository.findUserById(wrongId);
+			Optional<User> user = userRepository.findUserById(wrongId);
 			assertThatThrownBy(() -> {
 				user.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 			}).isInstanceOf(IllegalArgumentException.class)

@@ -17,10 +17,10 @@ import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.domain.notion.SyncedPages;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
+import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
@@ -37,12 +37,12 @@ public class NotionService {
 
 	private final NotionOAuthComponent notionOAuthComponent;
 	private final PostDataRepository postDataRepository;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 	private final NotionBlockConverter notionBlockConverter;
 	private final SyncedPagesDataRepository syncedPagesDataRepository;
 
 	public void setNotionLinkPages(String path, Long userId) {
-		User user = userDataRepository.findUserById(userId)
+		User user = userRepository.findUserById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String pathToId = convertPathToId(path);
@@ -63,7 +63,7 @@ public class NotionService {
 	// 	String title = getTitle(convertPath, userId);
 	// 	String content = getContent(convertPath, userId);
 	//
-	// 	User user = userDataRepository.findById(userId)
+	// 	User user = userRepository.findById(userId)
 	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 	// 	Post savePost = postDataRepository.save(Post.builder()
 	// 		.user(user)
@@ -132,7 +132,7 @@ public class NotionService {
 
 	public void initEveryPages(List<String> pageIds, Long userId, String accessCode) throws
 		NotionAuthenticationException {
-		User user = userDataRepository.findById(userId)
+		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		for (String pageId : pageIds) {
 			String title = getTitleTemp(pageId, accessCode);
@@ -239,7 +239,7 @@ public class NotionService {
 	}
 
 	private NotionClient createClient(Long userId) throws NotionAuthenticationException {
-		String accessToken = userDataRepository.findUserByIdForNotionAuthToken(userId)
+		String accessToken = userRepository.findUserByIdForNotionAuthToken(userId)
 			.orElseThrow(NotionAuthenticationException::new)
 			.getNotionOauth()
 			.getAccessToken();

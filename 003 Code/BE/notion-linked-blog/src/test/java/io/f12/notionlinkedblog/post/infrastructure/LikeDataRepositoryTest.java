@@ -19,7 +19,7 @@ import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)
@@ -27,7 +27,7 @@ class LikeDataRepositoryTest {
 	@Autowired
 	private PostDataRepository postDataRepository;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private LikeDataRepository likeDataRepository;
 	@Autowired
@@ -46,7 +46,7 @@ class LikeDataRepositoryTest {
 			.email("test@test.com")
 			.password("nope")
 			.build();
-		user = userDataRepository.save(savedUser);
+		user = userRepository.save(savedUser);
 
 		Post savedPost = Post.builder()
 			.title(title)
@@ -60,7 +60,7 @@ class LikeDataRepositoryTest {
 	@AfterEach
 	void clear() {
 		postDataRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 		entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
 		entityManager.createNativeQuery("ALTER SEQUENCE post_seq RESTART WITH 1").executeUpdate();
 	}

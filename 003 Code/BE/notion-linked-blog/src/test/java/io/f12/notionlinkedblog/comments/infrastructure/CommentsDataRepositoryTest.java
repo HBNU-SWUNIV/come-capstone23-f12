@@ -18,14 +18,14 @@ import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)
 class CommentsDataRepositoryTest {
 
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private PostDataRepository postDataRepository;
 	@Autowired
@@ -42,7 +42,7 @@ class CommentsDataRepositoryTest {
 			.email("test@gamil.com")
 			.password("1234")
 			.build();
-		savedUser = userDataRepository.save(user);
+		savedUser = userRepository.save(user);
 
 		Post post = Post.builder()
 			.user(savedUser)
@@ -65,7 +65,7 @@ class CommentsDataRepositoryTest {
 	void clear() {
 		commentsDataRepository.deleteAll();
 		postDataRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("PostId로 댓글 조회")

@@ -28,7 +28,7 @@ import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -39,7 +39,7 @@ class CommentsApiControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private PostDataRepository postDataRepository;
 	@Autowired
@@ -53,7 +53,7 @@ class CommentsApiControllerTest {
 
 	@BeforeEach
 	void init() {
-		testUser = userDataRepository.save(User.builder()
+		testUser = userRepository.save(User.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
@@ -69,7 +69,7 @@ class CommentsApiControllerTest {
 			.post(testPost)
 			.depth(0)
 			.content("testComments").build());
-		userDataRepository.save(User.builder()
+		userRepository.save(User.builder()
 			.email("test2@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
@@ -81,7 +81,7 @@ class CommentsApiControllerTest {
 	void clear() {
 		commentsDataRepository.deleteAll();
 		postDataRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("댓글 조회")

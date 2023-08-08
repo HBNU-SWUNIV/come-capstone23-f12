@@ -35,7 +35,7 @@ import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,7 +49,7 @@ class PostServiceTest {
 	PostDataRepository postDataRepository;
 
 	@Mock
-	UserDataRepository userDataRepository;
+	UserRepository userRepository;
 	@Mock
 	LikeDataRepository likeDataRepository;
 
@@ -94,7 +94,7 @@ class PostServiceTest {
 
 				//Mock
 				MultipartFile mockMultipartFile = new MockMultipartFile(file.getName(), new FileInputStream(file));
-				given(userDataRepository.findById(fakeId))
+				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
 				given(postDataRepository.save(any(Post.class)))
 					.willReturn(returnPost);
@@ -131,7 +131,7 @@ class PostServiceTest {
 					.content(content)
 					.build();
 				//Mock
-				given(userDataRepository.findById(fakeId))
+				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
 				given(postDataRepository.save(any(Post.class)))
 					.willReturn(returnPost);
@@ -161,7 +161,7 @@ class PostServiceTest {
 				Long fakeId = 1L;
 
 				//Mock
-				given(userDataRepository.findById(fakeId))
+				given(userRepository.findById(fakeId))
 					.willReturn(null);
 
 				//when
@@ -784,7 +784,7 @@ class PostServiceTest {
 				//mock
 				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
-				given(userDataRepository.findById(fakeUserId))
+				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
 				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
 					.willReturn(Optional.empty());
@@ -820,7 +820,7 @@ class PostServiceTest {
 				//mock
 				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
-				given(userDataRepository.findById(fakeUserId))
+				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
 				given(likeDataRepository.findByUserIdAndPostId(fakeUserId, fakePostId))
 					.willReturn(Optional.of(dto));
@@ -852,7 +852,7 @@ class PostServiceTest {
 				//mock
 				given(postDataRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
-				given(userDataRepository.findById(fakeUserId))
+				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.empty());
 				//when
 				assertThatThrownBy(() -> {

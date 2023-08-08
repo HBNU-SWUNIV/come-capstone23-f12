@@ -23,7 +23,7 @@ import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
 import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserService {
 
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	public Long signupByEmail(UserSignupRequestDto requestDto) {
@@ -41,14 +41,14 @@ public class UserService {
 
 		requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 		User newUser = requestDto.toEntity();
-		User savedUser = userDataRepository.save(newUser);
+		User savedUser = userRepository.save(newUser);
 
 		return savedUser.getId();
 	}
 
 	@Transactional(readOnly = true)
 	public UserSearchDto getUserInfo(Long id) {
-		User user = userDataRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		User user = userRepository.findUserById(id).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		return UserSearchDto.builder()
 			.id(user.getId())
@@ -63,28 +63,28 @@ public class UserService {
 	}
 
 	public void editBasicUserInfo(Long id, UserBasicInfoEditDto editDto) {
-		User findUser = userDataRepository.findById(id)
+		User findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public void editUserBlogTitleInfo(Long id, UserBlogTitleEditDto editDto) {
-		User findUser = userDataRepository.findById(id)
+		User findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public void editUserSocialInfo(Long id, UserSocialInfoEditDto editDto) {
-		User findUser = userDataRepository.findById(id)
+		User findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		findUser.editProfile(editDto);
 	}
 
 	public ProfileSuccessEditDto editUserProfileImage(Long id, MultipartFile imageFile) throws IOException {
-		User findUser = userDataRepository.findById(id)
+		User findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String systemPath = System.getProperty("user.dir");
@@ -112,7 +112,7 @@ public class UserService {
 	}
 
 	public void removeUserProfileImage(Long id) {
-		User findUser = userDataRepository.findById(id)
+		User findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		try {
 			Files.delete(Path.of(findUser.getProfile()));
@@ -123,14 +123,14 @@ public class UserService {
 	}
 
 	public void removeUser(Long id) {
-		userDataRepository.findById(id)
+		userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-		userDataRepository.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 	public File readImageFile(Long userId) {
 		User editedUSer =
-			userDataRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+			userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		if (editedUSer.getProfile() == null) {
 			return null;
@@ -141,7 +141,7 @@ public class UserService {
 
 	//내부 사용 매서드
 	private void checkEmailIsDuplicated(final String email) {
-		boolean isPresent = userDataRepository.findByEmail(email).isPresent();
+		boolean isPresent = userRepository.findByEmail(email).isPresent();
 		if (isPresent) {
 			throw new IllegalArgumentException(EMAIL_ALREADY_EXIST);
 		}

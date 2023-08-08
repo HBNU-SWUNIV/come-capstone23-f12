@@ -24,7 +24,7 @@ import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @DataJpaTest
@@ -35,7 +35,7 @@ class PostDataRepositoryTest {
 	@Autowired
 	private PostDataRepository postDataRepository;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private SeriesDataRepository seriesDataRepository;
 
@@ -55,7 +55,7 @@ class PostDataRepositoryTest {
 			.email("test@test.com")
 			.password("nope")
 			.build();
-		user = userDataRepository.save(savedUser);
+		user = userRepository.save(savedUser);
 
 		Series savedSeries = Series.builder()
 			.title("testSeries")
@@ -80,7 +80,7 @@ class PostDataRepositoryTest {
 	void clear() {
 		postDataRepository.deleteAll();
 		seriesDataRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("포스트 조회")
@@ -100,7 +100,7 @@ class PostDataRepositoryTest {
 				void successCase() {
 					//given
 					//when
-					userDataRepository.findById(user.getId())
+					userRepository.findById(user.getId())
 						.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 					Post searchPost = postDataRepository.findById(post.getId())
 						.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
@@ -121,7 +121,7 @@ class PostDataRepositoryTest {
 						String content = "testContent";
 
 						//when
-						User savedUser = userDataRepository.findById(user.getId())
+						User savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						Post post = Post.builder()
@@ -229,7 +229,7 @@ class PostDataRepositoryTest {
 					@Test
 					void successfulCase_MultiData() {
 						//given
-						User savedUser = userDataRepository.findById(user.getId())
+						User savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 						for (int i = 0; i < 30; i++) {
 							Post savedPost = Post.builder()
@@ -298,7 +298,7 @@ class PostDataRepositoryTest {
 					@Test
 					void successfulCase_MultiData() {
 						//given
-						User savedUser = userDataRepository.findById(user.getId())
+						User savedUser = userRepository.findById(user.getId())
 							.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 						for (int i = 0; i < 30; i++) {

@@ -29,7 +29,7 @@ import io.f12.notionlinkedblog.domain.oauth.dto.notion.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NotionOauthService {
 	private final NotionOAuthComponent notionOAuthComponent;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 	private final NotionOauthDataRepository notionOauthDataRepository;
 
 	public NotionOAuthLinkDto getNotionAuthSite() {
@@ -48,7 +48,7 @@ public class NotionOauthService {
 	}
 
 	public String saveAccessToken(String code, Long userId) throws TokenAvailabilityFailureException {
-		User user = userDataRepository.findById(userId)
+		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		boolean exist = isExist(userId);

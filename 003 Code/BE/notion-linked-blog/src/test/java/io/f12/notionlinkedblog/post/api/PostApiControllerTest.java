@@ -41,7 +41,7 @@ import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.domain.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
 import io.f12.notionlinkedblog.post.service.PostService;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @AutoConfigureMockMvc
@@ -54,7 +54,7 @@ class PostApiControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private PostDataRepository postRepository;
 	@Autowired
@@ -69,7 +69,7 @@ class PostApiControllerTest {
 
 	@BeforeEach
 	void init() {
-		testUser = userDataRepository.save(User.builder()
+		testUser = userRepository.save(User.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
@@ -85,7 +85,7 @@ class PostApiControllerTest {
 	@AfterEach
 	void clear() {
 		postRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("포스트 생성")
@@ -378,7 +378,7 @@ class PostApiControllerTest {
 			//given
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
 
-			userDataRepository.findUserById(testUser.getId())
+			userRepository.findUserById(testUser.getId())
 				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 			PostEditDto body = PostEditDto.builder()
@@ -408,7 +408,7 @@ class PostApiControllerTest {
 		void successCase() throws Exception {
 			//given
 			String url = Endpoint.Api.POST + "/" + testPost.getId();
-			User user = userDataRepository.findUserById(testUser.getId())
+			User user = userRepository.findUserById(testUser.getId())
 				.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 			//mock
 			MockHttpSession mockHttpSession = new MockHttpSession();

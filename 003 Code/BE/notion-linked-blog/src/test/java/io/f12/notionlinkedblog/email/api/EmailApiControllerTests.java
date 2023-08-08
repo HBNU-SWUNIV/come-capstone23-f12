@@ -21,7 +21,7 @@ import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.email.infrastructure.redis.EmailVerificationTokenRepository;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,7 +34,7 @@ class EmailApiControllerTests {
 	@Autowired
 	private EmailVerificationTokenRepository emailVerificationTokenRepository;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private SecureRandomService secureRandomService;
 	@MockBean
@@ -156,7 +156,7 @@ class EmailApiControllerTests {
 			void duplicateEmail() throws Exception {
 				//given
 				final String alreadyExistingEmail = "hello@gmail.com";
-				userDataRepository.save(
+				userRepository.save(
 					User.builder().email(alreadyExistingEmail).password("1234").username("hello").build());
 
 				//when

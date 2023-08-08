@@ -22,7 +22,7 @@ import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @DataJpaTest
@@ -33,7 +33,7 @@ class SeriesDataRepositoryTest {
 	@Autowired
 	private PostDataRepository postDataRepository;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private SeriesDataRepository seriesDataRepository;
 	@Autowired
@@ -66,7 +66,7 @@ class SeriesDataRepositoryTest {
 			.email("test@test.com")
 			.password("nope")
 			.build();
-		user = userDataRepository.save(savedUser);
+		user = userRepository.save(savedUser);
 
 		Series savedSeries = Series.builder()
 			.id(1L)
@@ -129,7 +129,7 @@ class SeriesDataRepositoryTest {
 	void clear() {
 		postDataRepository.deleteAll();
 		seriesDataRepository.deleteAll();
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("간단 시리즈 조회")

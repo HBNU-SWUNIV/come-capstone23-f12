@@ -42,8 +42,8 @@ import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
 import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
 import io.f12.notionlinkedblog.user.service.UserService;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -56,7 +56,7 @@ class UserApiControllerTests {
 	@Autowired
 	private ObjectMapper om;
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -64,7 +64,7 @@ class UserApiControllerTests {
 
 	@BeforeEach
 	void setup() {
-		testUser = userDataRepository.save(User.builder()
+		testUser = userRepository.save(User.builder()
 			.email("test@gmail.com")
 			.username("test")
 			.password(passwordEncoder.encode("1234"))
@@ -74,7 +74,7 @@ class UserApiControllerTests {
 
 	@AfterEach
 	void teardown() {
-		userDataRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("이메일 기반 회원가입")

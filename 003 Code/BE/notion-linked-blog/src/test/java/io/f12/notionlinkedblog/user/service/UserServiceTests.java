@@ -31,7 +31,7 @@ import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
 import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTests extends DummyObject {
@@ -39,7 +39,7 @@ class UserServiceTests extends DummyObject {
 	@InjectMocks
 	private UserService userService;
 	@Mock
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
@@ -62,10 +62,10 @@ class UserServiceTests extends DummyObject {
 				User mockUser = newMockUser(1L, "test", "test@gmail.com");
 
 				// stub 1
-				given(userDataRepository.findByEmail(any())).willReturn(Optional.empty());
+				given(userRepository.findByEmail(any())).willReturn(Optional.empty());
 
 				// stub 2
-				given(userDataRepository.save(any())).willReturn(mockUser);
+				given(userRepository.save(any())).willReturn(mockUser);
 
 				//when
 				Long id = userService.signupByEmail(newUserDto);
@@ -88,7 +88,7 @@ class UserServiceTests extends DummyObject {
 					.password("password")
 					.build();
 				User existUser = existUserDto.toEntity();
-				userDataRepository.save(existUser);
+				userRepository.save(existUser);
 
 				UserSignupRequestDto newUserDto = UserSignupRequestDto.builder()
 					.email("test@gmail.com")
@@ -96,7 +96,7 @@ class UserServiceTests extends DummyObject {
 					.password("password")
 					.build();
 				User newUser = newUserDto.toEntity();
-				given(userDataRepository.findByEmail(newUser.getEmail())).willReturn(Optional.of(existUser));
+				given(userRepository.findByEmail(newUser.getEmail())).willReturn(Optional.of(existUser));
 
 				//then
 				assertThatThrownBy(() -> userService.signupByEmail(newUserDto)).isInstanceOf(
@@ -145,9 +145,9 @@ class UserServiceTests extends DummyObject {
 						.email("test2@gmail.com")
 						.username("username2")
 						.build();
-					given(userDataRepository.findUserById(fakeIdForA))
+					given(userRepository.findUserById(fakeIdForA))
 						.willReturn(Optional.ofNullable(mockUserSearchDtoA));
-					given(userDataRepository.findUserById(fakeIdForB))
+					given(userRepository.findUserById(fakeIdForB))
 						.willReturn(Optional.ofNullable(mockUserSearchDtoB));
 					//when
 					UserSearchDto userInfoA = userService.getUserInfo(fakeIdForA);
@@ -172,7 +172,7 @@ class UserServiceTests extends DummyObject {
 					//given
 					Long fakeId = 1L;
 					//mock
-					given(userDataRepository.findUserById(fakeId))
+					given(userRepository.findUserById(fakeId))
 						.willReturn(Optional.empty());
 					//when, then
 					assertThatThrownBy(() -> userService.getUserInfo(fakeId))
@@ -205,7 +205,7 @@ class UserServiceTests extends DummyObject {
 						.build();
 
 					//stub
-					given(userDataRepository.findById(1L))
+					given(userRepository.findById(1L))
 						.willReturn(Optional.of(userA));
 					//when
 					userService.editBasicUserInfo(1L, editDto);
@@ -235,7 +235,7 @@ class UserServiceTests extends DummyObject {
 						.build();
 
 					//stub
-					given(userDataRepository.findById(1L))
+					given(userRepository.findById(1L))
 						.willReturn(Optional.of(userA));
 					//when
 					userService.editUserBlogTitleInfo(1L, editDto);
@@ -263,7 +263,7 @@ class UserServiceTests extends DummyObject {
 						.build();
 
 					//stub
-					given(userDataRepository.findById(1L))
+					given(userRepository.findById(1L))
 						.willReturn(Optional.of(userA));
 					//when
 					userService.editUserSocialInfo(1L, editDto);
@@ -290,7 +290,7 @@ class UserServiceTests extends DummyObject {
 					File file = new ClassPathResource("static/images/test.jpg").getFile();
 					MultipartFile mockMultipartFile = new MockMultipartFile(file.getName(), new FileInputStream(file));
 					//stub
-					given(userDataRepository.findById(1L))
+					given(userRepository.findById(1L))
 						.willReturn(Optional.of(userA));
 					//when
 					userService.editUserProfileImage(1L, mockMultipartFile);
@@ -327,7 +327,7 @@ class UserServiceTests extends DummyObject {
 						.build();
 
 					//stub
-					given(userDataRepository.findById(1L))
+					given(userRepository.findById(1L))
 						.willReturn(Optional.of(userA));
 					//when
 					userService.removeUserProfileImage(1L);
@@ -356,7 +356,7 @@ class UserServiceTests extends DummyObject {
 						.password("changedPassword")
 						.build();
 					//mock
-					given(userDataRepository.findById(removedUserId))
+					given(userRepository.findById(removedUserId))
 						.willReturn(Optional.of(removedUser));
 					//when
 					userService.removeUser(removedUserId);
@@ -401,7 +401,7 @@ class UserServiceTests extends DummyObject {
 					.build();
 
 				//stub
-				given(userDataRepository.findById(1L))
+				given(userRepository.findById(1L))
 					.willReturn(Optional.of(userA));
 				//when
 				File file = userService.readImageFile(1L);
@@ -420,7 +420,7 @@ class UserServiceTests extends DummyObject {
 					.password("password1")
 					.build();
 				//stub
-				given(userDataRepository.findById(1L))
+				given(userRepository.findById(1L))
 					.willReturn(Optional.of(userA));
 				//when
 				File file = userService.readImageFile(1L);

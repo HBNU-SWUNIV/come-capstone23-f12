@@ -24,7 +24,7 @@ import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CommentsServiceTest {
@@ -35,7 +35,7 @@ class CommentsServiceTest {
 	@Mock
 	PostDataRepository postDataRepository;
 	@Mock
-	UserDataRepository userDataRepository;
+	UserRepository userRepository;
 	@Mock
 	private PasswordEncoder passwordEncoder;
 
@@ -151,7 +151,7 @@ class CommentsServiceTest {
 			//Mock
 			given(postDataRepository.findById(fakePostId))
 				.willReturn(Optional.ofNullable(post));
-			given(userDataRepository.findById(fakeUserId))
+			given(userRepository.findById(fakeUserId))
 				.willReturn(Optional.ofNullable(user));
 			given(commentsDataRepository.save(any(Comments.class)))
 				.willReturn(comments);

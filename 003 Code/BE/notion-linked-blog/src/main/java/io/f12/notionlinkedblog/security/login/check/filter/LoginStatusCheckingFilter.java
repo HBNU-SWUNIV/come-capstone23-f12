@@ -26,6 +26,7 @@ import io.f12.notionlinkedblog.security.login.ajax.dto.UserWithoutPassword;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingFailureResponseDto;
 import io.f12.notionlinkedblog.security.login.check.dto.LoginStatusCheckingSuccessResponseDto;
 import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,10 +35,10 @@ public final class LoginStatusCheckingFilter extends OncePerRequestFilter {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	private final RequestMatcher loginStatusCheckingRequestMatcher = new AntPathRequestMatcher(LOGIN_STATUS, "GET");
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 
 	public LoginStatusCheckingFilter(UserDataRepository userDataRepository) {
-		this.userDataRepository = userDataRepository;
+		this.userRepository = userDataRepository;
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public final class LoginStatusCheckingFilter extends OncePerRequestFilter {
 					&& (authentication = securityContext.getAuthentication()) != null) {
 					log.info("SecurityContext is exists.");
 					LoginUser principal = (LoginUser)authentication.getPrincipal();
-					User user = userDataRepository.findById(principal.getUser().getId()).get();
+					User user = userRepository.findById(principal.getUser().getId()).get();
 					UserWithoutPassword userWithoutPassword = UserWithoutPassword.of(user);
 					LoginStatusCheckingSuccessResponseDto responseDto =
 						LoginStatusCheckingSuccessResponseDto.of(userWithoutPassword);

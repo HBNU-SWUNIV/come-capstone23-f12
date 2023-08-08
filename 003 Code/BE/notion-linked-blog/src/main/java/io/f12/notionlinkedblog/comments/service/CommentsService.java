@@ -12,6 +12,7 @@ import java.util.Queue;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
@@ -20,9 +21,8 @@ import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,7 +32,7 @@ public class CommentsService {
 	private final CommentsDataRepository commentsDataRepository;
 
 	private final PostDataRepository postDataRepository;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 
 	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
 		List<Comments> comments = commentsDataRepository.findByPostId(postId);
@@ -45,7 +45,7 @@ public class CommentsService {
 	public CommentEditDto createComments(Long postId, Long userId, CreateCommentDto commentDto) {
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
-		User user = userDataRepository.findById(userId)
+		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.USER_NOT_EXIST));
 
 		Comments parentComment = null;

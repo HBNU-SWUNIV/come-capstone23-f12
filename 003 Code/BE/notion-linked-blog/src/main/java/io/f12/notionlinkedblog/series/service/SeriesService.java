@@ -26,7 +26,7 @@ import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,12 +37,12 @@ public class SeriesService {
 
 	private final SeriesDataRepository seriesDataRepository;
 	private final PostDataRepository postDataRepository;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 
 	private static final int pagingSize = 10;
 
 	public SeriesCreateResponseDto createSeries(SeriesCreateDto createDto) {
-		User user = userDataRepository.findById(createDto.getUserId())
+		User user = userRepository.findById(createDto.getUserId())
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		Series series = Series.builder()
@@ -71,7 +71,7 @@ public class SeriesService {
 	}
 
 	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
-		List<Series> series = userDataRepository.findSeriesByUserId(userId)
+		List<Series> series = userRepository.findSeriesByUserId(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST))
 			.getSeries();
 

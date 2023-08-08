@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ActiveProfiles("test")
 @Import(TestQuerydslConfiguration.class)
@@ -21,7 +22,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 class UserRepositoryTests {
 
 	@Autowired
-	private UserDataRepository userDataRepository;
+	private UserRepository userRepository;
 
 	@DisplayName("유저 조회 API")
 	@Nested
@@ -36,7 +37,7 @@ class UserRepositoryTests {
 				User testUser = User.builder().email("test@gmail.com").username("test").password("password").build();
 
 				//when
-				Optional<User> foundUser = userDataRepository.findByEmail(testUser.getEmail());
+				Optional<User> foundUser = userRepository.findByEmail(testUser.getEmail());
 
 				//then
 				assertThat(foundUser.isEmpty()).isTrue();
@@ -51,12 +52,12 @@ class UserRepositoryTests {
 			void findByEmail() {
 				//given
 				User existUser = User.builder().email("test@gmail.com").username("test").password("password").build();
-				userDataRepository.save(existUser);
+				userRepository.save(existUser);
 
 				User newUser = User.builder().email("test@gmail.com").username("test").password("password").build();
 
 				//when
-				Optional<User> foundUser = userDataRepository.findByEmail(newUser.getEmail());
+				Optional<User> foundUser = userRepository.findByEmail(newUser.getEmail());
 
 				//then
 				assertThat(foundUser.isPresent()).isTrue();

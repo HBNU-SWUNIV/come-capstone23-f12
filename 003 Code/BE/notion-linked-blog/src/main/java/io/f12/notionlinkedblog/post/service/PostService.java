@@ -29,9 +29,9 @@ import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
 import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
-import io.f12.notionlinkedblog.user.infrastructure.UserDataRepository;
+import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PostService {
 
 	private final PostDataRepository postDataRepository;
-	private final UserDataRepository userDataRepository;
+	private final UserRepository userRepository;
 	private final LikeDataRepository likeDataRepository;
 	private final int pageSize = 20;
 	@Value("${server.url}")
@@ -50,7 +50,7 @@ public class PostService {
 
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
 		Boolean isPublic, MultipartFile multipartFile) throws IOException {
-		User findUser = userDataRepository.findById(userId)
+		User findUser = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		String systemPath = System.getProperty("user.dir");
@@ -213,7 +213,7 @@ public class PostService {
 	public void likeStatusChange(Long postId, Long userId) {
 		Post post = postDataRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
-		User user = userDataRepository.findById(userId)
+		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		Optional<LikeSearchDto> dto = likeDataRepository.findByUserIdAndPostId(userId, postId);
