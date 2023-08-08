@@ -8,14 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,9 +35,9 @@ import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
+import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.domain.dto.ThumbnailReturnDto;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
 import io.f12.notionlinkedblog.post.service.PostService;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
@@ -60,8 +58,6 @@ class PostApiControllerTest {
 	private PostRepository postRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	@Mock
-	private PostDataRepository postDataRepository;
 	@MockBean
 	private PostService postService;
 
@@ -175,8 +171,8 @@ class PostApiControllerTest {
 					//given
 					String url = Endpoint.Api.POST + "/" + testPost.getId();
 					//Mock
-					given(postDataRepository.findById(testPost.getId()))
-						.willReturn(Optional.ofNullable(testPost));
+					given(postService.getPostDtoById(testPost.getId(), null))
+						.willReturn(PostSearchDto.builder().build());
 					//when
 					ResultActions resultActions = mockMvc.perform(
 						get(url)
