@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.service.notion;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserValidateMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,11 +12,11 @@ import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.domain.notion.SyncedPages;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.syncedpages.SyncedPagesDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;

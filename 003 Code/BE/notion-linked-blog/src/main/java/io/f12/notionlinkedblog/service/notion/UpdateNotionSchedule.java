@@ -8,8 +8,8 @@ import javax.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.domain.notion.SyncedPages;
-import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.repository.syncedpages.SyncedPagesDataRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.config;
+package io.f12.notionlinkedblog.common.config;
 
 import static io.f12.notionlinkedblog.api.common.Endpoint.Api.*;
 import static org.springframework.http.MediaType.*;

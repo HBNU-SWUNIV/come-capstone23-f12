@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.exceptions.exception;
+package io.f12.notionlinkedblog.common.exceptions.exception;
 
 public class NoProfileImageException extends Exception {
 	public NoProfileImageException() {

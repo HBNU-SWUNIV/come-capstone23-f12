@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.api.user;
 
 import static io.f12.notionlinkedblog.api.EmailApiController.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 import static org.springframework.http.MediaType.*;
 
 import java.io.File;
@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.domain.user.dto.request.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.domain.user.dto.request.UserBasicInfoEditDto;
@@ -42,7 +43,6 @@ import io.f12.notionlinkedblog.domain.user.dto.response.NoUserProfileDto;
 import io.f12.notionlinkedblog.domain.user.dto.response.UserSearchDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupRequestDto;
 import io.f12.notionlinkedblog.domain.user.dto.signup.UserSignupResponseDto;
-import io.f12.notionlinkedblog.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;

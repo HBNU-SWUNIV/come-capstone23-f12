@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api.oauth;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
+import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
+import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.NotionOAuthLinkDto;
-import io.f12.notionlinkedblog.exceptions.exception.AuthFailureException;
-import io.f12.notionlinkedblog.exceptions.exception.NotionAuthenticationException;
-import io.f12.notionlinkedblog.exceptions.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.service.notion.NotionService;
 import io.f12.notionlinkedblog.service.notion.UpdateNotionSchedule;

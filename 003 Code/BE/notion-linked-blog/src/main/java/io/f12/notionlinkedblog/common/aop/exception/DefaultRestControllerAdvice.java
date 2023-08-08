@@ -1,6 +1,6 @@
-package io.f12.notionlinkedblog.aop.exception;
+package io.f12.notionlinkedblog.common.aop.exception;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.net.MalformedURLException;
 import java.nio.file.DirectoryNotEmptyException;
@@ -13,11 +13,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
+import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
+import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.domain.user.dto.response.NoUserProfileDto;
-import io.f12.notionlinkedblog.exceptions.exception.AuthFailureException;
-import io.f12.notionlinkedblog.exceptions.exception.NoProfileImageException;
-import io.f12.notionlinkedblog.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Hidden

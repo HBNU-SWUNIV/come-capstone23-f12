@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.service.comments;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.CommentExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.CommentExceptionsMessages.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import java.util.Queue;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ChildCommentDto;
@@ -19,7 +20,6 @@ import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.repository.comments.CommentsDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;

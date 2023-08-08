@@ -1,8 +1,8 @@
 package io.f12.notionlinkedblog.service.series;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.SeriesExceptionMessages.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.SeriesExceptionMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.util.ArrayList;
 import java.util.List;

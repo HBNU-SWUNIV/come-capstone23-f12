@@ -1,8 +1,8 @@
 package io.f12.notionlinkedblog.service.oauth;
 
 import static io.f12.notionlinkedblog.api.common.Endpoint.NotionAuth.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.util.Objects;
 
@@ -21,13 +21,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
+import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.domain.oauth.NotionOauth;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.domain.oauth.dto.notion.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.exceptions.exception.TokenAvailabilityFailureException;
-import io.f12.notionlinkedblog.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.repository.oauth.NotionOauthDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;
 import lombok.RequiredArgsConstructor;

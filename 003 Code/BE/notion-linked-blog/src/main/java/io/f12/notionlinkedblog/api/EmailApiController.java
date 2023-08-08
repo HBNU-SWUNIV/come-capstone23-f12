@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.util.Optional;
 

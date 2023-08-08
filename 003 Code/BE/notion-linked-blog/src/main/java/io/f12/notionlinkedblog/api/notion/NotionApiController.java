@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.api.notion;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserValidateMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;

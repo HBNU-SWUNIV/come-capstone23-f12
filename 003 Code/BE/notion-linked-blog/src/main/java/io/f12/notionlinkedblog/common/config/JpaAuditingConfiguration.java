@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.config;
+package io.f12.notionlinkedblog.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

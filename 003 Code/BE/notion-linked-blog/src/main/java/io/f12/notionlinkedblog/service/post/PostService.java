@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.service.post;
 
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
-import static io.f12.notionlinkedblog.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.api.common.Endpoint;
+import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.domain.post.Post;
@@ -28,7 +29,6 @@ import io.f12.notionlinkedblog.domain.post.dto.PostSearchDto;
 import io.f12.notionlinkedblog.domain.post.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.domain.post.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.repository.like.LikeDataRepository;
 import io.f12.notionlinkedblog.repository.post.PostDataRepository;
 import io.f12.notionlinkedblog.repository.user.UserDataRepository;

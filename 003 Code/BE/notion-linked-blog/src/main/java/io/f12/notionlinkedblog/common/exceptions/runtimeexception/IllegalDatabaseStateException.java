@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.exceptions.runtimeexception;
+package io.f12.notionlinkedblog.common.exceptions.runtimeexception;
 
 public class IllegalDatabaseStateException extends RuntimeException {
 	public IllegalDatabaseStateException() {

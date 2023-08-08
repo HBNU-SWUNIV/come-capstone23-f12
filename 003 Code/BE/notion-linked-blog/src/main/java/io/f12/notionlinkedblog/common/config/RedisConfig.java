@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.config;
+package io.f12.notionlinkedblog.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.exceptions.message;
+package io.f12.notionlinkedblog.common.exceptions.message;
 
 public class ExceptionMessages {
 	public static class UserExceptionsMessages {

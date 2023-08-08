@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.config;
+package io.f12.notionlinkedblog.common.config;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
