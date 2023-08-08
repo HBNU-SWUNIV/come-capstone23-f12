@@ -127,8 +127,8 @@ class SeriesDataRepositoryTest {
 
 	@AfterEach
 	void clear() {
-		seriesDataRepository.deleteAll();
 		postDataRepository.deleteAll();
+		seriesDataRepository.deleteAll();
 		userDataRepository.deleteAll();
 	}
 
