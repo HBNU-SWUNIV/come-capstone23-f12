@@ -19,13 +19,14 @@ import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.likes.Like;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
 @Import(TestQuerydslConfiguration.class)
 class LikeDataRepositoryTest {
 	@Autowired
-	private PostDataRepository postDataRepository;
+	private PostRepository postRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -54,12 +55,12 @@ class LikeDataRepositoryTest {
 			.user(user)
 			.isPublic(true)
 			.build();
-		post = postDataRepository.save(savedPost);
+		post = postRepository.save(savedPost);
 	}
 
 	@AfterEach
 	void clear() {
-		postDataRepository.deleteAll();
+		postRepository.deleteAll();
 		userRepository.deleteAll();
 		entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
 		entityManager.createNativeQuery("ALTER SEQUENCE post_seq RESTART WITH 1").executeUpdate();
@@ -81,7 +82,7 @@ class LikeDataRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 		//when
-		Post getPost = postDataRepository.findById(post.getId())
+		Post getPost = postRepository.findById(post.getId())
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		// //then
 		assertThat(getPost.getLikes().size()).isEqualTo(count);
@@ -95,7 +96,7 @@ class LikeDataRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 		//when
-		Post getPost = postDataRepository.findById(post.getId())
+		Post getPost = postRepository.findById(post.getId())
 			.orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.PostExceptionsMessages.POST_NOT_EXIST));
 		//then
 		assertThat(getPost.getLikes()).size().isEqualTo(count);
@@ -120,13 +121,13 @@ class LikeDataRepositoryTest {
 			.user(user)
 			.isPublic(true)
 			.build();
-		postDataRepository.save(savedPost);
+		postRepository.save(savedPost);
 
 		entityManager.flush();
 		entityManager.clear();
 
 		// when
-		List<Post> posts = postDataRepository.findByPostIdForTrend();
+		List<Post> posts = postRepository.findByPostIdForTrend();
 		Post postA = posts.get(0);
 		Post postB = posts.get(1);
 

@@ -13,11 +13,12 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import io.f12.notionlinkedblog.domain.post.Post;
+import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class PostDataRepositoryImpl implements PostRepositoryCustom {
+public class PostDataRepositoryImpl implements QuerydslPostRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override

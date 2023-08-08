@@ -19,7 +19,7 @@ import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesDataRepository;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ import notion.api.v1.request.blocks.RetrieveBlockRequest;
 public class NotionService {
 
 	private final NotionOAuthComponent notionOAuthComponent;
-	private final PostDataRepository postDataRepository;
+	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final NotionBlockConverter notionBlockConverter;
 	private final SyncedPagesDataRepository syncedPagesDataRepository;
@@ -65,7 +65,7 @@ public class NotionService {
 	//
 	// 	User user = userRepository.findById(userId)
 	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-	// 	Post savePost = postDataRepository.save(Post.builder()
+	// 	Post savePost = postRepository.save(Post.builder()
 	// 		.user(user)
 	// 		.title(title)
 	// 		.content(content)
@@ -137,7 +137,7 @@ public class NotionService {
 		for (String pageId : pageIds) {
 			String title = getTitleTemp(pageId, accessCode);
 			String content = getContentTemp(pageId, accessCode);
-			Post post = postDataRepository.save(Post.builder()
+			Post post = postRepository.save(Post.builder()
 				.user(user)
 				.title(title)
 				.content(content)

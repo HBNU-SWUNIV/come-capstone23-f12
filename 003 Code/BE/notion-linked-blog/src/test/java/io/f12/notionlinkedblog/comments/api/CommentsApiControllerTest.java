@@ -27,7 +27,7 @@ import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.EditCommentDto;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @AutoConfigureMockMvc
@@ -41,7 +41,7 @@ class CommentsApiControllerTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private PostDataRepository postDataRepository;
+	private PostRepository postRepository;
 	@Autowired
 	private CommentsDataRepository commentsDataRepository;
 	@Autowired
@@ -59,7 +59,7 @@ class CommentsApiControllerTest {
 			.password(passwordEncoder.encode("1234"))
 			.build()
 		);
-		testPost = postDataRepository.save(Post.builder()
+		testPost = postRepository.save(Post.builder()
 			.user(testUser)
 			.title("testTitle")
 			.isPublic(true)
@@ -80,7 +80,7 @@ class CommentsApiControllerTest {
 	@AfterEach
 	void clear() {
 		commentsDataRepository.deleteAll();
-		postDataRepository.deleteAll();
+		postRepository.deleteAll();
 		userRepository.deleteAll();
 	}
 

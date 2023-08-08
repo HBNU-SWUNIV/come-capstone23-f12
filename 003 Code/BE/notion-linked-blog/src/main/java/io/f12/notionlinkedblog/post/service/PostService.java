@@ -30,7 +30,8 @@ import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostService {
 
-	private final PostDataRepository postDataRepository;
+	private final PostRepository postRepository;
+	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
 	private final LikeDataRepository likeDataRepository;
 	private final int pageSize = 20;
@@ -79,7 +81,7 @@ public class PostService {
 			.isPublic(isPublic)
 			.build();
 
-		Post savedPost = postDataRepository.save(post);
+		Post savedPost = postRepository.save(post);
 
 		return PostSearchDto.builder()
 			.isLiked(false)
@@ -99,8 +101,8 @@ public class PostService {
 	public PostSearchResponseDto getPostsByTitle(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
-		List<Long> ids = postDataRepository.findPostIdsByTitle(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<Long> ids = querydslPostRepository.findPostIdsByTitle(dto.getParam(), paging);
+		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -110,8 +112,8 @@ public class PostService {
 	public PostSearchResponseDto getPostByContent(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
-		List<Long> ids = postDataRepository.findPostIdsByContent(dto.getParam(), paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<Long> ids = querydslPostRepository.findPostIdsByContent(dto.getParam(), paging);
+		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 
@@ -119,7 +121,7 @@ public class PostService {
 	}
 
 	public PostSearchDto getPostDtoById(Long postId, Long userId) { //DONE
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		post.addViewCount();
 
@@ -160,8 +162,8 @@ public class PostService {
 
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) { //
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
-		List<Long> ids = postDataRepository.findLatestPostIdsByCreatedAtDesc(paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
+		List<Long> ids = querydslPostRepository.findLatestPostIdsByCreatedAtDesc(paging);
+		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
@@ -169,26 +171,26 @@ public class PostService {
 
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
-		List<Long> ids = postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging);
-		List<Post> posts = postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
+		List<Long> ids = querydslPostRepository.findPopularityPostIdsByViewCountAtDesc(paging);
+		List<Post> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
 	public void removePost(Long postId, Long userId) {
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(post.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
-		postDataRepository.deleteById(postId);
+		postRepository.deleteById(postId);
 
 	}
 
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
 	public PostSearchDto editPostContent(Long postId, Long userId, PostEditDto postEditDto) {
-		Post changedPost = postDataRepository.findById(postId)
+		Post changedPost = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(changedPost.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
@@ -211,7 +213,7 @@ public class PostService {
 	}
 
 	public void likeStatusChange(Long postId, Long userId) {
-		Post post = postDataRepository.findById(postId)
+		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -229,7 +231,7 @@ public class PostService {
 	}
 
 	public File readImageFile(String imageName) throws MalformedURLException {
-		String thumbnailPathWithName = postDataRepository.findThumbnailPathWithName(imageName);
+		String thumbnailPathWithName = postRepository.findThumbnailPathWithName(imageName);
 		if (thumbnailPathWithName == null) {
 			throw new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.IMAGE_NOT_EXIST);
 		}

@@ -17,7 +17,7 @@ import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @DataJpaTest
@@ -27,7 +27,7 @@ class CommentsDataRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private PostDataRepository postDataRepository;
+	private PostRepository postRepository;
 	@Autowired
 	private CommentsDataRepository commentsDataRepository;
 
@@ -50,7 +50,7 @@ class CommentsDataRepositoryTest {
 			.content("testContent")
 			.isPublic(true)
 			.build();
-		savedPost = postDataRepository.save(post);
+		savedPost = postRepository.save(post);
 		Comments comments = Comments.builder()
 			.user(savedUser)
 			.post(savedPost)
@@ -64,7 +64,7 @@ class CommentsDataRepositoryTest {
 	@AfterEach
 	void clear() {
 		commentsDataRepository.deleteAll();
-		postDataRepository.deleteAll();
+		postRepository.deleteAll();
 		userRepository.deleteAll();
 	}
 

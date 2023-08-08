@@ -23,6 +23,7 @@ import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesDataRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +34,8 @@ class SeriesServiceTest {
 
 	@Mock
 	PostDataRepository postDataRepository;
+	@Mock
+	QuerydslPostRepository querydslPostRepository;
 
 	@Mock
 	SeriesDataRepository seriesDataRepository;
@@ -177,9 +180,9 @@ class SeriesServiceTest {
 
 				PageRequest pageRequest = PageRequest.of(0, 10);
 				//mock
-				given(postDataRepository.findIdsBySeriesIdAsc(fakeId, pageRequest))
+				given(querydslPostRepository.findIdsBySeriesIdAsc(fakeId, pageRequest))
 					.willReturn(ids);
-				given(postDataRepository.findByIdsJoinWithSeries(ids))
+				given(querydslPostRepository.findByIdsJoinWithSeries(ids))
 					.willReturn(posts);
 				//when
 				SeriesDetailSearchDto seriesDetailSearchDto
@@ -259,9 +262,9 @@ class SeriesServiceTest {
 
 				PageRequest pageRequest = PageRequest.of(0, 10);
 				//mock
-				given(postDataRepository.findIdsBySeriesIdDesc(fakeId, pageRequest))
+				given(querydslPostRepository.findIdsBySeriesIdDesc(fakeId, pageRequest))
 					.willReturn(ids);
-				given(postDataRepository.findByIdsJoinWithSeries(ids))
+				given(querydslPostRepository.findByIdsJoinWithSeries(ids))
 					.willReturn(posts);
 				//when
 				SeriesDetailSearchDto seriesDetailSearchDto

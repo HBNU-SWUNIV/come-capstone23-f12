@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.post.infrastructure;
+package io.f12.notionlinkedblog.post.service.port;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import io.f12.notionlinkedblog.domain.post.Post;
 
-public interface PostRepositoryCustom {
+public interface QuerydslPostRepository {
 	List<Long> findPostIdsByTitle(String title, Pageable pageable);
 
 	List<Long> findPostIdsByContent(String content, Pageable pageable);

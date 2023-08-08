@@ -34,7 +34,8 @@ import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.LikeDataRepository;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +47,10 @@ class PostServiceTest {
 	PostService postService;
 
 	@Mock
-	PostDataRepository postDataRepository;
+	PostRepository postRepository;
+
+	@Mock
+	QuerydslPostRepository querydslPostRepository;
 
 	@Mock
 	UserRepository userRepository;
@@ -96,7 +100,7 @@ class PostServiceTest {
 				MultipartFile mockMultipartFile = new MockMultipartFile(file.getName(), new FileInputStream(file));
 				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postDataRepository.save(any(Post.class)))
+				given(postRepository.save(any(Post.class)))
 					.willReturn(returnPost);
 
 				//when
@@ -133,7 +137,7 @@ class PostServiceTest {
 				//Mock
 				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
-				given(postDataRepository.save(any(Post.class)))
+				given(postRepository.save(any(Post.class)))
 					.willReturn(returnPost);
 
 				//when
@@ -228,9 +232,9 @@ class PostServiceTest {
 					.build();
 				PageRequest paging = PageRequest.of(requestDto.getPageNumber(), 20);
 				//Mock
-				given(postDataRepository.findPostIdsByTitle(requestDto.getParam(), paging))
+				given(querydslPostRepository.findPostIdsByTitle(requestDto.getParam(), paging))
 					.willReturn(ids);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
+				given(querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
 					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostsByTitle(requestDto);
@@ -297,9 +301,9 @@ class PostServiceTest {
 				PageRequest paging = PageRequest.of(requestDto.getPageNumber(), 20);
 
 				//Mock
-				given(postDataRepository.findPostIdsByContent(requestDto.getParam(), paging))
+				given(querydslPostRepository.findPostIdsByContent(requestDto.getParam(), paging))
 					.willReturn(ids);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
+				given(querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(ids))
 					.willReturn(postList);
 				//when
 				PostSearchResponseDto posts = postService.getPostByContent(requestDto);
@@ -352,7 +356,7 @@ class PostServiceTest {
 						.userID(1L)
 						.build();
 					//Mock
-					given(postDataRepository.findById(fakeId))
+					given(postRepository.findById(fakeId))
 						.willReturn(Optional.ofNullable(testPost));
 					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
 						.willReturn(Optional.ofNullable(likeSearchDto));
@@ -397,7 +401,7 @@ class PostServiceTest {
 						.userID(1L)
 						.build();
 					//Mock
-					given(postDataRepository.findById(fakeId))
+					given(postRepository.findById(fakeId))
 						.willReturn(Optional.ofNullable(testPost));
 					given(likeDataRepository.findByUserIdAndPostId(fakeId, fakeId))
 						.willReturn(Optional.empty());
@@ -422,7 +426,7 @@ class PostServiceTest {
 					Long fakeId = 1L;
 
 					//Mock
-					given(postDataRepository.findById(fakeId))
+					given(postRepository.findById(fakeId))
 						.willReturn(Optional.empty());
 					//when
 					//then
@@ -458,7 +462,7 @@ class PostServiceTest {
 						.viewCount(10L)
 						.build();
 					//Mock
-					given(postDataRepository.findById(fakeId))
+					given(postRepository.findById(fakeId))
 						.willReturn(Optional.ofNullable(testPost));
 					//when
 					PostSearchDto postDto = postService.getPostDtoById(fakeId, null);
@@ -517,9 +521,9 @@ class PostServiceTest {
 				postList.add(postB);
 
 				//Mock
-				given(postDataRepository.findLatestPostIdsByCreatedAtDesc(paging))
+				given(querydslPostRepository.findLatestPostIdsByCreatedAtDesc(paging))
 					.willReturn(postIds);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(postIds))
+				given(querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(postIds))
 					.willReturn(postList);
 
 				//when
@@ -575,9 +579,9 @@ class PostServiceTest {
 				postList.add(postB);
 
 				//Mock
-				given(postDataRepository.findPopularityPostIdsByViewCountAtDesc(paging))
+				given(querydslPostRepository.findPopularityPostIdsByViewCountAtDesc(paging))
 					.willReturn(postIds);
-				given(postDataRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(postIds))
+				given(querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(postIds))
 					.willReturn(postList);
 
 				//when
@@ -615,7 +619,7 @@ class PostServiceTest {
 				.user(user)
 				.build();
 			//Mock
-			given(postDataRepository.findById(fakePostId))
+			given(postRepository.findById(fakePostId))
 				.willReturn(Optional.ofNullable(returnPost));
 			//when
 			postService.removePost(fakePostId, fakeUserId);
@@ -629,7 +633,7 @@ class PostServiceTest {
 			Long fakePostId = 1L;
 
 			//Mock
-			given(postDataRepository.findById(fakePostId))
+			given(postRepository.findById(fakePostId))
 				.willReturn(Optional.empty());
 			//when
 			//then
@@ -677,7 +681,7 @@ class PostServiceTest {
 					.build();
 
 				//Mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
 				postService.editPostContent(fakePostId, fakeUserId, editDto);
@@ -702,7 +706,7 @@ class PostServiceTest {
 					.content(editContent)
 					.build();
 				//Mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.empty());
 				//when
 				//then
@@ -742,7 +746,7 @@ class PostServiceTest {
 					.build();
 
 				//Mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
 				//then
@@ -782,7 +786,7 @@ class PostServiceTest {
 					.content("testContent")
 					.build();
 				//mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
 				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
@@ -818,7 +822,7 @@ class PostServiceTest {
 					.likeId(1L)
 					.build();
 				//mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
 				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.of(user));
@@ -850,7 +854,7 @@ class PostServiceTest {
 					.content("testContent")
 					.build();
 				//mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.of(post));
 				given(userRepository.findById(fakeUserId))
 					.willReturn(Optional.empty());
@@ -881,7 +885,7 @@ class PostServiceTest {
 					.content("testContent")
 					.build();
 				//mock
-				given(postDataRepository.findById(fakePostId))
+				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.empty());
 				//when
 				assertThatThrownBy(() -> {
@@ -913,7 +917,7 @@ class PostServiceTest {
 					.password("1234")
 					.build();
 				//mock
-				given(postDataRepository.findThumbnailPathWithName(imageName))
+				given(postRepository.findThumbnailPathWithName(imageName))
 					.willReturn("testImage.png");
 				//when
 				File file = postService.readImageFile(imageName);

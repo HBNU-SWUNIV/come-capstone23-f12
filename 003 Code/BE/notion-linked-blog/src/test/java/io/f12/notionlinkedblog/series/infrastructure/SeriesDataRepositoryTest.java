@@ -21,7 +21,7 @@ import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.post.Post;
 import io.f12.notionlinkedblog.domain.series.Series;
 import io.f12.notionlinkedblog.domain.user.User;
-import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 class SeriesDataRepositoryTest {
 
 	@Autowired
-	private PostDataRepository postDataRepository;
+	private PostRepository postRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -87,7 +87,7 @@ class SeriesDataRepositoryTest {
 			.isPublic(true)
 			.createdAt(LocalDateTime.of(2023, 1, 1, 0, 0))
 			.build();
-		postA = postDataRepository.save(savedPostA);
+		postA = postRepository.save(savedPostA);
 		Post savedPostB = Post.builder()
 			.id(2L)
 			.title(titleB)
@@ -99,7 +99,7 @@ class SeriesDataRepositoryTest {
 			.isPublic(true)
 			.createdAt(LocalDateTime.of(2023, 2, 1, 0, 0))
 			.build();
-		postB = postDataRepository.save(savedPostB);
+		postB = postRepository.save(savedPostB);
 		Post savedPostC = Post.builder()
 			.id(3L)
 			.title(titleC)
@@ -111,7 +111,7 @@ class SeriesDataRepositoryTest {
 			.isPublic(true)
 			.createdAt(LocalDateTime.of(2023, 3, 1, 0, 0))
 			.build();
-		postC = postDataRepository.save(savedPostC);
+		postC = postRepository.save(savedPostC);
 
 		List<Post> postList = new ArrayList<>();
 		postList.add(postA);
@@ -128,7 +128,7 @@ class SeriesDataRepositoryTest {
 
 	@AfterEach
 	void clear() {
-		postDataRepository.deleteAll();
+		postRepository.deleteAll();
 		seriesRepository.deleteAll();
 		userRepository.deleteAll();
 	}

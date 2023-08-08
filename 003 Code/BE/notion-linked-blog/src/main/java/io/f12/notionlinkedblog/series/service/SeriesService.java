@@ -25,6 +25,7 @@ import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostDataRepository;
+import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class SeriesService {
 
 	private final SeriesRepository seriesRepository;
 	private final PostDataRepository postDataRepository;
+	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
 
 	private static final int pagingSize = 10;
@@ -100,8 +102,8 @@ public class SeriesService {
 	public SeriesDetailSearchDto getDetailSeriesInfoOrderByDesc(Long seriesId, Integer page) {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
-		List<Long> postIds = postDataRepository.findIdsBySeriesIdDesc(seriesId, pageRequest);
-		List<Post> posts = postDataRepository.findByIdsJoinWithSeries(postIds);
+		List<Long> postIds = querydslPostRepository.findIdsBySeriesIdDesc(seriesId, pageRequest);
+		List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
 		Series series = posts.get(0).getSeries();
 
 		List<PostForDetailSeries> postDtos = posts.stream().map(p -> {
@@ -128,8 +130,8 @@ public class SeriesService {
 	public SeriesDetailSearchDto getDetailSeriesInfoOrderByAsc(Long seriesId, Integer page) {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
-		List<Long> postIds = postDataRepository.findIdsBySeriesIdAsc(seriesId, pageRequest);
-		List<Post> posts = postDataRepository.findByIdsJoinWithSeries(postIds);
+		List<Long> postIds = querydslPostRepository.findIdsBySeriesIdAsc(seriesId, pageRequest);
+		List<Post> posts = querydslPostRepository.findByIdsJoinWithSeries(postIds);
 		Series series = posts.get(0).getSeries();
 
 		List<PostForDetailSeries> postDtos = posts.stream().map(p -> {
