@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.post.infrastructure;
+package io.f12.notionlinkedblog.like.infrastructure;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import io.f12.notionlinkedblog.domain.likes.LikeEntity;
 import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
-import io.f12.notionlinkedblog.post.service.port.LikeRepository;
+import io.f12.notionlinkedblog.like.service.port.LikeRepository;
 
 @Repository
 public interface LikeDataRepository extends JpaRepository<LikeEntity, Long>, LikeRepository {

@@ -19,7 +19,7 @@ import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.likes.LikeEntity;
 import io.f12.notionlinkedblog.domain.post.PostEntity;
 import io.f12.notionlinkedblog.domain.user.UserEntity;
-import io.f12.notionlinkedblog.post.service.port.LikeRepository;
+import io.f12.notionlinkedblog.like.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 

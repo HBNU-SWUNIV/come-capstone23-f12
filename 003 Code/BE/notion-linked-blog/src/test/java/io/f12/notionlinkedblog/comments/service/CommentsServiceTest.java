@@ -16,11 +16,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
+import io.f12.notionlinkedblog.comments.domain.dto.response.CommentEditDto;
+import io.f12.notionlinkedblog.comments.domain.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
-import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
-import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
-import io.f12.notionlinkedblog.domain.comments.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.domain.post.PostEntity;
 import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
