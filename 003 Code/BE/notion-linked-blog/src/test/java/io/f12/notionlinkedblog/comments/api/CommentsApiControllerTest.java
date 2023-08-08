@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
+import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
@@ -43,7 +43,7 @@ class CommentsApiControllerTest {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private CommentsDataRepository commentsDataRepository;
+	private CommentsRepository commentsRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -64,7 +64,7 @@ class CommentsApiControllerTest {
 			.title("testTitle")
 			.isPublic(true)
 			.content("testContent").build());
-		testComment = commentsDataRepository.save(Comments.builder()
+		testComment = commentsRepository.save(Comments.builder()
 			.user(testUser)
 			.post(testPost)
 			.depth(0)
@@ -79,7 +79,7 @@ class CommentsApiControllerTest {
 
 	@AfterEach
 	void clear() {
-		commentsDataRepository.deleteAll();
+		commentsRepository.deleteAll();
 		postRepository.deleteAll();
 		userRepository.deleteAll();
 	}

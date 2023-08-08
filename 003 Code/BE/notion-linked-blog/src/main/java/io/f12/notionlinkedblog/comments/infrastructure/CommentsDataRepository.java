@@ -8,15 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 
 @Repository
-public interface CommentsDataRepository extends JpaRepository<Comments, Long> {
+public interface CommentsDataRepository extends JpaRepository<Comments, Long>, CommentsRepository {
+
+	@Override
 	@Query("SELECT c "
 		+ "FROM Comments c join fetch c.post join fetch c.user "
 		+ "WHERE c.post.id = :postId")
 	List<Comments> findByPostId(@Param("postId") Long postId);
 
+	@Override
 	@Query("SELECT c "
 		+ "FROM Comments c left join fetch c.user "
 		+ "WHERE c.id = :commentsId")

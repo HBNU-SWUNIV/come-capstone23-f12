@@ -12,7 +12,7 @@ import java.util.Queue;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
+import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
@@ -29,13 +29,13 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class CommentsService {
-	private final CommentsDataRepository commentsDataRepository;
+	private final CommentsRepository commentsRepository;
 
 	private final PostDataRepository postDataRepository;
 	private final UserRepository userRepository;
 
 	public List<ParentsCommentDto> getCommentsByPostId(Long postId) {
-		List<Comments> comments = commentsDataRepository.findByPostId(postId);
+		List<Comments> comments = commentsRepository.findByPostId(postId);
 		HashMap<Long, ParentsCommentDto> parentsMap = new HashMap<>();
 		Queue<ChildCommentDto> childQueue = new LinkedList<>();
 		convertCommentsToDto(comments, parentsMap, childQueue);
@@ -50,7 +50,7 @@ public class CommentsService {
 
 		Comments parentComment = null;
 		if (isChild(commentDto)) {
-			parentComment = commentsDataRepository.findById(commentDto.getParentCommentId())
+			parentComment = commentsRepository.findById(commentDto.getParentCommentId())
 				.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		}
 
@@ -62,7 +62,7 @@ public class CommentsService {
 			.parent(parentComment)
 			.build();
 
-		Comments savedComments = commentsDataRepository.save(builtComments);
+		Comments savedComments = commentsRepository.save(builtComments);
 
 		CommentEditDto builtReturnDto = convertCommentsToCommentEditDto(savedComments, user);
 
@@ -74,7 +74,7 @@ public class CommentsService {
 	}
 
 	public CommentEditDto editComment(Long commentId, Long userId, String contents) {
-		Comments comments = commentsDataRepository.findById(commentId)
+		Comments comments = commentsRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		User user = comments.getUser();
 
@@ -84,10 +84,10 @@ public class CommentsService {
 	}
 
 	public void removeComment(Long commentId, Long userId) {
-		Comments comments = commentsDataRepository.findById(commentId)
+		Comments comments = commentsRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException(COMMENT_NOT_EXIST));
 		checkIsAuthor(userId, comments);
-		commentsDataRepository.deleteById(commentId);
+		commentsRepository.deleteById(commentId);
 	}
 
 	// 내부사용 매서드

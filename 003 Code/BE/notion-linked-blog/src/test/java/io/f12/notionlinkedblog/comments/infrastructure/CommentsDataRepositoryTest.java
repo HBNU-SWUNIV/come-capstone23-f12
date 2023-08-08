@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.post.Post;
@@ -29,7 +30,7 @@ class CommentsDataRepositoryTest {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private CommentsDataRepository commentsDataRepository;
+	private CommentsRepository commentsRepository;
 
 	private User savedUser;
 	private Post savedPost;
@@ -57,13 +58,13 @@ class CommentsDataRepositoryTest {
 			.content("testComment")
 			.depth(0)
 			.build();
-		savedComment = commentsDataRepository.save(comments);
+		savedComment = commentsRepository.save(comments);
 
 	}
 
 	@AfterEach
 	void clear() {
-		commentsDataRepository.deleteAll();
+		commentsRepository.deleteAll();
 		postRepository.deleteAll();
 		userRepository.deleteAll();
 	}
@@ -75,7 +76,7 @@ class CommentsDataRepositoryTest {
 		@Test
 		void successCase() {
 			//given
-			Comments testComment2 = commentsDataRepository.save(Comments.builder()
+			Comments testComment2 = commentsRepository.save(Comments.builder()
 				.user(savedUser)
 				.post(savedPost)
 				.content("testComment2")
@@ -83,7 +84,7 @@ class CommentsDataRepositoryTest {
 				.build());
 
 			//when
-			List<Comments> comments = commentsDataRepository.findByPostId(savedPost.getId());
+			List<Comments> comments = commentsRepository.findByPostId(savedPost.getId());
 			Comments comments1 = comments.get(0);
 			Comments comments2 = comments.get(1);
 			//then

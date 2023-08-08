@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import io.f12.notionlinkedblog.comments.infrastructure.CommentsDataRepository;
+import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.domain.comments.Comments;
 import io.f12.notionlinkedblog.domain.comments.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.domain.comments.dto.response.CommentEditDto;
@@ -31,7 +31,7 @@ class CommentsServiceTest {
 	@InjectMocks
 	CommentsService commentsService;
 	@Mock
-	CommentsDataRepository commentsDataRepository;
+	CommentsRepository commentsRepository;
 	@Mock
 	PostDataRepository postDataRepository;
 	@Mock
@@ -82,7 +82,7 @@ class CommentsServiceTest {
 				returnComments.add(parent);
 				returnComments.add(child);
 				//Mock
-				given(commentsDataRepository.findByPostId(fakePostId))
+				given(commentsRepository.findByPostId(fakePostId))
 					.willReturn(returnComments);
 				//when
 				List<ParentsCommentDto> commentsDto = commentsService.getCommentsByPostId(fakePostId);
@@ -107,7 +107,7 @@ class CommentsServiceTest {
 					.password("test123")
 					.build();
 				//Mock
-				given(commentsDataRepository.findByPostId(fakePostId))
+				given(commentsRepository.findByPostId(fakePostId))
 					.willReturn(returnComments);
 				//when
 				List<ParentsCommentDto> commentsDto = commentsService.getCommentsByPostId(fakePostId);
@@ -153,7 +153,7 @@ class CommentsServiceTest {
 				.willReturn(Optional.ofNullable(post));
 			given(userRepository.findById(fakeUserId))
 				.willReturn(Optional.ofNullable(user));
-			given(commentsDataRepository.save(any(Comments.class)))
+			given(commentsRepository.save(any(Comments.class)))
 				.willReturn(comments);
 			//when
 			CommentEditDto commentDto = commentsService.createComments(fakePostId, fakeUserId, createCommentDto);
@@ -192,7 +192,7 @@ class CommentsServiceTest {
 				.depth(0)
 				.post(post)
 				.build();
-			given(commentsDataRepository.findById(fakeCommentId))
+			given(commentsRepository.findById(fakeCommentId))
 				.willReturn(Optional.ofNullable(comments));
 			//when
 			CommentEditDto editedComment = commentsService.editComment(fakeCommentId, fakeUserId, editContent);
@@ -232,7 +232,7 @@ class CommentsServiceTest {
 				.post(post)
 				.build();
 			//Mock
-			given(commentsDataRepository.findById(fakeCommentId))
+			given(commentsRepository.findById(fakeCommentId))
 				.willReturn(Optional.ofNullable(comments));
 			//when
 			commentsService.removeComment(fakeCommentId, fakeUserId);
