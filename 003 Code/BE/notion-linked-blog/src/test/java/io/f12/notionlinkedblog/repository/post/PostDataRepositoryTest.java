@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,8 +38,6 @@ class PostDataRepositoryTest {
 	private UserDataRepository userDataRepository;
 	@Autowired
 	private SeriesDataRepository seriesDataRepository;
-	@Autowired
-	private EntityManager entityManager;
 
 	private User user;
 	private Post post;
@@ -82,11 +78,9 @@ class PostDataRepositoryTest {
 
 	@AfterEach
 	void clear() {
-		seriesDataRepository.deleteAll();
 		postDataRepository.deleteAll();
+		seriesDataRepository.deleteAll();
 		userDataRepository.deleteAll();
-		entityManager.createNativeQuery("ALTER SEQUENCE user_seq RESTART WITH 1").executeUpdate();
-		entityManager.createNativeQuery("ALTER SEQUENCE post_seq RESTART WITH 1").executeUpdate();
 	}
 
 	@DisplayName("포스트 조회")
