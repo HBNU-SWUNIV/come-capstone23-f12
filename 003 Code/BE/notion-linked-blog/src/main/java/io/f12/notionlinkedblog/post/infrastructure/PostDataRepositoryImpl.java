@@ -1,9 +1,9 @@
 package io.f12.notionlinkedblog.post.infrastructure;
 
-import static io.f12.notionlinkedblog.domain.likes.QLikeEntity.*;
-import static io.f12.notionlinkedblog.domain.post.QPostEntity.*;
-import static io.f12.notionlinkedblog.domain.series.QSeriesEntity.*;
-import static io.f12.notionlinkedblog.domain.user.QUserEntity.*;
+import static io.f12.notionlinkedblog.like.infrastructure.QLikeEntity.*;
+import static io.f12.notionlinkedblog.post.infrastructure.QPostEntity.*;
+import static io.f12.notionlinkedblog.series.infrastructure.QSeriesEntity.*;
+import static io.f12.notionlinkedblog.user.infrastructure.QUserEntity.*;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import io.f12.notionlinkedblog.entity.post.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import lombok.RequiredArgsConstructor;
 

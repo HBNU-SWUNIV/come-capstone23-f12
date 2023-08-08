@@ -22,12 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.EditCommentDto;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
-import io.f12.notionlinkedblog.entity.post.PostEntity;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @AutoConfigureMockMvc

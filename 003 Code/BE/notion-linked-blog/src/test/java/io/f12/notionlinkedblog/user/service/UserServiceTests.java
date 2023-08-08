@@ -25,12 +25,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.entity.dummy.DummyObject;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.response.UserSearchDto;
 import io.f12.notionlinkedblog.user.domain.dto.signup.UserSignupRequestDto;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ExtendWith(MockitoExtension.class)

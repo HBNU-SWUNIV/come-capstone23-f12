@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.comments;
+package io.f12.notionlinkedblog.comments.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.util.StringUtils;
 
-import io.f12.notionlinkedblog.entity.PostTimeEntity;
-import io.f12.notionlinkedblog.entity.post.PostEntity;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostTimeEntity;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

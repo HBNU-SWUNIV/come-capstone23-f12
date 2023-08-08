@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.series;
+package io.f12.notionlinkedblog.series.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.entity.post.PostEntity;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

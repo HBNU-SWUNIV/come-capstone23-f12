@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.likes;
+package io.f12.notionlinkedblog.like.infrastructure;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +11,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.entity.post.PostEntity;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

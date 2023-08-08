@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.user;
+package io.f12.notionlinkedblog.user.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import io.f12.notionlinkedblog.entity.BaseTimeEntity;
-import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
-import io.f12.notionlinkedblog.entity.likes.LikeEntity;
-import io.f12.notionlinkedblog.entity.notion.SyncedPagesEntity;
-import io.f12.notionlinkedblog.entity.oauth.NotionOauthEntity;
-import io.f12.notionlinkedblog.entity.post.PostEntity;
-import io.f12.notionlinkedblog.entity.series.SeriesEntity;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
+import io.f12.notionlinkedblog.common.infrastructure.BaseTimeEntity;
+import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
+import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
+import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;

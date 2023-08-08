@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.common;
+package io.f12.notionlinkedblog.common.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

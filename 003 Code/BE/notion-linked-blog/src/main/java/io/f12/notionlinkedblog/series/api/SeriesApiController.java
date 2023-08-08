@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.entity.common.CommonErrorResponse;
+import io.f12.notionlinkedblog.common.domain.CommonErrorResponse;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.series.domain.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.series.domain.dto.SeriesSimpleSearchDto;

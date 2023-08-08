@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.post;
+package io.f12.notionlinkedblog.post.infrastructure;
 
 import static javax.persistence.FetchType.*;
 
@@ -23,12 +23,11 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.util.StringUtils;
 
-import io.f12.notionlinkedblog.entity.PostTimeEntity;
-import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
-import io.f12.notionlinkedblog.entity.likes.LikeEntity;
-import io.f12.notionlinkedblog.entity.notion.SyncedPagesEntity;
-import io.f12.notionlinkedblog.entity.series.SeriesEntity;
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
+import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
+import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

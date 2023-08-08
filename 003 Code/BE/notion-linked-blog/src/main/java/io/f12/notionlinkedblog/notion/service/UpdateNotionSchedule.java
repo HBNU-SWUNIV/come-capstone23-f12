@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
-import io.f12.notionlinkedblog.entity.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import lombok.RequiredArgsConstructor;
 

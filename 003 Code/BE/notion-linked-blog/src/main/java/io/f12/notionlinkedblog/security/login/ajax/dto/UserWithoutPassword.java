@@ -1,6 +1,6 @@
 package io.f12.notionlinkedblog.security.login.ajax.dto;
 
-import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

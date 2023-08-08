@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
-import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
 
 @Repository
 public interface CommentsDataRepository extends JpaRepository<CommentsEntity, Long>, CommentsRepository {

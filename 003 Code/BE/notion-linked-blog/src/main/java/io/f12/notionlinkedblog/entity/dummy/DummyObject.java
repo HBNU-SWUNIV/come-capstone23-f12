@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.entity.dummy;
 
-import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 
 public class DummyObject {
 

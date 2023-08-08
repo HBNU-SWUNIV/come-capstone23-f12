@@ -25,7 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.util.ReflectionUtils;
 
-import io.f12.notionlinkedblog.entity.common.CommonErrorResponse;
+import io.f12.notionlinkedblog.common.domain.CommonErrorResponse;
 import io.f12.notionlinkedblog.security.common.dto.AuthenticationFailureDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.security.login.ajax.filter.AjaxEmailPasswordAuthenticationFilter;

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
+import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

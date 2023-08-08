@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import lombok.RequiredArgsConstructor;
 
