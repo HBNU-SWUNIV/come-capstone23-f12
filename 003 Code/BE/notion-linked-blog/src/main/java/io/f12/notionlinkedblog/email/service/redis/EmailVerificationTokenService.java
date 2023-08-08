@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
-import io.f12.notionlinkedblog.email.infrastructure.redis.EmailVerificationTokenRepository;
+import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class EmailVerificationTokenService {
 
-	private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+	private final RedisEmailVerificationTokenRepository emailVerificationTokenRepository;
 
 	public EmailVerificationToken findById(String id) {
 		return emailVerificationTokenRepository.findById(id)

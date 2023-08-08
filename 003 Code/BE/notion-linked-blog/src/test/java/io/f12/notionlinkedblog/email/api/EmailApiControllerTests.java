@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import io.f12.notionlinkedblog.domain.user.User;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
-import io.f12.notionlinkedblog.email.infrastructure.redis.EmailVerificationTokenRepository;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
+import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ class EmailApiControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
-	private EmailVerificationTokenRepository emailVerificationTokenRepository;
+	private RedisEmailVerificationTokenRepository emailVerificationTokenRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired

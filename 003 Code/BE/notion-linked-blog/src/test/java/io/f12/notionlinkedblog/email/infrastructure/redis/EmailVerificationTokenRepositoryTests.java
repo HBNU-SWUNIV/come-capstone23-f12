@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import io.f12.notionlinkedblog.common.config.EmbeddedRedisConfig;
 import io.f12.notionlinkedblog.common.config.RedisConfig;
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
+import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
 
 @ActiveProfiles("test")
@@ -27,7 +28,7 @@ class EmailVerificationTokenRepositoryTests {
 	@Autowired
 	private SecureRandomService secureRandomService;
 	@Autowired
-	private EmailVerificationTokenRepository tokenRepository;
+	private RedisEmailVerificationTokenRepository tokenRepository;
 
 	@DisplayName("이메일 인증을 위한 토큰 생성")
 	@Test
