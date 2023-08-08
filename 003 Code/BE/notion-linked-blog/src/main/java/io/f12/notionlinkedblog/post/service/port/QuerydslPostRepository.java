@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
 
 public interface QuerydslPostRepository {
 	List<Long> findPostIdsByTitle(String title, Pageable pageable);

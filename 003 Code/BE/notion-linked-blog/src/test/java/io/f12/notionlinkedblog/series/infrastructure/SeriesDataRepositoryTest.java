@@ -18,9 +18,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.series.SeriesEntity;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.series.SeriesEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;

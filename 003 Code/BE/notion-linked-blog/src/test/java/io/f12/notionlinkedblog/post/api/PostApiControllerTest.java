@@ -32,8 +32,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;

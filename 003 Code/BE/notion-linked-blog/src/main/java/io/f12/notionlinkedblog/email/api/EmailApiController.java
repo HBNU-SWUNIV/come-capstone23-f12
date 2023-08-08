@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.f12.notionlinkedblog.domain.user.UserEntity;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import io.f12.notionlinkedblog.web.argumentresolver.email.Email;
 import io.swagger.v3.oas.annotations.Operation;

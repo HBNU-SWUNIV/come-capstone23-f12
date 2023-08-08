@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.entity.notion.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 
 public interface SyncedPagesDataRepository extends JpaRepository<SyncedPagesEntity, Long>, SyncedPagesRepository {

@@ -2,8 +2,8 @@ package io.f12.notionlinkedblog.like.service.port;
 
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.likes.LikeEntity;
-import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
+import io.f12.notionlinkedblog.entity.likes.LikeEntity;
+import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 
 public interface LikeRepository {
 

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 
 @ActiveProfiles("test")

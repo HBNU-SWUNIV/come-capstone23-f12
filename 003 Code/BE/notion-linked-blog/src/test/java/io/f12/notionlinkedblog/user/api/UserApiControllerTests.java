@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;

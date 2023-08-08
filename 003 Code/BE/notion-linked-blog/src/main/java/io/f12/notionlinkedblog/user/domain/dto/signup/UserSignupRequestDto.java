@@ -3,7 +3,7 @@ package io.f12.notionlinkedblog.user.domain.dto.signup;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

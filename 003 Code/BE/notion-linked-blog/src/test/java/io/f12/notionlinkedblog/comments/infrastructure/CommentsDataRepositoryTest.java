@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Import;
 
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.config.TestQuerydslConfiguration;
-import io.f12.notionlinkedblog.domain.comments.CommentsEntity;
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.comments.CommentsEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 

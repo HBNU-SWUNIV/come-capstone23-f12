@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
-import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
+import io.f12.notionlinkedblog.entity.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.user.domain.dto.request.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;

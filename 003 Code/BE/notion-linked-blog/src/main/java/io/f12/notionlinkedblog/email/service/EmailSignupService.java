@@ -4,9 +4,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.email.service.port.MailSender;
 import io.f12.notionlinkedblog.email.service.redis.EmailVerificationTokenService;
+import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
 import lombok.RequiredArgsConstructor;
 

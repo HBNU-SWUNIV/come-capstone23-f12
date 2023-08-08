@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.email.service.port;
 
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
+import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
 
 public interface RedisEmailVerificationTokenRepository {
 	Optional<EmailVerificationToken> findById(String id);

@@ -16,7 +16,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
-import io.f12.notionlinkedblog.domain.common.CommonErrorResponse;
+import io.f12.notionlinkedblog.entity.common.CommonErrorResponse;
 import io.f12.notionlinkedblog.user.domain.dto.response.NoUserProfileDto;
 import io.swagger.v3.oas.annotations.Hidden;
 

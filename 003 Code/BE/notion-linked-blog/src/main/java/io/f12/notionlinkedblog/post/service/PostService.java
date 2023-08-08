@@ -21,10 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
-import io.f12.notionlinkedblog.domain.likes.LikeEntity;
-import io.f12.notionlinkedblog.domain.likes.dto.LikeSearchDto;
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.likes.LikeEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.like.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;

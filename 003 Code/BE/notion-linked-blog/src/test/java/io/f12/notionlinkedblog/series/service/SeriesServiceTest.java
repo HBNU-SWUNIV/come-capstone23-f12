@@ -17,12 +17,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.series.SeriesEntity;
-import io.f12.notionlinkedblog.domain.series.dto.SeriesDetailSearchDto;
-import io.f12.notionlinkedblog.domain.series.dto.SeriesSimpleSearchDto;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.series.SeriesEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
+import io.f12.notionlinkedblog.series.domain.dto.SeriesDetailSearchDto;
+import io.f12.notionlinkedblog.series.domain.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 
 @ExtendWith(MockitoExtension.class)

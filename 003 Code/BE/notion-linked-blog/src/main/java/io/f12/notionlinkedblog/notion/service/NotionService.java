@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
-import io.f12.notionlinkedblog.domain.notion.SyncedPagesEntity;
-import io.f12.notionlinkedblog.domain.post.PostEntity;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.notion.SyncedPagesEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;

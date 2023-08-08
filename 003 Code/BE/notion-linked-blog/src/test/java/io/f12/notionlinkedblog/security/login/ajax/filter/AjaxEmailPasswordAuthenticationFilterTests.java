@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
-import io.f12.notionlinkedblog.domain.dummy.DummyObject;
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.dummy.DummyObject;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 import io.f12.notionlinkedblog.user.domain.dto.login.email.EmailLoginUserRequestDto;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 

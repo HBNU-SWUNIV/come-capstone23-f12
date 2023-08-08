@@ -17,7 +17,7 @@ import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
-import io.f12.notionlinkedblog.domain.oauth.dto.notion.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.domain.dto.notion.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.notion.service.NotionService;
 import io.f12.notionlinkedblog.notion.service.UpdateNotionSchedule;

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import io.f12.notionlinkedblog.domain.post.PostEntity;
+import io.f12.notionlinkedblog.entity.post.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
 import lombok.RequiredArgsConstructor;
 

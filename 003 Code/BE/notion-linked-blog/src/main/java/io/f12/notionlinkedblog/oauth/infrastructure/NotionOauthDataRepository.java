@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import io.f12.notionlinkedblog.domain.oauth.NotionOauthEntity;
+import io.f12.notionlinkedblog.entity.oauth.NotionOauthEntity;
 import io.f12.notionlinkedblog.oauth.service.port.NotionOauthRepository;
 
 public interface NotionOauthDataRepository extends JpaRepository<NotionOauthEntity, Long>, NotionOauthRepository {

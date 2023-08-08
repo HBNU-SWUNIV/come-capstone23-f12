@@ -2,7 +2,7 @@ package io.f12.notionlinkedblog.user.service.port;
 
 import java.util.Optional;
 
-import io.f12.notionlinkedblog.domain.user.UserEntity;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
 
 public interface UserRepository {
 	Optional<UserEntity> findUserById(Long id);

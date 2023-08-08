@@ -16,10 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import io.f12.notionlinkedblog.domain.user.UserEntity;
-import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.email.service.EmailSignupService;
 import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
+import io.f12.notionlinkedblog.entity.user.UserEntity;
+import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;

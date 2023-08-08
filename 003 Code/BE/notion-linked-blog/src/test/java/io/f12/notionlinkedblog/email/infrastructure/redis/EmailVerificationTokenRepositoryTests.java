@@ -12,8 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import io.f12.notionlinkedblog.common.config.EmbeddedRedisConfig;
 import io.f12.notionlinkedblog.common.config.RedisConfig;
-import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.email.service.port.RedisEmailVerificationTokenRepository;
+import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.security.service.SecureRandomService;
 
 @ActiveProfiles("test")
