@@ -1,20 +1,20 @@
 package io.f12.notionlinkedblog.email.service;
 
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.domain.verification.EmailVerificationToken;
-import io.f12.notionlinkedblog.security.service.SecureRandomService;
+import io.f12.notionlinkedblog.email.service.port.MailSender;
 import io.f12.notionlinkedblog.email.service.redis.EmailVerificationTokenService;
+import io.f12.notionlinkedblog.security.service.SecureRandomService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class EmailSignupService {
-	private final JavaMailSender javaMailSender;
+	private final MailSender mailSender;
 	private final SecureRandomService secureRandomService;
 	private final EmailVerificationTokenService emailVerificationTokenService;
 
@@ -31,7 +31,7 @@ public class EmailSignupService {
 		EmailVerificationToken verificationToken = EmailVerificationToken.builder().email(email).code(code).build();
 		emailVerificationTokenService.save(verificationToken);
 
-		javaMailSender.send(mail);
+		mailSender.send(mail);
 
 		return verificationToken.getId();
 	}
