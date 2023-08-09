@@ -31,10 +31,13 @@ import io.f12.notionlinkedblog.post.domain.Post;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter

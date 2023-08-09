@@ -28,11 +28,14 @@ import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Entity
 @Table(name = "users", indexes = @Index(name = "user_index", columnList = "email"))

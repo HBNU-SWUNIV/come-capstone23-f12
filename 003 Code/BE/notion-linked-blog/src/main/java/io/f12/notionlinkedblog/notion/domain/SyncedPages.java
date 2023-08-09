@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.notion.domain;
 
+import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.post.domain.Post;
 import io.f12.notionlinkedblog.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -12,4 +13,13 @@ public class SyncedPages {
 	private String pageId;
 	private User user;
 	private Post post;
+
+	public SyncedPagesEntity toEntity() {
+		return SyncedPagesEntity.builder()
+			.id(this.id)
+			.pageId(this.pageId)
+			.user(this.user.toEntity())
+			.post(this.post.toEntity())
+			.build();
+	}
 }

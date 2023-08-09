@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.user.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.f12.notionlinkedblog.comments.domain.Comments;
 import io.f12.notionlinkedblog.like.domain.Like;
@@ -9,6 +10,7 @@ import io.f12.notionlinkedblog.notion.domain.SyncedPages;
 import io.f12.notionlinkedblog.oauth.domain.notion.NotionOauth;
 import io.f12.notionlinkedblog.post.domain.Post;
 import io.f12.notionlinkedblog.series.domain.Series;
+import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -31,4 +33,24 @@ public class User {
 	private String githubLink;
 	private String instagramLink;
 	private LocalDateTime createdAt;
+
+	public UserEntity toEntity() {
+		return UserEntity.builder()
+			.id(this.id)
+			.posts(this.posts.stream().map(Post::toEntity).collect(Collectors.toList()))
+			.comments(this.comments.stream().map(Comments::toEntity).collect(Collectors.toList()))
+			.likes(this.likes.stream().map(Like::toEntity).collect(Collectors.toList()))
+			.series(this.series.stream().map(Series::toEntity).collect(Collectors.toList()))
+			.notionOauth(this.notionOauth.toEntity())
+			.syncedPages(this.syncedPages.stream().map(SyncedPages::toEntity).collect(Collectors.toList()))
+			.username(this.username)
+			.email(this.email)
+			.password(this.password)
+			.profile(this.profile)
+			.introduction(this.introduction)
+			.blogTitle(this.blogTitle)
+			.githubLink(this.githubLink)
+			.instagramLink(this.instagramLink)
+			.build();
+	}
 }
