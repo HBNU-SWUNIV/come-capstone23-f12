@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import io.f12.notionlinkedblog.notion.domain.SyncedPages;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
@@ -40,4 +41,14 @@ public class SyncedPagesEntity {
 	@JoinColumn(name = "post_id")
 	@NotNull
 	private PostEntity post;
+
+	public SyncedPages toModel() {
+		return SyncedPages.builder()
+			.id(this.id)
+			.pageId(this.pageId)
+			.user(this.user.toModel())
+			.post(this.post.toModel())
+			.build();
+	}
+	
 }

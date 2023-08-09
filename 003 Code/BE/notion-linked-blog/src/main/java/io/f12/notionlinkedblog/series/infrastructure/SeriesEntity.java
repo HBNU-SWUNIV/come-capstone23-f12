@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.series.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.series.domain.Series;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,6 +54,16 @@ public class SeriesEntity {
 		this.title = title;
 	}
 
+	public Series toModel() {
+		return Series.builder()
+			.id(this.id)
+			.user(this.user.toModel())
+			.post(this.post.stream().map(PostEntity::toModel).collect(Collectors.toList()))
+			.title(this.title)
+			.build();
+	}
+
+	// have to remove
 	public void addPost(PostEntity post) {
 		this.post.add(post);
 		post.setSeries(this);

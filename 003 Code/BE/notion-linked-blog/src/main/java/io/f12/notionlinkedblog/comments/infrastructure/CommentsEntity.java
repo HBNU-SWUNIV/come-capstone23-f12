@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.comments.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.util.StringUtils;
 
+import io.f12.notionlinkedblog.comments.domain.Comments;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.infrastructure.PostTimeEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
@@ -60,6 +62,18 @@ public class CommentsEntity extends PostTimeEntity {
 	private CommentsEntity parent;
 	@OneToMany(mappedBy = "parent", orphanRemoval = true)
 	private List<CommentsEntity> children = new ArrayList<>();
+
+	public Comments toModel() {
+		return Comments.builder()
+			.id(this.id)
+			.user(this.user.toModel())
+			.post(this.post.toModel())
+			.content(this.content)
+			.depth(this.depth)
+			.parent(this.parent.toModel())
+			.children(this.children.stream().map(CommentsEntity::toModel).collect(Collectors.toList()))
+			.build();
+	}
 
 	public void editComments(String content) {
 		if (StringUtils.hasText(content)) {

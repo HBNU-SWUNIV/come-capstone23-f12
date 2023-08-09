@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.user.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +23,7 @@ import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthEntity;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
+import io.f12.notionlinkedblog.user.domain.User;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBlogTitleEditDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserSocialInfoEditDto;
@@ -89,6 +91,27 @@ public class UserEntity extends BaseTimeEntity {
 		this.instagramLink = instagramLink;
 	}
 
+	public User toModel() {
+		return User.builder()
+			.id(this.id)
+			.posts(this.posts.stream().map(PostEntity::toModel).collect(Collectors.toList()))
+			.comments(this.comments.stream().map(CommentsEntity::toModel).collect(Collectors.toList()))
+			.likes(this.likes.stream().map(LikeEntity::toModel).collect(Collectors.toList()))
+			.series(this.series.stream().map(SeriesEntity::toModel).collect(Collectors.toList()))
+			.notionOauth(this.notionOauth.toModel())
+			.syncedPages(this.syncedPages.stream().map(SyncedPagesEntity::toModel).collect(Collectors.toList()))
+			.username(this.username)
+			.email(this.email)
+			.password(this.password)
+			.profile(this.profile)
+			.introduction(this.introduction)
+			.blogTitle(this.blogTitle)
+			.githubLink(this.githubLink)
+			.instagramLink(this.instagramLink)
+			.build();
+	}
+
+	//have to move
 	public void editProfile(UserBasicInfoEditDto editDto) {
 		this.username = editDto.getUsername();
 		this.introduction = editDto.getIntroduction();
