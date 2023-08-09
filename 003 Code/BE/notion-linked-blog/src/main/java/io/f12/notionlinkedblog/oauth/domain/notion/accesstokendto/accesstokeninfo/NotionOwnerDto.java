@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.dto.notion.accesstokendto.accesstokeninfo;
+package io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.accesstokeninfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

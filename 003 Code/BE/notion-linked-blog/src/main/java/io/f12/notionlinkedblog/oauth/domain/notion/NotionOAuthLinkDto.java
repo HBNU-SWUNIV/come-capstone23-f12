@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.dto.notion;
+package io.f12.notionlinkedblog.oauth.domain.notion;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

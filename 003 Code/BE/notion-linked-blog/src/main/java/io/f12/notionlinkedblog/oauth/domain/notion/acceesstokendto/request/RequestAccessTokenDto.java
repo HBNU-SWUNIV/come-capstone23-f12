@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.dto.notion;
+package io.f12.notionlinkedblog.oauth.domain.notion.acceesstokendto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class ExchangeNotionAccessTokenDto {
-	private String grantType;
+public class RequestAccessTokenDto {
 	private String code;
+	private String grantType;
 	private String redirectUri;
 }
