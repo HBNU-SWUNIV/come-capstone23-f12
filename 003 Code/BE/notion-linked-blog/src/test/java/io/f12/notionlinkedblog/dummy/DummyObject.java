@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.entity.dummy;
+package io.f12.notionlinkedblog.dummy;
 
 import io.f12.notionlinkedblog.entity.verification.EmailVerificationToken;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
