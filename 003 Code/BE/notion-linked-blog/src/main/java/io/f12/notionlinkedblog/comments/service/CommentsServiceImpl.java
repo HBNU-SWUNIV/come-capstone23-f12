@@ -12,6 +12,7 @@ import java.util.Queue;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.f12.notionlinkedblog.comments.api.port.CommentsService;
 import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.response.ChildCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.response.CommentEditDto;
@@ -28,9 +29,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CommentsService {
-	private final CommentsRepository commentsRepository;
+public class CommentsServiceImpl implements CommentsService {
 
+	private final CommentsRepository commentsRepository;
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 

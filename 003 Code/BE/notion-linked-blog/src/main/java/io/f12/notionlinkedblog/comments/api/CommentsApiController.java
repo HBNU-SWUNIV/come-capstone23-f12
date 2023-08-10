@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.f12.notionlinkedblog.comments.api.port.CommentsService;
 import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.EditCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.response.CommentEditDto;
 import io.f12.notionlinkedblog.comments.domain.dto.response.ParentsCommentDto;
-import io.f12.notionlinkedblog.comments.service.CommentsService;
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;

@@ -29,7 +29,7 @@ import io.f12.notionlinkedblog.user.service.port.UserRepository;
 @ExtendWith(MockitoExtension.class)
 class CommentsServiceTest {
 	@InjectMocks
-	CommentsService commentsService;
+	CommentsServiceImpl commentsService;
 	@Mock
 	CommentsRepository commentsRepository;
 	@Mock
