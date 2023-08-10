@@ -32,7 +32,7 @@ import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.service.PostService;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
-import io.f12.notionlinkedblog.series.service.SeriesService;
+import io.f12.notionlinkedblog.series.api.port.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

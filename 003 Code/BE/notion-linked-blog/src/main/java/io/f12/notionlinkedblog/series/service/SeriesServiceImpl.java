@@ -18,6 +18,7 @@ import io.f12.notionlinkedblog.post.domain.dto.SimplePostDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
+import io.f12.notionlinkedblog.series.api.port.SeriesService;
 import io.f12.notionlinkedblog.series.domain.dto.SeriesDetailSearchDto;
 import io.f12.notionlinkedblog.series.domain.dto.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.series.domain.dto.request.SeriesCreateDto;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SeriesService {
+public class SeriesServiceImpl implements SeriesService {
 
 	private final SeriesRepository seriesRepository;
 	private final PostRepository postRepository;
@@ -43,6 +44,7 @@ public class SeriesService {
 
 	private static final int pagingSize = 10;
 
+	@Override
 	public SeriesCreateResponseDto createSeries(SeriesCreateDto createDto) {
 		UserEntity user = userRepository.findById(createDto.getUserId())
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -60,6 +62,7 @@ public class SeriesService {
 			.build();
 	}
 
+	@Override
 	public void removeSeries(SeriesRemoveDto removeDto) {
 		SeriesEntity series = seriesRepository.findSeriesById(removeDto.getSeriesId())
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
@@ -72,6 +75,7 @@ public class SeriesService {
 		seriesRepository.delete(series);
 	}
 
+	@Override
 	public List<UserSeriesDto> getSeriesByUserId(Long userId) {
 		List<SeriesEntity> series = userRepository.findSeriesByUserId(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST))
@@ -85,6 +89,7 @@ public class SeriesService {
 		}).collect(Collectors.toList());
 	}
 
+	@Override
 	public SeriesSimpleSearchDto getSimpleSeriesInfo(Long seriesId) {
 		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException("잘못된 seriesId 입니다."));
@@ -99,6 +104,7 @@ public class SeriesService {
 			.build();
 	}
 
+	@Override
 	public SeriesDetailSearchDto getDetailSeriesInfoOrderByDesc(Long seriesId, Integer page) {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
@@ -127,6 +133,7 @@ public class SeriesService {
 			.build();
 	}
 
+	@Override
 	public SeriesDetailSearchDto getDetailSeriesInfoOrderByAsc(Long seriesId, Integer page) {
 		PageRequest pageRequest = PageRequest.of(page, pagingSize);
 
@@ -156,6 +163,7 @@ public class SeriesService {
 
 	}
 
+	@Override
 	public void addPostTo(Long seriesId, Long postId) {
 		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
@@ -164,6 +172,7 @@ public class SeriesService {
 		series.addPost(post);
 	}
 
+	@Override
 	public void removePostFrom(Long seriesId, Long postId) {
 		SeriesEntity series = seriesRepository.findSeriesById(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
@@ -172,6 +181,7 @@ public class SeriesService {
 		series.removePost(post);
 	}
 
+	@Override
 	public void editTitle(Long id, String title) {
 		SeriesEntity series = seriesRepository.findSeriesById(id)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));

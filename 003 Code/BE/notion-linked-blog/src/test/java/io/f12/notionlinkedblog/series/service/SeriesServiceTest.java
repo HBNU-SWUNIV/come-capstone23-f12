@@ -29,7 +29,7 @@ import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 class SeriesServiceTest {
 
 	@InjectMocks
-	SeriesService seriesService;
+	SeriesServiceImpl seriesService;
 
 	@Mock
 	QuerydslPostRepository querydslPostRepository;
