@@ -26,11 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.domain.CommonErrorResponse;
+import io.f12.notionlinkedblog.post.api.port.PostService;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
-import io.f12.notionlinkedblog.post.service.PostService;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.series.api.port.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;

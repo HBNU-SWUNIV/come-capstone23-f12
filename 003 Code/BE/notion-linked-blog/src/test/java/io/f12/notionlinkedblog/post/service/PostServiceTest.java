@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 class PostServiceTest {
 
 	@InjectMocks
-	PostService postService;
+	PostServiceImpl postService;
 
 	@Mock
 	PostRepository postRepository;

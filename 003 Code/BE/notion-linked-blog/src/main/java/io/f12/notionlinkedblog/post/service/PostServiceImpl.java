@@ -24,6 +24,7 @@ import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.like.service.port.LikeRepository;
+import io.f12.notionlinkedblog.post.api.port.PostService;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
@@ -40,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Service
 @Slf4j
-public class PostService {
+public class PostServiceImpl implements PostService {
 
 	private final PostRepository postRepository;
 	private final QuerydslPostRepository querydslPostRepository;
@@ -50,6 +51,7 @@ public class PostService {
 	@Value("${server.url}")
 	private String serverUrl;
 
+	@Override
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
 		Boolean isPublic, MultipartFile multipartFile) throws IOException {
 		UserEntity findUser = userRepository.findById(userId)
@@ -98,6 +100,7 @@ public class PostService {
 			.build();
 	}
 
+	@Override
 	public PostSearchResponseDto getPostsByTitle(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
@@ -109,6 +112,7 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
+	@Override
 	public PostSearchResponseDto getPostByContent(SearchRequestDto dto) { // DONE
 		PageRequest paging = PageRequest.of(dto.getPageNumber(), pageSize);
 
@@ -120,6 +124,7 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
+	@Override
 	public PostSearchDto getPostDtoById(Long postId, Long userId) { //DONE
 		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
@@ -160,6 +165,7 @@ public class PostService {
 			.build();
 	}
 
+	@Override
 	public PostSearchResponseDto getLatestPosts(Integer pageNumber) { //
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = querydslPostRepository.findLatestPostIdsByCreatedAtDesc(paging);
@@ -169,6 +175,7 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
+	@Override
 	public PostSearchResponseDto getPopularityPosts(Integer pageNumber) {
 		PageRequest paging = PageRequest.of(pageNumber, pageSize);
 		List<Long> ids = querydslPostRepository.findPopularityPostIdsByViewCountAtDesc(paging);
@@ -178,6 +185,7 @@ public class PostService {
 		return buildPostSearchResponseDto(paging, postSearchDtos, ids.size());
 	}
 
+	@Override
 	public void removePost(Long postId, Long userId) {
 		PostEntity post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
