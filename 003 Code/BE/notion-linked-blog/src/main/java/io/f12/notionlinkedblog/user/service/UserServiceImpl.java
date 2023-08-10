@@ -31,11 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Service
 @Slf4j
-public class UserService {
+public class UserServiceImpl implements io.f12.notionlinkedblog.user.api.port.UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
+	@Override
 	public Long signupByEmail(UserSignupRequestDto requestDto) {
 		checkEmailIsDuplicated(requestDto.getEmail());
 
@@ -46,6 +47,7 @@ public class UserService {
 		return savedUser.getId();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public UserSearchDto getUserInfo(Long id) {
 		UserEntity user = userRepository.findUserById(id)
@@ -63,6 +65,7 @@ public class UserService {
 			.build();
 	}
 
+	@Override
 	public void editBasicUserInfo(Long id, UserBasicInfoEditDto editDto) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -70,6 +73,7 @@ public class UserService {
 		findUser.editProfile(editDto);
 	}
 
+	@Override
 	public void editUserBlogTitleInfo(Long id, UserBlogTitleEditDto editDto) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -77,6 +81,7 @@ public class UserService {
 		findUser.editProfile(editDto);
 	}
 
+	@Override
 	public void editUserSocialInfo(Long id, UserSocialInfoEditDto editDto) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -84,6 +89,7 @@ public class UserService {
 		findUser.editProfile(editDto);
 	}
 
+	@Override
 	public ProfileSuccessEditDto editUserProfileImage(Long id, MultipartFile imageFile) throws IOException {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -112,6 +118,7 @@ public class UserService {
 			.build();
 	}
 
+	@Override
 	public void removeUserProfileImage(Long id) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -123,12 +130,14 @@ public class UserService {
 		findUser.setProfile(null);
 	}
 
+	@Override
 	public void removeUser(Long id) {
 		userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		userRepository.deleteById(id);
 	}
 
+	@Override
 	public File readImageFile(Long userId) {
 		UserEntity editedUSer =
 			userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));

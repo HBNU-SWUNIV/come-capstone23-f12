@@ -37,7 +37,7 @@ import io.f12.notionlinkedblog.user.service.port.UserRepository;
 class UserServiceTests extends DummyObject {
 
 	@InjectMocks
-	private UserService userService;
+	private UserServiceImpl userService;
 	@Mock
 	private UserRepository userRepository;
 	@Mock
