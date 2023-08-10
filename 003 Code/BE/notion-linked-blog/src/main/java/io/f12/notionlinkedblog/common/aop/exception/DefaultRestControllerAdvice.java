@@ -17,7 +17,7 @@ import io.f12.notionlinkedblog.common.domain.CommonErrorResponse;
 import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
-import io.f12.notionlinkedblog.user.domain.dto.response.NoUserProfileDto;
+import io.f12.notionlinkedblog.user.api.response.NoUserProfileDto;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @Hidden

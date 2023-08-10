@@ -33,8 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.post.api.port.PostService;
+import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
-import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.domain.dto.ThumbnailReturnDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
@@ -442,6 +442,7 @@ class PostApiControllerTest {
 	@DisplayName("썸네일 실제 조회")
 	@Nested
 	class ThumbnailLookup {
+		//TODO: 변경 필요
 		@DisplayName("성공 케이스")
 		@Test
 		void successCase() throws Exception {

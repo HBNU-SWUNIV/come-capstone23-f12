@@ -16,9 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import io.f12.notionlinkedblog.comments.api.response.CommentEditDto;
+import io.f12.notionlinkedblog.comments.api.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
-import io.f12.notionlinkedblog.comments.domain.dto.response.CommentEditDto;
-import io.f12.notionlinkedblog.comments.domain.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;

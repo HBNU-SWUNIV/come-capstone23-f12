@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.notion;
+package io.f12.notionlinkedblog.series.api.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-public class NotionOAuthLinkDto {
-	String authUrl;
+@Builder
+public class SimplePostDto {
+	private Long postId;
+	private String postTitle;
 }

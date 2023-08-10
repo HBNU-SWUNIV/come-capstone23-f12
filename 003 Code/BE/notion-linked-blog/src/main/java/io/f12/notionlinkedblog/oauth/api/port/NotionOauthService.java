@@ -1,7 +1,7 @@
 package io.f12.notionlinkedblog.oauth.api.port;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
-import io.f12.notionlinkedblog.oauth.domain.notion.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.api.response.NotionOAuthLinkDto;
 
 public interface NotionOauthService {
 

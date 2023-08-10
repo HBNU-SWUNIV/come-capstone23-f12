@@ -1,9 +1,8 @@
-package io.f12.notionlinkedblog.series.domain.dto;
+package io.f12.notionlinkedblog.series.api.response;
 
 import java.util.List;
 
 import io.f12.notionlinkedblog.common.domain.PagingInfo;
-import io.f12.notionlinkedblog.post.domain.dto.PostForDetailSeries;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

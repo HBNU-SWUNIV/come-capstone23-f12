@@ -19,8 +19,8 @@ import org.springframework.data.domain.PageRequest;
 
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
-import io.f12.notionlinkedblog.series.domain.dto.SeriesDetailSearchDto;
-import io.f12.notionlinkedblog.series.domain.dto.SeriesSimpleSearchDto;
+import io.f12.notionlinkedblog.series.api.response.SeriesDetailSearchDto;
+import io.f12.notionlinkedblog.series.api.response.SeriesSimpleSearchDto;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;

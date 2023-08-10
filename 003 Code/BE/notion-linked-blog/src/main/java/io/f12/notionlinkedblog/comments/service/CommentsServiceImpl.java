@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.comments.api.port.CommentsService;
+import io.f12.notionlinkedblog.comments.api.response.ChildCommentDto;
+import io.f12.notionlinkedblog.comments.api.response.CommentEditDto;
+import io.f12.notionlinkedblog.comments.api.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.comments.domain.dto.CreateCommentDto;
-import io.f12.notionlinkedblog.comments.domain.dto.response.ChildCommentDto;
-import io.f12.notionlinkedblog.comments.domain.dto.response.CommentEditDto;
-import io.f12.notionlinkedblog.comments.domain.dto.response.ParentsCommentDto;
 import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
 import io.f12.notionlinkedblog.comments.service.port.CommentsRepository;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;

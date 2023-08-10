@@ -2,12 +2,12 @@ package io.f12.notionlinkedblog.series.api.port;
 
 import java.util.List;
 
-import io.f12.notionlinkedblog.series.domain.dto.SeriesDetailSearchDto;
-import io.f12.notionlinkedblog.series.domain.dto.SeriesSimpleSearchDto;
+import io.f12.notionlinkedblog.series.api.response.SeriesCreateResponseDto;
+import io.f12.notionlinkedblog.series.api.response.SeriesDetailSearchDto;
+import io.f12.notionlinkedblog.series.api.response.SeriesSimpleSearchDto;
+import io.f12.notionlinkedblog.series.api.response.UserSeriesDto;
 import io.f12.notionlinkedblog.series.domain.dto.request.SeriesCreateDto;
 import io.f12.notionlinkedblog.series.domain.dto.request.SeriesRemoveDto;
-import io.f12.notionlinkedblog.series.domain.dto.response.SeriesCreateResponseDto;
-import io.f12.notionlinkedblog.series.domain.dto.response.UserSeriesDto;
 
 public interface SeriesService {
 

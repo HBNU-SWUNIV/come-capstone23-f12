@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.series.domain.dto.response;
+package io.f12.notionlinkedblog.user.api.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class SeriesCreateResponseDto {
-	Long seriesId;
+public class ProfileSuccessEditDto {
+	String requestLink;
 }

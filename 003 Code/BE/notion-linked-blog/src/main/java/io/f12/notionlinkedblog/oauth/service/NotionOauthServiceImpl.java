@@ -25,7 +25,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFail
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.oauth.api.port.NotionOauthService;
-import io.f12.notionlinkedblog.oauth.domain.notion.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.api.response.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthEntity;
 import io.f12.notionlinkedblog.oauth.service.port.NotionOauthRepository;

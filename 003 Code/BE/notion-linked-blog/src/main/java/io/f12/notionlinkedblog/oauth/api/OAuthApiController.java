@@ -20,7 +20,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFail
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.service.UpdateNotionSchedule;
 import io.f12.notionlinkedblog.oauth.api.port.NotionOauthService;
-import io.f12.notionlinkedblog.oauth.domain.notion.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.api.response.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,6 +63,7 @@ public class OAuthApiController {
 		AuthFailureException,
 		TokenAvailabilityFailureException, NotionAuthenticationException {
 		isError(error);
+		//TODO 서비스 분리 필요
 		String accessToken = notionOauthService.saveAccessToken(code, loginUser.getUser().getId());
 		List<String> everyPages = notionService.getEveryPages(accessToken);
 		notionService.initEveryPages(everyPages, loginUser.getUser().getId(), accessToken);

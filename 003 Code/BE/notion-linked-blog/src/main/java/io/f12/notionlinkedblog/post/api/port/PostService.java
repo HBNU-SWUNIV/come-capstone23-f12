@@ -6,9 +6,9 @@ import java.net.MalformedURLException;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
+import io.f12.notionlinkedblog.post.api.response.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
-import io.f12.notionlinkedblog.post.domain.dto.PostSearchDto;
-import io.f12.notionlinkedblog.post.domain.dto.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 
 public interface PostService {

@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.comments.domain.dto.response;
+package io.f12.notionlinkedblog.comments.api.response;
 
 import java.time.LocalDateTime;
 
