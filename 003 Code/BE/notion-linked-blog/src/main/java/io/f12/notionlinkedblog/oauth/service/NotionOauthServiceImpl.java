@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
+import io.f12.notionlinkedblog.oauth.api.port.NotionOauthService;
 import io.f12.notionlinkedblog.oauth.domain.notion.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.oauth.infrastructure.NotionOauthEntity;
@@ -36,17 +37,19 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotionOauthService {
+public class NotionOauthServiceImpl implements NotionOauthService {
 	private final NotionOAuthComponent notionOAuthComponent;
 	private final UserRepository userRepository;
 	private final NotionOauthRepository notionOauthRepository;
 
+	@Override
 	public NotionOAuthLinkDto getNotionAuthSite() {
 		return NotionOAuthLinkDto.builder()
 			.authUrl(notionOAuthComponent.getAuthUrl())
 			.build();
 	}
 
+	@Override
 	public String saveAccessToken(String code, Long userId) throws TokenAvailabilityFailureException {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
@@ -59,6 +62,7 @@ public class NotionOauthService {
 	}
 
 	@Transactional
+	@Override
 	public void removeAccessToken(Long userId) {
 		notionOauthRepository.deleteNotionOauthByUserId(userId);
 	}

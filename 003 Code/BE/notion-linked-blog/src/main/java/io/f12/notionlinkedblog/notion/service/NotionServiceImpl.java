@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
+import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
@@ -33,7 +34,7 @@ import notion.api.v1.request.blocks.RetrieveBlockRequest;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class NotionService {
+public class NotionServiceImpl implements NotionService {
 
 	private final NotionOAuthComponent notionOAuthComponent;
 	private final PostRepository postRepository;
@@ -93,6 +94,7 @@ public class NotionService {
 	// 		.build();
 	// }
 
+	@Override
 	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
@@ -116,6 +118,7 @@ public class NotionService {
 		// 	.build();
 	}
 
+	@Override
 	public List<String> getEveryPages(String accessToken) throws NotionAuthenticationException {
 		NotionClient client = createClient(accessToken);
 		ArrayList<String> pageIds = new ArrayList<>();
@@ -130,6 +133,7 @@ public class NotionService {
 		return pageIds;
 	}
 
+	@Override
 	public void initEveryPages(List<String> pageIds, Long userId, String accessCode) throws
 		NotionAuthenticationException {
 		UserEntity user = userRepository.findById(userId)
@@ -156,6 +160,7 @@ public class NotionService {
 
 	}
 
+	@Override
 	public boolean needUpdate(Long userId, String pageId, LocalDateTime updateTime)
 		throws NotionAuthenticationException {
 		NotionClient client = createClient(userId);
