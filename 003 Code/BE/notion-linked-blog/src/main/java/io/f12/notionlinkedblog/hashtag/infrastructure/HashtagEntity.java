@@ -3,6 +3,7 @@ package io.f12.notionlinkedblog.hashtag.infrastructure;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,6 +30,7 @@ public class HashtagEntity {
 	@Id
 	private Long id;
 	@NotNull
+	@Column(unique = true)
 	private String name;
 
 	@ManyToMany
