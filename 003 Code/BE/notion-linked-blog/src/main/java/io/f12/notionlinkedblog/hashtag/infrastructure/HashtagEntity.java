@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "hashtags")
 public class HashtagEntity {
 	@Id
+	@GeneratedValue
 	private Long id;
 	@NotNull
 	@Column(unique = true)
