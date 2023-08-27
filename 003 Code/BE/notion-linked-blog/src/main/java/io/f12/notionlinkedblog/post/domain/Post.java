@@ -54,4 +54,8 @@ public class Post {
 			.isPublic(this.isPublic)
 			.build();
 	}
+
+	public void changeHashtags(List<Hashtag> hashtag) {
+		this.hashtag = hashtag;
+	}
 }

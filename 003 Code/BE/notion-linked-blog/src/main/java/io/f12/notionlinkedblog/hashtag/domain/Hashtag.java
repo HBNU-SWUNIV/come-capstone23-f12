@@ -22,4 +22,8 @@ public class Hashtag {
 			.post(this.post.stream().map(Post::toEntity).collect(Collectors.toList()))
 			.build();
 	}
+
+	public void addPost(Post post) {
+		this.post.add(post);
+	}
 }
