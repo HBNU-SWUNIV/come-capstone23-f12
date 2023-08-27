@@ -10,9 +10,9 @@ import io.f12.notionlinkedblog.hashtag.domain.Hashtag;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.hashtag.serivce.port.HashtagRepository;
 import io.f12.notionlinkedblog.hashtag.serivce.port.PostHashtagRepository;
+import io.f12.notionlinkedblog.post.api.port.RegistrationPostHashtagService;
 import io.f12.notionlinkedblog.post.domain.Post;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
-import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
 import lombok.RequiredArgsConstructor;
 
 @Service

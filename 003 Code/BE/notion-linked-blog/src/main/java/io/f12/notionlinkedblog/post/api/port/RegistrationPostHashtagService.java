@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.post.service.port;
+package io.f12.notionlinkedblog.post.api.port;
 
 import java.util.List;
 
