@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -25,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
+import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.post.domain.Post;
@@ -70,6 +72,9 @@ public class PostEntity extends PostTimeEntity {
 
 	@OneToOne(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private SyncedPagesEntity syncedPages;
+
+	@ManyToMany(mappedBy = "post")
+	private List<HashtagEntity> hashtag;
 
 	@NotBlank
 	private String title;
