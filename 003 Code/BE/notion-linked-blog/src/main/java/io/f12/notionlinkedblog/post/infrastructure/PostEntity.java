@@ -5,7 +5,6 @@ import static javax.persistence.FetchType.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,7 +29,6 @@ import io.f12.notionlinkedblog.common.infrastructure.PostTimeEntity;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
-import io.f12.notionlinkedblog.post.domain.Post;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
@@ -112,23 +110,8 @@ public class PostEntity extends PostTimeEntity {
 		this.isPublic = isPublic;
 	}
 
-	public Post toModel() {
-		return Post.builder()
-			.id(this.id)
-			.user(this.user.toModel())
-			.comments(this.comments.stream().map(CommentsEntity::toModel).collect(Collectors.toList()))
-			.likes(this.likes.stream().map(LikeEntity::toModel).collect(Collectors.toList()))
-			.series(this.series.toModel())
-			.syncedPages(this.syncedPages.toModel())
-			.hashtag(this.hashtag.stream().map(HashtagEntity::toModel).collect(Collectors.toList()))
-			.title(this.title)
-			.content(this.content)
-			.thumbnailName(this.thumbnailName)
-			.storedThumbnailPath(this.storedThumbnailPath)
-			.viewCount(this.viewCount)
-			.popularity(this.popularity)
-			.description(this.description)
-			.build();
+	public void changeHashtags(List<HashtagEntity> hashtags) {
+		this.hashtag = hashtags;
 	}
 
 	//have to move
