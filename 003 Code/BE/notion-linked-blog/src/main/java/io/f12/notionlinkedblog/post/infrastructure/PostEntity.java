@@ -119,6 +119,7 @@ public class PostEntity extends PostTimeEntity {
 			.likes(this.likes.stream().map(LikeEntity::toModel).collect(Collectors.toList()))
 			.series(this.series.toModel())
 			.syncedPages(this.syncedPages.toModel())
+			.hashtag(this.hashtag.stream().map(HashtagEntity::toModel).collect(Collectors.toList()))
 			.title(this.title)
 			.content(this.content)
 			.thumbnailName(this.thumbnailName)
