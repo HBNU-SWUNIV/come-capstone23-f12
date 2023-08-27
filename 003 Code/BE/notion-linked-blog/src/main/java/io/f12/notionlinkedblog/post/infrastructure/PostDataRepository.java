@@ -8,10 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import io.f12.notionlinkedblog.hashtag.serivce.port.PostHashtagRepository;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 
 @Repository
-public interface PostDataRepository extends JpaRepository<PostEntity, Long>, PostRepository {
+public interface PostDataRepository extends JpaRepository<PostEntity, Long>, PostRepository, PostHashtagRepository {
 
 	@Override
 	@Query("SELECT p "

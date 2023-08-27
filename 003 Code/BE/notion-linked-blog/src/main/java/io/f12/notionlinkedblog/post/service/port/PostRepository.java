@@ -17,6 +17,4 @@ public interface PostRepository {
 	void deleteById(Long id);
 
 	void deleteAll();
-
-	List<PostEntity> findByIdForHashtag(Long id);
 }
