@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.post.infrastructure;
+package io.f12.notionlinkedblog.common.infrastructure;
 
 import java.time.LocalDateTime;
 

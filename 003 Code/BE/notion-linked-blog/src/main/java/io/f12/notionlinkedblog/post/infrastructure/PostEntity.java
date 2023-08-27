@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
+import io.f12.notionlinkedblog.common.infrastructure.PostTimeEntity;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;

@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.StringUtils;
 
 import io.f12.notionlinkedblog.comments.domain.Comments;
+import io.f12.notionlinkedblog.common.infrastructure.PostTimeEntity;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
-import io.f12.notionlinkedblog.post.infrastructure.PostTimeEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
