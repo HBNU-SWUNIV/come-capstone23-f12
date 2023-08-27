@@ -32,6 +32,7 @@ import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
+import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,13 +48,14 @@ public class PostServiceImpl implements PostService {
 	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
 	private final LikeRepository likeRepository;
+	private final RegistrationPostHashtagService registrationPostHashtagService;
 	private final int pageSize = 20;
 	@Value("${server.url}")
 	private String serverUrl;
 
 	@Override
 	public PostSearchDto createPost(Long userId, String title, String content, String description,
-		Boolean isPublic, MultipartFile multipartFile) throws IOException {
+		Boolean isPublic, MultipartFile multipartFile, List<String> hashtags) throws IOException {
 		UserEntity findUser = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
@@ -84,6 +86,8 @@ public class PostServiceImpl implements PostService {
 			.build();
 
 		PostEntity savedPost = postRepository.save(post);
+
+		registrationPostHashtagService.addHashtags(hashtags, savedPost);
 
 		return PostSearchDto.builder()
 			.isLiked(false)

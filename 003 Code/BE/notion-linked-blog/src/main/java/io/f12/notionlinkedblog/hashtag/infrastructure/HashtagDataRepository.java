@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import io.f12.notionlinkedblog.hashtag.serivce.port.HashtagRepository;
 
-public interface HashtagDataRepository extends JpaRepository<Long, HashtagEntity>, HashtagRepository {
+public interface HashtagDataRepository extends JpaRepository<HashtagEntity, Long>, HashtagRepository {
 
 	@Override
 	@Query("SELECT h FROM HashtagEntity h LEFT JOIN FETCH h.post WHERE h.name = :name")

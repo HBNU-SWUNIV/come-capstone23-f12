@@ -6,13 +6,12 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import io.f12.notionlinkedblog.hashtag.domain.Hashtag;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.hashtag.serivce.port.HashtagRepository;
 import io.f12.notionlinkedblog.hashtag.serivce.port.PostHashtagRepository;
-import io.f12.notionlinkedblog.post.api.port.RegistrationPostHashtagService;
-import io.f12.notionlinkedblog.post.domain.Post;
+import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,32 +23,36 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 	private final PostRepository postRepository;
 
 	@Override
-	public void addHashtags(List<String> hashtags, Post post) {
-		List<Hashtag> domainHashtag = findHashtag(hashtags);
+	public void addHashtags(List<String> hashtags, PostEntity post) {
+		if (hashtags.isEmpty()) {
+			return;
+		}
+		List<HashtagEntity> domainHashtag = findHashtag(hashtags);
 
 		addPostsToHashtag(post, domainHashtag);
 		post.changeHashtags(domainHashtag);
 
-		postRepository.save(post.toEntity());
-		for (Hashtag hashtag : domainHashtag) {
-			hashtagRepository.save(hashtag.toEntity());
+		for (HashtagEntity hashtag : domainHashtag) {
+			hashtagRepository.save(hashtag);
 		}
+		postRepository.save(post);
+
 	}
 
-	private void addPostsToHashtag(Post post, List<Hashtag> domainHashtag) {
-		for (Hashtag hashtag : domainHashtag) {
+	private void addPostsToHashtag(PostEntity post, List<HashtagEntity> domainHashtag) {
+		for (HashtagEntity hashtag : domainHashtag) {
 			hashtag.addPost(post);
 		}
 	}
 
-	private List<Hashtag> findHashtag(List<String> hashtags) {
-		List<Hashtag> returnHashtags = new ArrayList<>();
+	private List<HashtagEntity> findHashtag(List<String> hashtags) {
+		List<HashtagEntity> returnHashtags = new ArrayList<>();
 		for (String hashtag : hashtags) {
 			Optional<HashtagEntity> findEntity = hashtagRepository.findByName(hashtag);
 			if (findEntity.isPresent()) {
-				returnHashtags.add(findEntity.get().toModel());
+				returnHashtags.add(findEntity.get());
 			} else {
-				returnHashtags.add(Hashtag.builder()
+				returnHashtags.add(HashtagEntity.builder()
 					.name(hashtag)
 					.post(new ArrayList<>())
 					.build());
