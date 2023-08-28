@@ -35,6 +35,7 @@ import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
+import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,9 @@ class PostServiceTest {
 
 	@InjectMocks
 	PostServiceImpl postService;
+
+	@Mock
+	RegistrationPostHashtagService service;
 
 	@Mock
 	PostRepository postRepository;
@@ -684,7 +688,7 @@ class PostServiceTest {
 				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
 				//when
-				postService.editPostContent(fakePostId, fakeUserId, editDto);
+				postService.editPost(fakePostId, fakeUserId, editDto);
 
 			}
 		}
@@ -711,7 +715,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPostContent(fakePostId, fakeUserId, editDto);
+					postService.editPost(fakePostId, fakeUserId, editDto);
 				}).isInstanceOf(IllegalArgumentException.class)
 					.hasMessageContaining(POST_NOT_EXIST);
 
@@ -751,7 +755,7 @@ class PostServiceTest {
 				//when
 				//then
 				assertThatThrownBy(() -> {
-					postService.editPostContent(fakePostId, illegalEditorId, editDto);
+					postService.editPost(fakePostId, illegalEditorId, editDto);
 				}).isInstanceOf(IllegalStateException.class)
 					.hasMessageContaining(WRITER_USER_NOT_MATCH);
 
