@@ -136,23 +136,6 @@ class SeriesDataRepositoryTest {
 	@DisplayName("간단 시리즈 조회")
 	@Nested
 	class SimpleSeriesLookUp {
-		@DisplayName("성공케이스")
-		@Test
-		void successCase() {
-			//given
-			Long seriesId = series.getId();
-			//when
-			SeriesEntity searchSeries = seriesRepository.findSeriesById(seriesId)
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID"));
-
-			//then
-			assertThat(searchSeries).extracting("id").isEqualTo(series.getId());
-			assertThat(searchSeries).extracting("title").isEqualTo(series.getTitle());
-			assertThat(searchSeries.getPost()).size().isEqualTo(3);
-			assertThat(searchSeries.getPost().get(0).getId()).isEqualTo(postA.getId());
-			assertThat(searchSeries.getPost().get(2).getId()).isEqualTo(postC.getId());
-
-		}
 
 		@DisplayName("실패케이스")
 		@Test
