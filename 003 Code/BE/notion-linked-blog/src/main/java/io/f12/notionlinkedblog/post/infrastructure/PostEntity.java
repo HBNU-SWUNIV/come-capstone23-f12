@@ -33,13 +33,10 @@ import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -95,14 +92,16 @@ public class PostEntity extends PostTimeEntity {
 
 	@Builder
 	public PostEntity(LocalDateTime createdAt, LocalDateTime updatedAt, Long id, UserEntity user,
-		List<CommentsEntity> comments, List<LikeEntity> likes, SeriesEntity series, String title, String content,
-		String thumbnailName,
-		String storedThumbnailPath, Long viewCount, Double popularity, String description, Boolean isPublic) {
+		List<CommentsEntity> comments, List<LikeEntity> likes, List<HashtagEntity> hashtag, SeriesEntity series,
+		SyncedPagesEntity syncedPages, String title, String content, String thumbnailName, String storedThumbnailPath,
+		Long viewCount, Double popularity, String description, Boolean isPublic) {
 		super(createdAt, updatedAt);
 		this.id = id;
 		this.user = user;
 		this.comments = comments;
 		this.likes = likes;
+		this.hashtag = hashtag;
+		this.syncedPages = syncedPages;
 		this.series = series;
 		this.title = title;
 		this.content = content;
