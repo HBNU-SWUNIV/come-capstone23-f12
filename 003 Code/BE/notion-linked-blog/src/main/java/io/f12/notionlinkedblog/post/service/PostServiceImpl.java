@@ -201,13 +201,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
-	public PostSearchDto editPostContent(Long postId, Long userId, PostEditDto postEditDto) {
+	public PostSearchDto editPost(Long postId, Long userId, PostEditDto postEditDto) {
 		PostEntity changedPost = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		if (isSame(changedPost.getUser().getId(), userId)) {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent());
+		registrationPostHashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
 
 		return PostSearchDto.builder()
 			.isLiked(false)

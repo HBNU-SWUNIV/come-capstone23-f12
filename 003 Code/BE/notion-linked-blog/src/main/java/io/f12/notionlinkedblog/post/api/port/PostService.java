@@ -29,7 +29,7 @@ public interface PostService {
 	public void removePost(Long postId, Long userId);
 
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
-	public PostSearchDto editPostContent(Long postId, Long userId, PostEditDto postEditDto);
+	public PostSearchDto editPost(Long postId, Long userId, PostEditDto postEditDto);
 
 	public void likeStatusChange(Long postId, Long userId);
 

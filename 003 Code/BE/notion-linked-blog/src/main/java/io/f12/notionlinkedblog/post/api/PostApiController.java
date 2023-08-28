@@ -171,11 +171,10 @@ public class PostApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "302", description = "포스트 수정 성공")
 	})
-	//TODO: 추후 JSON 으로 리턴타입 변경 필요
 	public PostSearchDto editPost(@PathVariable("id") Long postId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated PostEditDto editInfo) {
-		PostSearchDto postSearchDto = postService.editPostContent(postId, loginUser.getUser().getId(), editInfo);
+		PostSearchDto postSearchDto = postService.editPost(postId, loginUser.getUser().getId(), editInfo);
 		if (editInfo.getSeriesId() != null) {
 			seriesService.addPostTo(editInfo.getSeriesId(), postSearchDto.getPostId());
 		}

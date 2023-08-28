@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
@@ -21,6 +23,7 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 	private final HashtagRepository hashtagRepository;
 	private final PostHashtagRepository postHashtagRepository;
 	private final PostRepository postRepository;
+	private final EntityManager entityManager;
 
 	@Override
 	public void addHashtags(List<String> hashtags, PostEntity post) {
@@ -40,6 +43,19 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 		}
 		postRepository.save(post);
 
+	}
+
+	@Override
+	public void editHashtags(List<String> hashtagList, PostEntity post) {
+		List<HashtagEntity> hashtags = post.getHashtag();
+		removeHashtags(hashtags, post);
+		addHashtags(hashtagList, post);
+
+	}
+
+	private void removeHashtags(List<HashtagEntity> hashtags, PostEntity post) {
+		List<HashtagEntity> newHashtagList = new ArrayList<>();
+		post.changeHashtags(newHashtagList);
 	}
 
 	private void addPostsToHashtag(PostEntity post, List<HashtagEntity> domainHashtag) {
