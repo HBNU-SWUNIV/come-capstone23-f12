@@ -6,8 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -33,10 +31,7 @@ public class HashtagEntity {
 	@Column(unique = true)
 	private String name;
 
-	@ManyToMany
-	@JoinTable(name = "posts_hashtags",
-		joinColumns = @JoinColumn(name = "hashtags_id"),
-		inverseJoinColumns = @JoinColumn(name = "post_id"))
+	@ManyToMany(mappedBy = "hashtag")
 	private List<PostEntity> post;
 
 	public void addPost(PostEntity post) {

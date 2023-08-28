@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -72,7 +73,10 @@ public class PostEntity extends PostTimeEntity {
 	@OneToOne(mappedBy = "post", cascade = CascadeType.REMOVE)
 	private SyncedPagesEntity syncedPages;
 
-	@ManyToMany(mappedBy = "post")
+	@ManyToMany
+	@JoinTable(name = "posts_hashtags",
+		joinColumns = @JoinColumn(name = "hashtags_id"),
+		inverseJoinColumns = @JoinColumn(name = "post_id"))
 	private List<HashtagEntity> hashtag;
 
 	@NotBlank
