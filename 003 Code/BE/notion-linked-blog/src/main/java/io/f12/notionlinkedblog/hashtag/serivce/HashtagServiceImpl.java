@@ -4,26 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.hashtag.serivce.port.HashtagRepository;
-import io.f12.notionlinkedblog.hashtag.serivce.port.PostHashtagRepository;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class HashtagServiceImpl implements RegistrationPostHashtagService {
 
 	private final HashtagRepository hashtagRepository;
-	private final PostHashtagRepository postHashtagRepository;
 	private final PostRepository postRepository;
-	private final EntityManager entityManager;
 
 	@Override
 	public void addHashtags(List<String> hashtags, PostEntity post) {
@@ -42,7 +39,7 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 			hashtagRepository.save(hashtag);
 		}
 		postRepository.save(post);
-
+		//TODO: Post 반환하고 PostService 에서 응답 변경
 	}
 
 	@Override
@@ -50,7 +47,7 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 		List<HashtagEntity> hashtags = post.getHashtag();
 		removeHashtags(hashtags, post);
 		addHashtags(hashtagList, post);
-
+		//TODO: Post 반환하고 PostService 에서 응답 변경
 	}
 
 	private void removeHashtags(List<HashtagEntity> hashtags, PostEntity post) {
