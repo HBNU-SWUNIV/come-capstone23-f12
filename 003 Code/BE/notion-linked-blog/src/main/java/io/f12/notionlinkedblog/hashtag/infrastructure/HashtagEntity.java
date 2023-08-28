@@ -38,4 +38,7 @@ public class HashtagEntity {
 		this.post.add(post);
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

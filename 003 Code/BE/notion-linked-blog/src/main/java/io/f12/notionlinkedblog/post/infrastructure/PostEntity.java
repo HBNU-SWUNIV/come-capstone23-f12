@@ -117,6 +117,10 @@ public class PostEntity extends PostTimeEntity {
 		this.hashtag = hashtags;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	//have to move
 	public void setPopularity(Double popularity) {
 		this.popularity = popularity;
