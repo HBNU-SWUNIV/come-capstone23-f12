@@ -24,6 +24,9 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 
 	@Override
 	public void addHashtags(List<String> hashtags, PostEntity post) {
+		if (hashtags == null) {
+			return;
+		}
 		if (hashtags.isEmpty()) {
 			return;
 		}

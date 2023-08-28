@@ -5,6 +5,7 @@ import static org.springframework.http.MediaType.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,11 +74,12 @@ public class PostApiController {
 		@RequestPart(value = "content") String content,
 		@RequestPart(value = "description", required = false) String description,
 		@RequestPart(value = "isPublic") String isPublic,
-		@RequestPart(value = "seriesId", required = false) String seriesId
+		@RequestPart(value = "seriesId", required = false) String seriesId,
+		@RequestParam(value = "hashtags", required = false) List<String> hashtags
 	) throws IOException {
 		validateIsPublic(isPublic);
 		PostSearchDto post = postService.createPost(loginUser.getUser().getId(), title, content, description,
-			isPublic(isPublic), file);
+			isPublic(isPublic), file, hashtags);
 		if (seriesId != null) {
 			seriesService.addPostTo(Long.parseLong(seriesId), post.getPostId());
 		}
