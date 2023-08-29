@@ -49,7 +49,7 @@ class PostServiceTest {
 	PostServiceImpl postService;
 
 	@Mock
-	RegistrationPostHashtagService service;
+	RegistrationPostHashtagService hashtagService;
 
 	@Mock
 	PostRepository postRepository;
@@ -107,6 +107,8 @@ class PostServiceTest {
 					.willReturn(Optional.of(user));
 				given(postRepository.save(any(PostEntity.class)))
 					.willReturn(returnPost);
+				given(hashtagService.addHashtags(null, returnPost))
+					.willReturn(returnPost);
 
 				//when
 				PostSearchDto createdPost = postService.createPost(fakeId, title, content, description, isPublic,
@@ -143,6 +145,8 @@ class PostServiceTest {
 				given(userRepository.findById(fakeId))
 					.willReturn(Optional.of(user));
 				given(postRepository.save(any(PostEntity.class)))
+					.willReturn(returnPost);
+				given(hashtagService.addHashtags(null, returnPost))
 					.willReturn(returnPost);
 
 				//when
@@ -688,6 +692,8 @@ class PostServiceTest {
 				//Mock
 				given(postRepository.findById(fakePostId))
 					.willReturn(Optional.ofNullable(returnPost));
+				given(hashtagService.editHashtags(null, returnPost))
+					.willReturn(returnPost);
 				//when
 				postService.editPost(fakePostId, fakeUserId, editDto);
 
