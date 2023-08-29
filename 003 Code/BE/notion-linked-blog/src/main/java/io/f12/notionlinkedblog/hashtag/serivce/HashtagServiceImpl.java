@@ -68,10 +68,10 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 			if (findEntity.isPresent()) {
 				returnHashtags.add(findEntity.get());
 			} else {
-				returnHashtags.add(HashtagEntity.builder()
+				returnHashtags.add(hashtagRepository.save(HashtagEntity.builder()
 					.name(hashtag)
 					.post(new ArrayList<>())
-					.build());
+					.build()));
 			}
 		}
 
