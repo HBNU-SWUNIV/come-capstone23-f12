@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
+import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.like.service.port.LikeRepository;
@@ -86,6 +87,7 @@ public class PostServiceImpl implements PostService {
 			.build();
 
 		PostEntity savedPost = registrationPostHashtagService.addHashtags(hashtags, postRepository.save(post));
+		List<String> hashtagList = getHashtagsFromPost(savedPost);
 
 		return PostSearchDto.builder()
 			.isLiked(false)
@@ -99,6 +101,7 @@ public class PostServiceImpl implements PostService {
 			.createdAt(savedPost.getCreatedAt())
 			.author(savedPost.getUser().getUsername())
 			.avatar(getAvatarRequestUrl(userId))
+			.hashtags(hashtagList)
 			.build();
 	}
 
@@ -207,6 +210,7 @@ public class PostServiceImpl implements PostService {
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent());
 		PostEntity savedPost = registrationPostHashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
+		List<String> savedHashtagList = getHashtagsFromPost(savedPost);
 
 		return PostSearchDto.builder()
 			.isLiked(false)
@@ -220,6 +224,7 @@ public class PostServiceImpl implements PostService {
 			.createdAt(savedPost.getCreatedAt())
 			.author(savedPost.getUser().getUsername())
 			.avatar(getAvatarRequestUrl(userId))
+			.hashtags(savedHashtagList)
 			.build();
 	}
 
@@ -250,6 +255,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	// 내부 사용 매서드
+
+	private List<String> getHashtagsFromPost(PostEntity savedPost) {
+		List<String> savedHashtagList = savedPost.getHashtag().stream()
+			.map(HashtagEntity::getName)
+			.collect(Collectors.toList());
+		return savedHashtagList;
+	}
+
 	private List<PostSearchDto> convertPostToPostDto(List<PostEntity> posts) {
 		return posts.stream().map(p -> {
 			String thumbnailLink = null;
