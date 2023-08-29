@@ -23,12 +23,12 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 	private final PostRepository postRepository;
 
 	@Override
-	public void addHashtags(List<String> hashtags, PostEntity post) {
+	public PostEntity addHashtags(List<String> hashtags, PostEntity post) {
 		if (hashtags == null) {
-			return;
+			return post;
 		}
 		if (hashtags.isEmpty()) {
-			return;
+			return post;
 		}
 		List<HashtagEntity> domainHashtag = findHashtag(hashtags);
 
@@ -39,15 +39,15 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 			hashtagRepository.save(hashtag);
 		}
 		postRepository.save(post);
-		//TODO: Post 반환하고 PostService 에서 응답 변경
+
+		return post;
 	}
 
 	@Override
-	public void editHashtags(List<String> hashtagList, PostEntity post) {
+	public PostEntity editHashtags(List<String> hashtagList, PostEntity post) {
 		List<HashtagEntity> hashtags = post.getHashtag();
 		removeHashtags(hashtags, post);
-		addHashtags(hashtagList, post);
-		//TODO: Post 반환하고 PostService 에서 응답 변경
+		return addHashtags(hashtagList, post);
 	}
 
 	private void removeHashtags(List<HashtagEntity> hashtags, PostEntity post) {

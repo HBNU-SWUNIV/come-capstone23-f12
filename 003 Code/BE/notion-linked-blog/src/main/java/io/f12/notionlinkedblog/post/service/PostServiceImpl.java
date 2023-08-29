@@ -85,9 +85,7 @@ public class PostServiceImpl implements PostService {
 			.isPublic(isPublic)
 			.build();
 
-		PostEntity savedPost = postRepository.save(post);
-
-		registrationPostHashtagService.addHashtags(hashtags, savedPost);
+		PostEntity savedPost = registrationPostHashtagService.addHashtags(hashtags, postRepository.save(post));
 
 		return PostSearchDto.builder()
 			.isLiked(false)
@@ -208,19 +206,19 @@ public class PostServiceImpl implements PostService {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent());
-		registrationPostHashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
+		PostEntity savedPost = registrationPostHashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
 
 		return PostSearchDto.builder()
 			.isLiked(false)
-			.postId(changedPost.getId())
-			.title(changedPost.getTitle())
-			.content(changedPost.getContent())
-			.viewCount(changedPost.getViewCount())
+			.postId(savedPost.getId())
+			.title(savedPost.getTitle())
+			.content(savedPost.getContent())
+			.viewCount(savedPost.getViewCount())
 			.likes(0)
-			.requestThumbnailLink(Endpoint.Api.REQUEST_THUMBNAIL_IMAGE + changedPost.getThumbnailName())
-			.description(changedPost.getDescription())
-			.createdAt(changedPost.getCreatedAt())
-			.author(changedPost.getUser().getUsername())
+			.requestThumbnailLink(Endpoint.Api.REQUEST_THUMBNAIL_IMAGE + savedPost.getThumbnailName())
+			.description(savedPost.getDescription())
+			.createdAt(savedPost.getCreatedAt())
+			.author(savedPost.getUser().getUsername())
 			.avatar(getAvatarRequestUrl(userId))
 			.build();
 	}
