@@ -45,12 +45,11 @@ public class HashtagServiceImpl implements RegistrationPostHashtagService {
 
 	@Override
 	public PostEntity editHashtags(List<String> hashtagList, PostEntity post) {
-		List<HashtagEntity> hashtags = post.getHashtag();
-		removeHashtags(hashtags, post);
+		removeHashtags(post);
 		return addHashtags(hashtagList, post);
 	}
 
-	private void removeHashtags(List<HashtagEntity> hashtags, PostEntity post) {
+	private void removeHashtags(PostEntity post) {
 		List<HashtagEntity> newHashtagList = new ArrayList<>();
 		post.changeHashtags(newHashtagList);
 	}
