@@ -1,6 +1,9 @@
 package io.f12.notionlinkedblog.small.hashtag.service;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,8 +77,10 @@ public class HashtagServiceTest {
 					.build();
 				ArrayList<String> hashtags = new ArrayList<>();
 				//when
-				hashtagService.addHashtags(hashtags, post);
+				PostEntity savedPost = hashtagService.addHashtags(hashtags, post);
 				//then
+				List<HashtagEntity> hashtagList = savedPost.getHashtag();
+				assertThat(hashtagList).isNull();
 			}
 
 			@DisplayName("해쉬태그 없는 경우(null 경우)")
@@ -87,7 +92,10 @@ public class HashtagServiceTest {
 					.content("testContent2")
 					.build();
 				//when
-				hashtagService.addHashtags(null, post);
+				PostEntity savedPost = hashtagService.addHashtags(null, post);
+				//then
+				List<HashtagEntity> hashtagList = savedPost.getHashtag();
+				assertThat(hashtagList).isNull();
 			}
 
 			@DisplayName("해쉬태그 존재")
@@ -102,7 +110,10 @@ public class HashtagServiceTest {
 				hashtags.add("tagB");
 				hashtags.add("tagC");
 				//when
-				hashtagService.addHashtags(hashtags, post);
+				PostEntity savedPost = hashtagService.addHashtags(hashtags, post);
+				//then
+				List<HashtagEntity> hashtagList = savedPost.getHashtag();
+				assertThat(hashtagList).size().isEqualTo(2);
 			}
 
 		}
@@ -111,17 +122,35 @@ public class HashtagServiceTest {
 	@DisplayName("해쉬태그 수정, 삭제 테스트")
 	@Nested
 	class EditHashtagTest {
-		@DisplayName("해쉬태그 수정")
+		@DisplayName("해쉬태그 부분수정")
 		@Test
-		void editHashtag() {
+		void editPartialHashtag() {
 			//given
 			PostEntity post = fakePostRepository.findById(1L).get();
 			ArrayList<String> hashtags = new ArrayList<>();
 			hashtags.add("tagB");
 			hashtags.add("tagC");
 			//when
-			hashtagService.editHashtags(hashtags, post);
+			PostEntity savedPost = hashtagService.editHashtags(hashtags, post);
 			//then
+			List<HashtagEntity> hashtagList = savedPost.getHashtag();
+			assertThat(hashtagList).size().isEqualTo(2);
+		}
+
+		@DisplayName("해쉬태그 전체수정")
+		@Test
+		void editEntireHashtag() {
+			//given
+			PostEntity post = fakePostRepository.findById(1L).get();
+			ArrayList<String> hashtags = new ArrayList<>();
+			hashtags.add("tagC");
+			hashtags.add("tagD");
+			hashtags.add("tagE");
+			//when
+			PostEntity savedPost = hashtagService.editHashtags(hashtags, post);
+			//then
+			List<HashtagEntity> hashtagList = savedPost.getHashtag();
+			assertThat(hashtagList).size().isEqualTo(3);
 		}
 
 		@DisplayName("해쉬태그 삭제")
@@ -131,9 +160,10 @@ public class HashtagServiceTest {
 			PostEntity post = fakePostRepository.findById(1L).get();
 			ArrayList<String> hashtags = new ArrayList<>();
 			//when
-			hashtagService.editHashtags(hashtags, post);
+			PostEntity savedPost = hashtagService.editHashtags(hashtags, post);
 			//then
-
+			List<HashtagEntity> hashtagList = savedPost.getHashtag();
+			assertThat(hashtagList).isEmpty();
 		}
 	}
 
