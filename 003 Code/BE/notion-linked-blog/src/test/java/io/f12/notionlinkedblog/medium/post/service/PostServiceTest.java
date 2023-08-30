@@ -26,6 +26,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.like.service.port.LikeRepository;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
@@ -84,6 +85,12 @@ class PostServiceTest {
 					.password("test123")
 					.build();
 
+				List<HashtagEntity> hashtagEntities = new ArrayList<>();
+
+				hashtagEntities.add(HashtagEntity.builder()
+					.name("test")
+					.build());
+
 				String title = "testTitle";
 				String content = "testContent";
 				String thumbnail = "testThumbnail";
@@ -95,6 +102,7 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
+					.hashtag(hashtagEntities)
 					.thumbnailName(thumbnail)
 					.storedThumbnailPath(path)
 					.build();
@@ -131,6 +139,12 @@ class PostServiceTest {
 					.password("test123")
 					.build();
 
+				List<HashtagEntity> hashtagEntities = new ArrayList<>();
+
+				hashtagEntities.add(HashtagEntity.builder()
+					.name("test")
+					.build());
+
 				String title = "testTitle";
 				String content = "testContent";
 				String description = "description";
@@ -140,6 +154,7 @@ class PostServiceTest {
 					.user(user)
 					.title(title)
 					.content(content)
+					.hashtag(hashtagEntities)
 					.build();
 				//Mock
 				given(userRepository.findById(fakeId))
@@ -671,6 +686,12 @@ class PostServiceTest {
 				String editTitle = "editedTitle";
 				String editContent = "editedContent";
 
+				List<HashtagEntity> hashtagEntities = new ArrayList<>();
+
+				hashtagEntities.add(HashtagEntity.builder()
+					.name("test")
+					.build());
+
 				PostEditDto editDto = PostEditDto.builder()
 					.title(editTitle)
 					.content(editContent)
@@ -685,6 +706,7 @@ class PostServiceTest {
 				PostEntity returnPost = PostEntity.builder()
 					.id(fakePostId)
 					.user(user)
+					.hashtag(hashtagEntities)
 					.title("testTitle")
 					.content("testContent")
 					.build();
