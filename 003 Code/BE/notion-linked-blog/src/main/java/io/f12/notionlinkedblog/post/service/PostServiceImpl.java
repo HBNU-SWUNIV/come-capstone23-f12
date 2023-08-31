@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.f12.notionlinkedblog.common.Endpoint;
 import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
+import io.f12.notionlinkedblog.hashtag.exception.NoHashtagException;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
@@ -31,9 +32,9 @@ import io.f12.notionlinkedblog.post.api.response.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
 import io.f12.notionlinkedblog.post.domain.dto.SearchRequestDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.post.service.port.HashtagService;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.post.service.port.QuerydslPostRepository;
-import io.f12.notionlinkedblog.post.service.port.RegistrationPostHashtagService;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class PostServiceImpl implements PostService {
 	private final QuerydslPostRepository querydslPostRepository;
 	private final UserRepository userRepository;
 	private final LikeRepository likeRepository;
-	private final RegistrationPostHashtagService registrationPostHashtagService;
+	private final HashtagService hashtagService;
 	private final int pageSize = 20;
 	@Value("${server.url}")
 	private String serverUrl;
@@ -86,7 +87,7 @@ public class PostServiceImpl implements PostService {
 			.isPublic(isPublic)
 			.build();
 
-		PostEntity savedPost = registrationPostHashtagService.addHashtags(hashtags, postRepository.save(post));
+		PostEntity savedPost = hashtagService.addHashtags(hashtags, postRepository.save(post));
 		List<String> hashtagList = getHashtagsFromPost(savedPost);
 
 		return PostSearchDto.builder()
@@ -204,6 +205,30 @@ public class PostServiceImpl implements PostService {
 
 	}
 
+	@Override
+	public PostSearchResponseDto getByHashtagOrderByTrend(String hashtagName, Integer pageNumber)
+		throws NoHashtagException {
+		List<Long> postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(postIds);
+
+		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
+		PageRequest paging = PageRequest.of(pageNumber, pageSize);
+
+		return buildPostSearchResponseDto(paging, postSearchDtos, posts.size());
+	}
+
+	@Override
+	public PostSearchResponseDto getByHashtagOrderByLatest(String hashtagName, Integer pageNumber)
+		throws NoHashtagException {
+		List<Long> postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(postIds);
+
+		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
+		PageRequest paging = PageRequest.of(pageNumber, pageSize);
+
+		return buildPostSearchResponseDto(paging, postSearchDtos, posts.size());
+	}
+
 	//TODO: 추후 EditThumbnail 을 따로 만들어야 함
 	public PostSearchDto editPost(Long postId, Long userId, PostEditDto postEditDto) {
 		PostEntity changedPost = postRepository.findById(postId)
@@ -212,7 +237,7 @@ public class PostServiceImpl implements PostService {
 			throw new IllegalStateException(WRITER_USER_NOT_MATCH);
 		}
 		changedPost.editPost(postEditDto.getTitle(), postEditDto.getContent());
-		PostEntity savedPost = registrationPostHashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
+		PostEntity savedPost = hashtagService.editHashtags(postEditDto.getHashtags(), changedPost);
 		List<String> savedHashtagList = getHashtagsFromPost(savedPost);
 
 		return PostSearchDto.builder()
