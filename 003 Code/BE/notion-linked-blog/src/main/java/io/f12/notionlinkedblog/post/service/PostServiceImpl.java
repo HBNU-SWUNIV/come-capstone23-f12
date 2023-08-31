@@ -154,6 +154,8 @@ public class PostServiceImpl implements PostService {
 				.orElse(null);
 		}
 
+		List<String> hashtagList = getHashtagsFromPost(post);
+
 		return PostSearchDto.builder()
 			.isLiked(likeInfo != null)
 			.postId(post.getId())
@@ -167,6 +169,7 @@ public class PostServiceImpl implements PostService {
 			.author(post.getUser().getUsername())
 			.likes(likeSize)
 			.avatar(getAvatarRequestUrl(post.getUser().getId()))
+			.hashtags(hashtagList)
 			.build();
 	}
 
@@ -280,6 +283,8 @@ public class PostServiceImpl implements PostService {
 				commentsSize = p.getComments().size();
 			}
 
+			List<String> hashtagList = getHashtagsFromPost(p);
+
 			return PostSearchDto.builder()
 				.postId(p.getId())
 				.title(p.getTitle())
@@ -292,6 +297,7 @@ public class PostServiceImpl implements PostService {
 				.countOfComments(commentsSize)
 				.author(p.getUser().getUsername())
 				.avatar(getAvatarRequestUrl(p.getUser().getId()))
+				.hashtags(hashtagList)
 				.build();
 		}).collect(Collectors.toList());
 	}
