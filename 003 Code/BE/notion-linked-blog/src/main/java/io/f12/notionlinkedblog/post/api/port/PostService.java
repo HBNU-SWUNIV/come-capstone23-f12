@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import io.f12.notionlinkedblog.hashtag.exception.NoHashtagException;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.api.response.PostSearchResponseDto;
 import io.f12.notionlinkedblog.post.domain.dto.PostEditDto;
@@ -36,7 +35,7 @@ public interface PostService {
 
 	File readImageFile(String imageName) throws MalformedURLException;
 
-	PostSearchResponseDto getByHashtagOrderByTrend(String hashtagName, Integer pageNumber) throws NoHashtagException;
+	PostSearchResponseDto getByHashtagOrderByTrend(String hashtagName, Integer pageNumber);
 
-	PostSearchResponseDto getByHashtagOrderByLatest(String hashtagName, Integer pageNumber) throws NoHashtagException;
+	PostSearchResponseDto getByHashtagOrderByLatest(String hashtagName, Integer pageNumber);
 }

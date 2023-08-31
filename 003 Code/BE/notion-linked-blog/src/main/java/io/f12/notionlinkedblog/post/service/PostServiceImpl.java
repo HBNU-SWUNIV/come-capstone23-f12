@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -206,9 +207,19 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostSearchResponseDto getByHashtagOrderByTrend(String hashtagName, Integer pageNumber)
-		throws NoHashtagException {
-		List<Long> postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+	public PostSearchResponseDto getByHashtagOrderByTrend(String hashtagName, Integer pageNumber) {
+		List<Long> postIds = null;
+		try {
+			postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+		} catch (NoHashtagException e) {
+			return PostSearchResponseDto.builder()
+				.pageSize(0)
+				.pageNow(pageNumber)
+				.posts(new ArrayList<>())
+				.elementsSize(0)
+				.build();
+		}
+
 		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByTrend(postIds);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
@@ -218,9 +229,18 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostSearchResponseDto getByHashtagOrderByLatest(String hashtagName, Integer pageNumber)
-		throws NoHashtagException {
-		List<Long> postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+	public PostSearchResponseDto getByHashtagOrderByLatest(String hashtagName, Integer pageNumber) {
+		List<Long> postIds = null;
+		try {
+			postIds = hashtagService.getPostIdsByHashtag(hashtagName);
+		} catch (NoHashtagException e) {
+			return PostSearchResponseDto.builder()
+				.pageSize(0)
+				.pageNow(pageNumber)
+				.posts(new ArrayList<>())
+				.elementsSize(0)
+				.build();
+		}
 		List<PostEntity> posts = querydslPostRepository.findByPostIdsJoinWithUserAndLikeOrderByLatest(postIds);
 
 		List<PostSearchDto> postSearchDtos = convertPostToPostDto(posts);
