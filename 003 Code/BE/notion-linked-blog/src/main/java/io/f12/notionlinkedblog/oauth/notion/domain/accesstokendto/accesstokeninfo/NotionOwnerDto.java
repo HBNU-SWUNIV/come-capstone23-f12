@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.accesstokeninfo;
+package io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto.accesstokeninfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class NotionPersonDto {
-	private String email;
+public class NotionOwnerDto {
+	private String type;
+	private NotionUserDto user;
 }

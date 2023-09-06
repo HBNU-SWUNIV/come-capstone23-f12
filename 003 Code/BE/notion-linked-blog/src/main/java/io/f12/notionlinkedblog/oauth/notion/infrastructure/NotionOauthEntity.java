@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.infrastructure;
+package io.f12.notionlinkedblog.oauth.notion.infrastructure;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

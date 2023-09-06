@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.accesstokeninfo;
+package io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto.accesstokeninfo;
 
 import com.google.gson.annotations.SerializedName;
 

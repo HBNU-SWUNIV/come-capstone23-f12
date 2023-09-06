@@ -1,8 +1,8 @@
-package io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto;
+package io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.f12.notionlinkedblog.oauth.domain.notion.accesstokendto.accesstokeninfo.NotionOwnerDto;
+import io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto.accesstokeninfo.NotionOwnerDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

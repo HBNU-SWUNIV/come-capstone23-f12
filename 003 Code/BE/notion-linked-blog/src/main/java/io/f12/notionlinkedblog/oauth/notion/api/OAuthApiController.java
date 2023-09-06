@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.api;
+package io.f12.notionlinkedblog.oauth.notion.api;
 
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
 
@@ -19,8 +19,8 @@ import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationE
 import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.service.UpdateNotionSchedule;
-import io.f12.notionlinkedblog.oauth.api.port.NotionOauthService;
-import io.f12.notionlinkedblog.oauth.api.response.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.notion.api.port.NotionOauthService;
+import io.f12.notionlinkedblog.oauth.notion.api.response.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

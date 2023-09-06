@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.oauth.api.response;
+package io.f12.notionlinkedblog.oauth.notion.api.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
