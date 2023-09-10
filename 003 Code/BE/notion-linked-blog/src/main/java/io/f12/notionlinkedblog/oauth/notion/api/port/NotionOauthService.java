@@ -1,11 +1,11 @@
 package io.f12.notionlinkedblog.oauth.notion.api.port;
 
-import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
-import io.f12.notionlinkedblog.oauth.notion.api.response.NotionOAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.common.domain.response.OAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.common.exception.TokenAvailabilityFailureException;
 
 public interface NotionOauthService {
 
-	public NotionOAuthLinkDto getNotionAuthSite();
+	public OAuthLinkDto getNotionAuthSite();
 
 	public String saveAccessToken(String code, Long userId) throws TokenAvailabilityFailureException;
 

@@ -21,11 +21,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import io.f12.notionlinkedblog.common.exceptions.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
+import io.f12.notionlinkedblog.oauth.common.domain.response.OAuthLinkDto;
+import io.f12.notionlinkedblog.oauth.common.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.oauth.notion.api.port.NotionOauthService;
-import io.f12.notionlinkedblog.oauth.notion.api.response.NotionOAuthLinkDto;
 import io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto.NotionAccessTokenDto;
 import io.f12.notionlinkedblog.oauth.notion.infrastructure.NotionOauthEntity;
 import io.f12.notionlinkedblog.oauth.notion.service.port.NotionOauthRepository;
@@ -43,8 +43,8 @@ public class NotionOauthServiceImpl implements NotionOauthService {
 	private final NotionOauthRepository notionOauthRepository;
 
 	@Override
-	public NotionOAuthLinkDto getNotionAuthSite() {
-		return NotionOAuthLinkDto.builder()
+	public OAuthLinkDto getNotionAuthSite() {
+		return OAuthLinkDto.builder()
 			.authUrl(notionOAuthComponent.getAuthUrl())
 			.build();
 	}
