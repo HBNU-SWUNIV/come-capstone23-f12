@@ -20,6 +20,7 @@ import io.f12.notionlinkedblog.comments.infrastructure.CommentsEntity;
 import io.f12.notionlinkedblog.common.infrastructure.BaseTimeEntity;
 import io.f12.notionlinkedblog.like.infrastructure.LikeEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
+import io.f12.notionlinkedblog.oauth.common.infrastructure.CommonOAuthEntity;
 import io.f12.notionlinkedblog.oauth.notion.infrastructure.NotionOauthEntity;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
@@ -66,6 +67,9 @@ public class UserEntity extends BaseTimeEntity {
 
 	@OneToMany(mappedBy = "user")
 	private List<SyncedPagesEntity> syncedPages;
+
+	@OneToMany(mappedBy = "user")
+	private List<CommonOAuthEntity> oAuths;
 
 	@Column(nullable = false)
 	private String username;
