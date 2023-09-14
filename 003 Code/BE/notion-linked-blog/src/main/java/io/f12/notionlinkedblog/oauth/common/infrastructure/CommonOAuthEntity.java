@@ -34,8 +34,6 @@ public class CommonOAuthEntity {
 	private String accessToken;
 	@Column(unique = true)
 	private String refreshToken;
-	@Column(unique = true)
-	private String uniqueId;
 
 	@Enumerated(EnumType.STRING)
 	private OAuthType type;
