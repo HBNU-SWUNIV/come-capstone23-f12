@@ -13,8 +13,14 @@ import lombok.NoArgsConstructor;
 public class GithubOAuthComponent {
 	@Value("${external.github.authorizeUrl}")
 	private String authUrl;
+	@Value("${external.github.redirectUrl}")
+	private String redirectUrl;
 	@Value("${external.github.clientId}")
 	private String clientId;
 	@Value("${external.github.clientSecret}")
 	private String clientSecret;
+	@Value("${external.github.exchangeCodeUrl}")
+	private String exchangeCodeUrl;
+	@Value("${external.github.requestInfoUrl")
+	private String requestInfoUrl;
 }
