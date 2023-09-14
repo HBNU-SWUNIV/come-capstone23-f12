@@ -23,10 +23,10 @@ import com.google.gson.JsonParser;
 
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
-import io.f12.notionlinkedblog.oauth.common.domain.response.OAuthLinkDto;
-import io.f12.notionlinkedblog.oauth.common.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.oauth.notion.api.port.NotionOauthService;
+import io.f12.notionlinkedblog.oauth.notion.domain.OAuthLinkDto;
 import io.f12.notionlinkedblog.oauth.notion.domain.accesstokendto.NotionAccessTokenDto;
+import io.f12.notionlinkedblog.oauth.notion.exception.TokenAvailabilityFailureException;
 import io.f12.notionlinkedblog.oauth.notion.infrastructure.NotionOauthEntity;
 import io.f12.notionlinkedblog.oauth.notion.service.port.NotionOauthRepository;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
