@@ -33,6 +33,10 @@ public class LoginUser implements OAuth2User, UserDetails, Serializable {
 		this.attributes = attributes;
 	}
 
+	public static LoginUser of(UserEntity user, Collection<? extends GrantedAuthority> authorities) {
+		return new LoginUser(user, authorities, null);
+	}
+
 	public static LoginUser of(UserEntity user, Collection<? extends GrantedAuthority> authorities,
 		OAuth2UserProfile attributes) {
 		return new LoginUser(user, authorities, attributes);
