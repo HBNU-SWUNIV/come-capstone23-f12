@@ -1,6 +1,7 @@
 package io.f12.notionlinkedblog.oauth.common.domain.handler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
 		log.info("Oauth2AuthenticationFailureHandler.onAuthenticationFailure() 시작");
 		String errorMessage = "로그인에 실패하였습니다. " + exception.getLocalizedMessage();
 		AjaxLoginFailureDto loginFailureDto = AjaxLoginFailureDto.from(errorMessage);
-
+		response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
 		response.setStatus(HttpStatus.BAD_REQUEST.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 

@@ -1,6 +1,7 @@
 package io.f12.notionlinkedblog.common.handler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ public class CommonAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		SavedRequest savedRequest = this.requestCache.getRequest(request, response);
 		String redirectUrl = savedRequest == null ? getDefaultTargetUrl() : savedRequest.getRedirectUrl();
 		LoginSuccessDto loginSuccessDto = LoginSuccessDto.getLoginSuccessDto(authentication, redirectUrl);
+		response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		objectMapper.writeValue(response.getWriter(), loginSuccessDto);
