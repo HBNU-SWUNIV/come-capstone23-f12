@@ -24,6 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.f12.notionlinkedblog.common.Endpoint;
+import io.f12.notionlinkedblog.common.handler.CommonAuthenticationSuccessHandler;
+import io.f12.notionlinkedblog.oauth.common.domain.handler.OAuth2AuthenticationFailureHandler;
 import io.f12.notionlinkedblog.oauth.common.service.CustomOAuth2UserDetailsService;
 import io.f12.notionlinkedblog.security.common.dto.AuthenticationFailureDto;
 import io.f12.notionlinkedblog.security.login.ajax.configure.AjaxLoginConfigurer;
@@ -41,6 +43,7 @@ public class SecurityConfig {
 	private final UserRepository userRepository;
 	private final CustomOAuth2UserDetailsService customOAuth2UserDetailsService;
 	private final PasswordEncoder passwordEncoder;
+	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -59,7 +62,10 @@ public class SecurityConfig {
 
 		http.oauth2Login()
 			.userInfoEndpoint()
-			.userService(customOAuth2UserDetailsService);
+			.userService(customOAuth2UserDetailsService)
+			.and()
+			.successHandler(CommonAuthenticationSuccessHandler.create())
+			.failureHandler(oAuth2AuthenticationFailureHandler);
 
 		http
 			.headers().frameOptions().disable()
