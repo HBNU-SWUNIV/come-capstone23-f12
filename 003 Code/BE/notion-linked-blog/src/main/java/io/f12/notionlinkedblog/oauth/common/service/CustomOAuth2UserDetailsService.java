@@ -49,7 +49,7 @@ public class CustomOAuth2UserDetailsService extends DefaultOAuth2UserService {
 
 	private UserEntity getOrSaveUser(OAuth2UserProfile userProfile) {
 
-		Optional<UserEntity> user = userRepository.findByEmail(userProfile.getEmail());
+		Optional<UserEntity> user = userRepository.findByOauthId(userProfile.getOauthId());
 		if (user.isPresent()) {
 			return user.orElseThrow(IllegalArgumentException::new);
 		}
@@ -58,6 +58,7 @@ public class CustomOAuth2UserDetailsService extends DefaultOAuth2UserService {
 			.email(userProfile.getEmail())
 			.username(userProfile.getName())
 			.password(passwordEncoder.encode(KeyGenerators.string().generateKey()))
+			.oauthId(userProfile.getOauthId())
 			.build());
 	}
 
