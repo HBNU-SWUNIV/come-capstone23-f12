@@ -8,18 +8,19 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum OAuthAttributes {
-	GITHUB("github", (attributes) -> {
+
+	GITHUB("GitHub", (attributes) -> {
 		return new OAuth2UserProfile(
 			String.valueOf(attributes.get("id")),
-			(String)attributes.get("name"),
-			(String)attributes.get("email")
+			(String)attributes.get("login"),
+			"github " + (String)attributes.get("email")
 		);
 	}),
 	GOOGLE("Google", (attributes) -> {
 		return new OAuth2UserProfile(
 			String.valueOf(attributes.get("sub")),
 			(String)attributes.get("name"),
-			(String)attributes.get("email")
+			"google " + (String)attributes.get("email")
 		);
 	});
 	private final String registrationId;
