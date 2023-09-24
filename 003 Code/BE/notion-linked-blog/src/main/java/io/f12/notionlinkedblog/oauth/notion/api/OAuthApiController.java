@@ -2,8 +2,6 @@ package io.f12.notionlinkedblog.oauth.notion.api;
 
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -59,14 +57,13 @@ public class OAuthApiController {
 	public void notionOAuth(@RequestParam(value = "code", required = false) String code,
 		@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "state", required = false) String state,
-		@NotNull @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) throws
-		AuthFailureException,
-		TokenAvailabilityFailureException, NotionAuthenticationException {
+		@NotNull @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser)
+		throws AuthFailureException, TokenAvailabilityFailureException, NotionAuthenticationException {
 		isError(error);
-		//TODO 서비스 분리 필요
+		//TODO 서비스 분리(인증, 인가와 연동 분리)
 		String accessToken = notionOauthService.saveAccessToken(code, loginUser.getUser().getId());
-		List<String> everyPages = notionService.getEveryPages(accessToken);
-		notionService.initEveryPages(everyPages, loginUser.getUser().getId(), accessToken);
+		// List<String> everyPages = notionService.getEveryPages(accessToken);
+		// notionService.initEveryPages(everyPages, loginUser.getUser().getId(), accessToken);
 	}
 
 	@DeleteMapping
