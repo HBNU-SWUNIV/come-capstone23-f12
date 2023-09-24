@@ -1,5 +1,6 @@
 package io.f12.notionlinkedblog.notion.service;
 
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
@@ -12,12 +13,14 @@ import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import io.f12.notionlinkedblog.common.exceptions.exception.AlreadyExistException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
+import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
@@ -27,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
 import notion.api.v1.model.blocks.Blocks;
-import notion.api.v1.model.search.SearchResult;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 import notion.api.v1.request.blocks.RetrieveBlockRequest;
 
@@ -42,16 +44,82 @@ public class NotionServiceImpl implements NotionService {
 	private final NotionBlockConverter notionBlockConverter;
 	private final SyncedPagesRepository syncedPagesRepository;
 
-	public void setNotionLinkPages(String path, Long userId) {
-		UserEntity user = userRepository.findUserById(userId)
+	// public void setNotionLinkPages(String path, Long userId) {
+	// 	UserEntity user = userRepository.findUserById(userId)
+	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+	//
+	// 	String pathToId = convertPathToId(path);
+	// 	SyncedPagesEntity syncedPages = SyncedPagesEntity.builder()
+	// 		.pageId(pathToId)
+	// 		.user(user)
+	// 		.build();
+	// 	syncedPagesRepository.save(syncedPages);
+	// }
+
+	public PostSearchDto saveSingleNotionPage(String path, Long userId) throws NotionAuthenticationException {
+		String convertPath = convertPathToId(path);
+
+		if (syncedPagesRepository.findByPageId(convertPath).isPresent()) {
+			throw new AlreadyExistException(DATA_ALREADY_EXIST);
+		}
+
+		String title = getTitle(convertPath, userId);
+		String content = getContent(convertPath, userId);
+
+		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-		String pathToId = convertPathToId(path);
-		SyncedPagesEntity syncedPages = SyncedPagesEntity.builder()
-			.pageId(pathToId)
+		PostEntity savePost = postRepository.save(PostEntity.builder()
 			.user(user)
+			.title(title)
+			.content(content)
+			.viewCount(0L)
+			.popularity(0.0)
+			.isPublic(true)
+			.build());
+		syncedPagesRepository.save(SyncedPagesEntity.builder()
+			.pageId(convertPath)
+			.post(savePost)
+			.user(user)
+			.build());
+
+		return PostSearchDto.builder()
+			.postId(savePost.getId())
+			.title(savePost.getTitle())
+			.content(savePost.getContent())
+			.viewCount(savePost.getViewCount())
+			.likes(0)
+			.requestThumbnailLink(savePost.getStoredThumbnailPath())
+			.description(savePost.getDescription())
+			.createdAt(LocalDateTime.now())
+			.countOfComments(0)
+			.author(user.getUsername())
+			.isLiked(false)
 			.build();
-		syncedPagesRepository.save(syncedPages);
+	}
+
+	@Override
+	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
+		Long postUserId = post.getUser().getId();
+		checkSameUser(postUserId, userId);
+
+		String content = getContent(post.getSyncedPages().getPageId(), userId);
+		String title = getTitle(post.getSyncedPages().getPageId(), userId);
+		post.editPost(title, content);
+
+		// return PostSearchDto.builder()
+		// 	.postId(post.getId())
+		// 	.title(post.getTitle())
+		// 	.content(post.getContent())
+		// 	.viewCount(post.getViewCount())
+		// 	.likes(post.getLikes().size())
+		// 	.requestThumbnailLink(post.getStoredThumbnailPath())
+		// 	.description(post.getDescription())
+		// 	.createdAt(post.getCreatedAt())
+		// 	.countOfComments(post.getComments().size())
+		// 	.author(post.getUser().getUsername())
+		// 	.isLiked(false)
+		// 	.build();
 	}
 
 	//아래 도메인 으로 묶기
@@ -94,44 +162,20 @@ public class NotionServiceImpl implements NotionService {
 	// 		.build();
 	// }
 
-	@Override
-	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
-		Long postUserId = post.getUser().getId();
-		checkSameUser(postUserId, userId);
-
-		String content = getContent(post.getSyncedPages().getPageId(), userId);
-		String title = getTitle(post.getSyncedPages().getPageId(), userId);
-		post.editPost(title, content);
-
-		// return PostSearchDto.builder()
-		// 	.postId(post.getId())
-		// 	.title(post.getTitle())
-		// 	.content(post.getContent())
-		// 	.viewCount(post.getViewCount())
-		// 	.likes(post.getLikes().size())
-		// 	.requestThumbnailLink(post.getStoredThumbnailPath())
-		// 	.description(post.getDescription())
-		// 	.createdAt(post.getCreatedAt())
-		// 	.countOfComments(post.getComments().size())
-		// 	.author(post.getUser().getUsername())
-		// 	.isLiked(false)
-		// 	.build();
-	}
-
-	@Override
-	public List<String> getEveryPages(String accessToken) throws NotionAuthenticationException {
-		NotionClient client = createClient(accessToken);
-		ArrayList<String> pageIds = new ArrayList<>();
-		List<SearchResult> results = null;
-		try (client) {
-			results = client.search("").getResults();
-		}
-
-		for (SearchResult searchResult : results) {
-			pageIds.add(searchResult.getId());
-		}
-		return pageIds;
-	}
+	// @Override
+	// public List<String> getEveryPages(String accessToken) throws NotionAuthenticationException {
+	// 	NotionClient client = createClient(accessToken);
+	// 	ArrayList<String> pageIds = new ArrayList<>();
+	// 	List<SearchResult> results = null;
+	// 	try (client) {
+	// 		results = client.search("").getResults();
+	// 	}
+	//
+	// 	for (SearchResult searchResult : results) {
+	// 		pageIds.add(searchResult.getId());
+	// 	}
+	// 	return pageIds;
+	// }
 
 	@Override
 	public void initEveryPages(List<String> pageIds, Long userId, String accessCode) throws
@@ -177,7 +221,6 @@ public class NotionServiceImpl implements NotionService {
 		boolean b = compareResult < 0;
 
 		return compareResult < 0;
-		// return false;
 	}
 
 	// private 매소드
