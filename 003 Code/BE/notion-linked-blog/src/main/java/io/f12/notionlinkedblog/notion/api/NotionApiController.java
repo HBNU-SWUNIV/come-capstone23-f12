@@ -57,30 +57,29 @@ public class NotionApiController {
 		return notionService.saveSingleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
 	}
 
+	@PostMapping("/multi")
+	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(summary = "노션 포스트 생성 - multi", description = "노션에서 포스트 n개를 가져와 포스트를 생성합니다. 기본 생성모드는 공개입니다.\n"
+		+ "부모 페이지는 Series, 자식 페이지는 post로 등록되며, 부모페이지에 존재하는 데이터는 page 블록과 제목만 등록처리 됩니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "201", description = "포스트 생성 성공",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = PostSearchDto.class,
+					description = "썸네일, 설명, 시리즈는 연동 이후 따로 등록해야 합니다."))),
+		@ApiResponse(responseCode = "400", description = "isPublic 값이 0, 1 이 아닌경우",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class)))
+	})
+	public void getMultipleNotionPageToBlog(
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
+		notionAccessAvailable(loginUser);
+		notionService.saveMultipleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
+	}
+
 	private void notionAccessAvailable(LoginUser loginUser) {
 		Assert.notNull(loginUser.getUser().getNotionOauth().getAccessToken(), "AuthenticationNeed");
 	}
-	//
-	// @PostMapping("/setpage")
-	// public void setPage(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-	// 	@RequestPart(value = "pageId") String pageId) {
-	// 	notionService.setNotionLinkPages(pageId, loginUser.getUser().getId());
-	// }
-	//
-	// @PutMapping
-	// @ResponseStatus(HttpStatus.OK)
-	// @Operation(summary = "Notion 연동 포스트 수정", description = "id 에 해당하는 포스트 수정")
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "포스트 수정 성공",
-	// 		content = @Content(mediaType = APPLICATION_JSON_VALUE,
-	// 			schema = @Schema(implementation = PostSearchDto.class,
-	// 				description = "PostId 에 해당하는 사용자의 PostEntity 를 노션과 업데이트, 업데이트시 모든 내용을 대체")))
-	// })
-	// public PostSearchDto updateNotionPageToBlog(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-	// 	@RequestBody @Validated UpdateNotionPageInfoDto infoDto) throws NotionAuthenticationException {
-	// 	checkSameUser(infoDto.getUserId(), loginUser);
-	// 	return notionService.editNotionPageToBlogDev(infoDto.getUserId(), infoDto.getPostId());
-	// }
 
 	private void checkSameUser(Long id, LoginUser loginUser) {
 		if (!id.equals(loginUser.getUser().getId())) {
