@@ -53,9 +53,8 @@ public class NotionApiController {
 	public PostSearchDto getSingleNotionPageToBlog(
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
-		checkSameUser(notionToBlogDto.getUserId(), loginUser);
 		notionAccessAvailable(loginUser);
-		return notionService.saveSingleNotionPage(notionToBlogDto.getPath(), notionToBlogDto.getUserId());
+		return notionService.saveSingleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
 	}
 
 	private void notionAccessAvailable(LoginUser loginUser) {
