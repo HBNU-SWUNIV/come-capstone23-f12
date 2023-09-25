@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.AlreadyExistException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
@@ -20,9 +21,12 @@ import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
+import io.f12.notionlinkedblog.oauth.notion.infrastructure.NotionType;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
+import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
 import io.f12.notionlinkedblog.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,46 +45,25 @@ public class NotionServiceImpl implements NotionService {
 	private final NotionOAuthComponent notionOAuthComponent;
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
+	private final SeriesRepository seriesRepository;
 	private final NotionBlockConverter notionBlockConverter;
 	private final SyncedPagesRepository syncedPagesRepository;
 
-	// public void setNotionLinkPages(String path, Long userId) {
-	// 	UserEntity user = userRepository.findUserById(userId)
-	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-	//
-	// 	String pathToId = convertPathToId(path);
-	// 	SyncedPagesEntity syncedPages = SyncedPagesEntity.builder()
-	// 		.pageId(pathToId)
-	// 		.user(user)
-	// 		.build();
-	// 	syncedPagesRepository.save(syncedPages);
-	// }
-
+	@Override
 	public PostSearchDto saveSingleNotionPage(String path, Long userId) throws NotionAuthenticationException {
+
 		String convertPath = convertPathToId(path);
-
-		if (syncedPagesRepository.findByPageId(convertPath).isPresent()) {
-			throw new AlreadyExistException(DATA_ALREADY_EXIST);
-		}
-
-		String title = getTitle(convertPath, userId);
-		String content = getContent(convertPath, userId);
 
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-		PostEntity savePost = postRepository.save(PostEntity.builder()
-			.user(user)
-			.title(title)
-			.content(content)
-			.viewCount(0L)
-			.popularity(0.0)
-			.isPublic(true)
-			.build());
+		PostEntity savePost = postRepository.save(createPost(convertPath, userId));
+
 		syncedPagesRepository.save(SyncedPagesEntity.builder()
 			.pageId(convertPath)
 			.post(savePost)
 			.user(user)
+			.type(NotionType.POST)
 			.build());
 
 		return PostSearchDto.builder()
@@ -99,6 +82,34 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	@Override
+	@Transactional
+	public void saveMultipleNotionPage(String path, Long userId) throws NotionAuthenticationException {
+		String convertPath = convertPathToId(path);
+
+		if (syncedPagesRepository.findByPageId(convertPath).isPresent()) {
+			throw new AlreadyExistException(DATA_ALREADY_EXIST);
+		}
+		String seriesTitle = getTitle(convertPath, userId);
+
+		List<String> ids = getIds(convertPath, userId);
+		UserEntity user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		SeriesEntity series = seriesRepository.save(SeriesEntity.builder()
+			.user(user)
+			.title(seriesTitle)
+			.post(new ArrayList<>())
+			.build());
+
+		for (String id : ids) {
+			PostEntity post = createPost(id, userId);
+			PostEntity savePost = postRepository.save(post);
+			series.addPost(savePost);
+		}
+		seriesRepository.save(series);
+	}
+
+	@Override
 	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
@@ -106,101 +117,6 @@ public class NotionServiceImpl implements NotionService {
 		String content = getContent(post.getSyncedPages().getPageId(), userId);
 		String title = getTitle(post.getSyncedPages().getPageId(), userId);
 		post.editPost(title, content);
-
-		// return PostSearchDto.builder()
-		// 	.postId(post.getId())
-		// 	.title(post.getTitle())
-		// 	.content(post.getContent())
-		// 	.viewCount(post.getViewCount())
-		// 	.likes(post.getLikes().size())
-		// 	.requestThumbnailLink(post.getStoredThumbnailPath())
-		// 	.description(post.getDescription())
-		// 	.createdAt(post.getCreatedAt())
-		// 	.countOfComments(post.getComments().size())
-		// 	.author(post.getUser().getUsername())
-		// 	.isLiked(false)
-		// 	.build();
-	}
-
-	//아래 도메인 으로 묶기
-	// public PostSearchDto saveNotionPageToBlog(String path, Long userId) throws NotionAuthenticationException {
-	// 	String convertPath = convertPathToId(path);
-	// 	Notion notion = notionDataRepository.findByPathValue(convertPath).orElse(null);
-	// 	if (notion != null) {
-	// 		throw new AlreadyExistException(DATA_ALREADY_EXIST);
-	// 	}
-	// 	String title = getTitle(convertPath, userId);
-	// 	String content = getContent(convertPath, userId);
-	//
-	// 	UserEntity user = userRepository.findById(userId)
-	// 		.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-	// 	PostEntity savePost = postRepository.save(PostEntity.builder()
-	// 		.user(user)
-	// 		.title(title)
-	// 		.content(content)
-	// 		.viewCount(0L)
-	// 		.popularity(0.0)
-	// 		.isPublic(true)
-	// 		.build());
-	// 	notionDataRepository.save(Notion.builder()
-	// 		.notionId(convertPath)
-	// 		.post(savePost)
-	// 		.build());
-	//
-	// 	return PostSearchDto.builder()
-	// 		.postId(savePost.getId())
-	// 		.title(savePost.getTitle())
-	// 		.content(savePost.getContent())
-	// 		.viewCount(savePost.getViewCount())
-	// 		.likes(0)
-	// 		.requestThumbnailLink(savePost.getStoredThumbnailPath())
-	// 		.description(savePost.getDescription())
-	// 		.createdAt(LocalDateTime.now())
-	// 		.countOfComments(0)
-	// 		.author(user.getUsername())
-	// 		.isLiked(false)
-	// 		.build();
-	// }
-
-	// @Override
-	// public List<String> getEveryPages(String accessToken) throws NotionAuthenticationException {
-	// 	NotionClient client = createClient(accessToken);
-	// 	ArrayList<String> pageIds = new ArrayList<>();
-	// 	List<SearchResult> results = null;
-	// 	try (client) {
-	// 		results = client.search("").getResults();
-	// 	}
-	//
-	// 	for (SearchResult searchResult : results) {
-	// 		pageIds.add(searchResult.getId());
-	// 	}
-	// 	return pageIds;
-	// }
-
-	@Override
-	public void initEveryPages(List<String> pageIds, Long userId, String accessCode) throws
-		NotionAuthenticationException {
-		UserEntity user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-		for (String pageId : pageIds) {
-			String title = getTitleTemp(pageId, accessCode);
-			String content = getContentTemp(pageId, accessCode);
-			PostEntity post = postRepository.save(PostEntity.builder()
-				.user(user)
-				.title(title)
-				.content(content)
-				.isPublic(true)
-				.comments(new ArrayList<>())
-				.likes(new ArrayList<>())
-				.viewCount(0L)
-				.build());
-			SyncedPagesEntity syncedPages = syncedPagesRepository.save(SyncedPagesEntity.builder()
-				.pageId(pageId)
-				.user(user)
-				.post(post)
-				.build());
-			post.setSyncedPages(syncedPages);
-		}
 
 	}
 
@@ -224,6 +140,28 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	// private 매소드
+	private PostEntity createPost(String path, Long userId) throws NotionAuthenticationException {
+
+		if (syncedPagesRepository.findByPageId(path).isPresent()) {
+			throw new AlreadyExistException(DATA_ALREADY_EXIST);
+		}
+
+		String title = getTitle(path, userId);
+		String content = getContent(path, userId);
+
+		UserEntity user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+
+		return PostEntity.builder()
+			.user(user)
+			.title(title)
+			.content(content)
+			.viewCount(0L)
+			.popularity(0.0)
+			.isPublic(true)
+			.build();
+	}
+
 	private String getTitle(String fullPath, Long userId) throws NotionAuthenticationException {
 		Block block;
 		NotionClient client = createClient(userId);
@@ -255,21 +193,9 @@ public class NotionServiceImpl implements NotionService {
 		return stringBuilder.toString();
 	}
 
-	private String getTitleTemp(String fullPath, String accessCode) throws NotionAuthenticationException {
-		Block block;
-		NotionClient client = createClient(accessCode);
-		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(fullPath);
-		try (client) {
-			block = client.retrieveBlock(retrieveBlockRequest);
-		}
-
-		return block.asChildPage().getChildPage().getTitle();
-	}
-
-	private String getContentTemp(String fullPath, String accessCode) throws NotionAuthenticationException {
+	private List<String> getIds(String fullPath, Long userId) throws NotionAuthenticationException {
 		Blocks blocks;
-		NotionClient client = createClient(accessCode);
-		StringBuilder stringBuilder = new StringBuilder();
+		NotionClient client = createClient(userId);
 		RetrieveBlockChildrenRequest retrieveBlockChildrenRequest
 			= new RetrieveBlockChildrenRequest(fullPath);
 		try {
@@ -279,11 +205,13 @@ public class NotionServiceImpl implements NotionService {
 		}
 
 		List<Block> blockedContents = blocks.getResults();
+		List<String> results = new ArrayList<>();
 
 		for (Block blockedContent : blockedContents) {
-			stringBuilder.append(notionBlockConverter.doFilter(blockedContent, client));
+			results.add(blockedContent.getId());
 		}
-		return stringBuilder.toString();
+
+		return results;
 	}
 
 	private NotionClient createClient(Long userId) throws NotionAuthenticationException {
@@ -292,16 +220,6 @@ public class NotionServiceImpl implements NotionService {
 			.getNotionOauth()
 			.getAccessToken();
 
-		NotionClient notionClient = new NotionClient();
-		notionClient.setClientId(notionOAuthComponent.getClientId());
-		notionClient.setClientSecret(notionOAuthComponent.getClientSecret());
-		notionClient.setRedirectUri(notionOAuthComponent.getRedirectUrl());
-		notionClient.setToken(accessToken);
-
-		return notionClient;
-	}
-
-	private NotionClient createClient(String accessToken) throws NotionAuthenticationException {
 		NotionClient notionClient = new NotionClient();
 		notionClient.setClientId(notionOAuthComponent.getClientId());
 		notionClient.setClientSecret(notionOAuthComponent.getClientSecret());
