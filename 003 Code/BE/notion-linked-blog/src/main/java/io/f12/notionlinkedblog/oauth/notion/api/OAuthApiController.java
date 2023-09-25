@@ -58,12 +58,9 @@ public class OAuthApiController {
 		@RequestParam(value = "error", required = false) String error,
 		@RequestParam(value = "state", required = false) String state,
 		@NotNull @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser)
-		throws AuthFailureException, TokenAvailabilityFailureException, NotionAuthenticationException {
+		throws AuthFailureException, TokenAvailabilityFailureException {
 		isError(error);
-		//TODO 서비스 분리(인증, 인가와 연동 분리)
 		String accessToken = notionOauthService.saveAccessToken(code, loginUser.getUser().getId());
-		// List<String> everyPages = notionService.getEveryPages(accessToken);
-		// notionService.initEveryPages(everyPages, loginUser.getUser().getId(), accessToken);
 	}
 
 	@DeleteMapping
