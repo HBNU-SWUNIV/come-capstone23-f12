@@ -8,7 +8,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -75,6 +77,21 @@ public class NotionApiController {
 		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
 		notionAccessAvailable(loginUser);
 		notionService.saveMultipleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
+	}
+
+	@PutMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "포스트 업데이트 요청", description = "postId 에 해당하는 포스트를 바로 연동합니다.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "포스트 업데이트 성공"),
+		@ApiResponse(responseCode = "404", description = "포스트가 존재하지 않는 경우"),
+		@ApiResponse(responseCode = "500", description = "사용자와 Post 작성자가 다른 경우",
+			content = @Content(mediaType = APPLICATION_JSON_VALUE,
+				schema = @Schema(implementation = CommonErrorResponse.class)))
+	})
+	public void requestUpdatePost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
+		@PathVariable Long postId) throws NotionAuthenticationException {
+		notionService.updateRequest(loginUser.getUser().getId(), postId);
 	}
 
 	private void notionAccessAvailable(LoginUser loginUser) {

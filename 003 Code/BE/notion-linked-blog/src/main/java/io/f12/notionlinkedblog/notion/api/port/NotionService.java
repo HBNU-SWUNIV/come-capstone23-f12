@@ -16,4 +16,6 @@ public interface NotionService {
 
 	boolean needUpdate(Long userId, String pageId, LocalDateTime updateTime)
 		throws NotionAuthenticationException;
+
+	public void updateRequest(Long userId, Long postId) throws NotionAuthenticationException;
 }

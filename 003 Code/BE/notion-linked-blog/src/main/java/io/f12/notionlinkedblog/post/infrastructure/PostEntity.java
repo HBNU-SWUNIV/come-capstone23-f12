@@ -139,6 +139,15 @@ public class PostEntity extends PostTimeEntity {
 		}
 	}
 
+	public void editPost(PostEntity postEntity) {
+		if (StringUtils.hasText(postEntity.getTitle())) {
+			this.title = postEntity.getTitle();
+		}
+		if (StringUtils.hasText(postEntity.getContent())) {
+			this.content = postEntity.getContent();
+		}
+	}
+
 	public void addViewCount() {
 		viewCount++;
 	}

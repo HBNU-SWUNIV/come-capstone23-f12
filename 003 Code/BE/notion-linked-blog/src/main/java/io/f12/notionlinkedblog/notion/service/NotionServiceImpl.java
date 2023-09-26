@@ -1,6 +1,7 @@
 package io.f12.notionlinkedblog.notion.service;
 
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
@@ -57,6 +58,8 @@ public class NotionServiceImpl implements NotionService {
 		UserEntity user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
+		checkPostExist(convertPath);
+
 		PostEntity savePost = postRepository.save(createPost(convertPath, userId));
 
 		syncedPagesRepository.save(SyncedPagesEntity.builder()
@@ -102,6 +105,7 @@ public class NotionServiceImpl implements NotionService {
 			.build());
 
 		for (String id : ids) {
+			checkPostExist(id);
 			PostEntity post = createPost(id, userId);
 			PostEntity savePost = postRepository.save(post);
 			series.addPost(savePost);
@@ -134,18 +138,21 @@ public class NotionServiceImpl implements NotionService {
 		LocalDateTime serverUpdateTime = instant.atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
 		int compareResult = updateTime.compareTo(serverUpdateTime);
 
-		boolean b = compareResult < 0;
-
 		return compareResult < 0;
+	}
+
+	@Override
+	public void updateRequest(Long userId, Long postId) throws NotionAuthenticationException {
+		PostEntity existPost = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
+		checkSameUser(userId, existPost.getUser().getId());
+
+		PostEntity newPost = createPost(existPost.getSyncedPages().getPageId(), userId);
+		existPost.editPost(newPost);
 	}
 
 	// private 매소드
 	private PostEntity createPost(String path, Long userId) throws NotionAuthenticationException {
-
-		if (syncedPagesRepository.findByPageId(path).isPresent()) {
-			throw new AlreadyExistException(DATA_ALREADY_EXIST);
-		}
-
 		String title = getTitle(path, userId);
 		String content = getContent(path, userId);
 
@@ -237,6 +244,12 @@ public class NotionServiceImpl implements NotionService {
 	private void checkSameUser(Long id1, Long id2) {
 		if (!id1.equals(id2)) {
 			throw new AccessDeniedException(USER_NOT_MATCH);
+		}
+	}
+
+	private void checkPostExist(String path) {
+		if (syncedPagesRepository.findByPageId(path).isPresent()) {
+			throw new AlreadyExistException(DATA_ALREADY_EXIST);
 		}
 	}
 
