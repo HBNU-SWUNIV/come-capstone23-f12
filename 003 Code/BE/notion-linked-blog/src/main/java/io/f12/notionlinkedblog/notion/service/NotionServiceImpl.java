@@ -20,8 +20,10 @@ import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationE
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
+import io.f12.notionlinkedblog.notion.infrastructure.multi.SyncedSeriesEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.single.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
+import io.f12.notionlinkedblog.notion.service.port.SyncedSeriesRepository;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
@@ -48,6 +50,7 @@ public class NotionServiceImpl implements NotionService {
 	private final SeriesRepository seriesRepository;
 	private final NotionBlockConverter notionBlockConverter;
 	private final SyncedPagesRepository syncedPagesRepository;
+	private final SyncedSeriesRepository syncedSeriesRepository;
 
 	@Override
 	public PostSearchDto saveSingleNotionPage(String path, Long userId) throws NotionAuthenticationException {
@@ -87,14 +90,14 @@ public class NotionServiceImpl implements NotionService {
 	public void saveMultipleNotionPage(String path, Long userId) throws NotionAuthenticationException {
 		String convertPath = convertPathToId(path);
 
-		if (syncedPagesRepository.findByPageId(convertPath).isPresent()) {
+		if (syncedSeriesRepository.findByPageId(convertPath).isPresent()) {
 			throw new AlreadyExistException(DATA_ALREADY_EXIST);
 		}
+		UserEntity user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 		String seriesTitle = getTitle(convertPath, userId);
 
 		List<String> ids = getIds(convertPath, userId);
-		UserEntity user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
 		SeriesEntity series = seriesRepository.save(SeriesEntity.builder()
 			.user(user)
@@ -103,12 +106,25 @@ public class NotionServiceImpl implements NotionService {
 			.build());
 
 		for (String id : ids) {
-			checkPostExist(id);
 			PostEntity post = createPost(id, userId);
-			PostEntity savePost = postRepository.save(post);
-			series.addPost(savePost);
+			syncedPagesRepository.findByPageId(id).ifPresentOrElse(s -> {
+				s.getPost().editPost(post);
+				series.addPost(s.getPost());
+			}, () -> {
+				PostEntity savePost = postRepository.save(post);
+				series.addPost(savePost);
+				syncedPagesRepository.save(SyncedPagesEntity.builder()
+					.pageId(id)
+					.post(savePost)
+					.user(user)
+					.build());
+			});
 		}
-		seriesRepository.save(series);
+		syncedSeriesRepository.save(SyncedSeriesEntity.builder()
+			.pageId(convertPath)
+			.user(user)
+			.series(seriesRepository.save(series))
+			.build());
 	}
 
 	@Override
@@ -213,7 +229,7 @@ public class NotionServiceImpl implements NotionService {
 		List<String> results = new ArrayList<>();
 
 		for (Block blockedContent : blockedContents) {
-			results.add(blockedContent.getId());
+			results.add((blockedContent.getId()));
 		}
 
 		return results;
@@ -236,7 +252,10 @@ public class NotionServiceImpl implements NotionService {
 
 	private String convertPathToId(String path) {
 		String[] split = path.split("-");
-		return split[split.length - 1];
+		String rawId = split[split.length - 1];
+		return rawId.substring(0, 8) + "-" + rawId.substring(8, 12) + "-" + rawId.substring(12, 16) + "-"
+			+ rawId.substring(16, 20) + "-" + rawId.substring(20);
+
 	}
 
 	private void checkSameUser(Long id1, Long id2) {
