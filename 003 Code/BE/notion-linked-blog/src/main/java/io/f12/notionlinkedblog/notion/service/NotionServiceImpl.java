@@ -22,7 +22,6 @@ import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
-import io.f12.notionlinkedblog.oauth.notion.infrastructure.NotionType;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
@@ -66,7 +65,6 @@ public class NotionServiceImpl implements NotionService {
 			.pageId(convertPath)
 			.post(savePost)
 			.user(user)
-			.type(NotionType.POST)
 			.build());
 
 		return PostSearchDto.builder()
