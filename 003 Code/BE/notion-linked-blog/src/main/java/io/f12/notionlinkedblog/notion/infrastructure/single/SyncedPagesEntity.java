@@ -1,4 +1,4 @@
-package io.f12.notionlinkedblog.notion.infrastructure;
+package io.f12.notionlinkedblog.notion.infrastructure.single;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

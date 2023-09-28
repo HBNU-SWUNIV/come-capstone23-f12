@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
-import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
+import io.f12.notionlinkedblog.notion.infrastructure.single.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -20,7 +20,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationE
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
-import io.f12.notionlinkedblog.notion.infrastructure.SyncedPagesEntity;
+import io.f12.notionlinkedblog.notion.infrastructure.single.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
