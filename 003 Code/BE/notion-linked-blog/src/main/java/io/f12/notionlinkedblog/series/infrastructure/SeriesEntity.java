@@ -42,7 +42,7 @@ public class SeriesEntity {
 	@OneToMany(mappedBy = "series", cascade = CascadeType.PERSIST)
 	private List<PostEntity> post = new ArrayList<>();
 
-	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToOne(mappedBy = "series", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private SyncedSeriesEntity syncedSeries;
 
 	@NotNull

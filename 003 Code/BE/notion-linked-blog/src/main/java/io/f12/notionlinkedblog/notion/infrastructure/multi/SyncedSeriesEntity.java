@@ -39,6 +39,6 @@ public class SyncedSeriesEntity {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "series_id")
 	@NotNull
-	private SeriesEntity post;
+	private SeriesEntity series;
 
 }
