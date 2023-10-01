@@ -20,6 +20,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationE
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
+import io.f12.notionlinkedblog.notion.exception.NoContentException;
 import io.f12.notionlinkedblog.notion.infrastructure.multi.SyncedSeriesEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.single.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.blocks.Block;
+import notion.api.v1.model.blocks.BlockType;
 import notion.api.v1.model.blocks.Blocks;
 import notion.api.v1.request.blocks.RetrieveBlockChildrenRequest;
 import notion.api.v1.request.blocks.RetrieveBlockRequest;
@@ -229,7 +231,13 @@ public class NotionServiceImpl implements NotionService {
 		List<String> results = new ArrayList<>();
 
 		for (Block blockedContent : blockedContents) {
-			results.add((blockedContent.getId()));
+			if (blockedContent.getType().equals(BlockType.ChildPage)) {
+				results.add((blockedContent.getId()));
+			}
+		}
+
+		if (results.isEmpty()) {
+			throw new NoContentException();
 		}
 
 		return results;

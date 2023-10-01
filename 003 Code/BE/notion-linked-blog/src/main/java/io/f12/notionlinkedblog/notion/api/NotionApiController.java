@@ -68,7 +68,7 @@ public class NotionApiController {
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = PostSearchDto.class,
 					description = "썸네일, 설명, 시리즈는 연동 이후 따로 등록해야 합니다."))),
-		@ApiResponse(responseCode = "400", description = "isPublic 값이 0, 1 이 아닌경우",
+		@ApiResponse(responseCode = "400", description = "Series 내부에 Post가 존재하지 않을 경우",
 			content = @Content(mediaType = APPLICATION_JSON_VALUE,
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
