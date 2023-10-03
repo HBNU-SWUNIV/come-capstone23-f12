@@ -2,6 +2,7 @@ package io.f12.notionlinkedblog.notion.service;
 
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.NotionValidateMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.PostExceptionsMessages.*;
+import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.SeriesExceptionMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserValidateMessages.*;
 
@@ -158,7 +159,17 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	@Override
-	public void updateRequest(Long userId, Long postId) throws NotionAuthenticationException {
+	public void updateSeriesRequest(Long userId, String seriesId) throws NotionAuthenticationException {
+		SyncedSeriesEntity existSeries = syncedSeriesRepository.findByPageId(seriesId)
+			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
+		checkSameUser(userId, existSeries.getUser().getId());
+
+		String seriesTitle = getTitle(existSeries.getPageId(), userId);
+		existSeries.getSeries().setTitle(seriesTitle);
+	}
+
+	@Override
+	public void updatePostRequest(Long userId, Long postId) throws NotionAuthenticationException {
 		PostEntity existPost = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		checkSameUser(userId, existPost.getUser().getId());
