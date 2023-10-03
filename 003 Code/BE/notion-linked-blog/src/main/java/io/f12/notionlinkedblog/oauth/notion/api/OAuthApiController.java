@@ -76,7 +76,7 @@ public class OAuthApiController {
 	@GetMapping("/test")
 	@Operation(summary = "일정시간 마다 동기화 확인 매서드, Test용", description = "노션 연동된 Post들 내용 업데이트")
 	public void test() throws NotionAuthenticationException {
-		test.updateNotionData();
+		test.updatePostData();
 	}
 
 	private void isError(String error) throws AuthFailureException {

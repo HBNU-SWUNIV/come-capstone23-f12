@@ -91,7 +91,7 @@ public class NotionApiController {
 	})
 	public void requestUpdatePost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
 		@PathVariable Long postId) throws NotionAuthenticationException {
-		notionService.updateRequest(loginUser.getUser().getId(), postId);
+		notionService.updatePostRequest(loginUser.getUser().getId(), postId);
 	}
 
 	private void notionAccessAvailable(LoginUser loginUser) {
