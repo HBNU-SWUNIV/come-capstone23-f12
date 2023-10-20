@@ -4,7 +4,6 @@ import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessage
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import io.f12.notionlinkedblog.common.domain.AwsBucket;
-import io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages;
 import io.f12.notionlinkedblog.hashtag.exception.NoHashtagException;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.like.domain.dto.LikeSearchDto;
@@ -316,15 +314,15 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	public PostThumbnailDto getThumbnail(String imageName) throws MalformedURLException {
-		String thumbnailName = postRepository.findThumbnailWithName(imageName);
-		if (thumbnailName == null) {
-			throw new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.IMAGE_NOT_EXIST);
-		}
-		return PostThumbnailDto.builder()
-			.url(awsBucket.makeFileUrl(thumbnailName))
-			.build();
-	}
+	// public PostThumbnailDto getThumbnail(String imageName)  {
+	// 	String thumbnailName = postRepository.findThumbnailWithName(imageName);
+	// 	if (thumbnailName == null) {
+	// 		throw new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.IMAGE_NOT_EXIST);
+	// 	}
+	// 	return PostThumbnailDto.builder()
+	// 		.url(awsBucket.makeFileUrl(thumbnailName))
+	// 		.build();
+	// }
 
 	// 내부 사용 매서드
 	private List<String> getHashtagsFromPost(PostEntity savedPost) {
