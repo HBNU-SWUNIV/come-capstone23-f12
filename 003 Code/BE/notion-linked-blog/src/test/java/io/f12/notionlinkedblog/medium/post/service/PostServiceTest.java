@@ -950,7 +950,7 @@ class PostServiceTest {
 					.password("1234")
 					.build();
 				//mock
-				given(postRepository.findThumbnailPathWithName(imageName))
+				given(postRepository.findThumbnailWithName(imageName))
 					.willReturn("testImage.png");
 				//when
 				File file = postService.readImageFile(imageName);

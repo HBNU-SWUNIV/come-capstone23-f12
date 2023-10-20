@@ -11,6 +11,9 @@ public class AwsBucket {
 	private String region;
 
 	public String makeFileUrl(String fileFullName) {
+		if (fileFullName == null) {
+			return "https://" + bucket + ".s3." + region + ".amazonaws.com/profile/DefaultProfile.png";
+		}
 		return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileFullName;
 	}
 
