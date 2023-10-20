@@ -2,12 +2,7 @@ package io.f12.notionlinkedblog.user.service;
 
 import static io.f12.notionlinkedblog.common.exceptions.message.ExceptionMessages.UserExceptionsMessages.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +16,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import io.f12.notionlinkedblog.common.domain.AwsBucket;
 import io.f12.notionlinkedblog.user.api.port.UserService;
+import io.f12.notionlinkedblog.user.api.response.ProfileImageLinkDto;
 import io.f12.notionlinkedblog.user.api.response.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.user.api.response.UserSearchDto;
 import io.f12.notionlinkedblog.user.domain.dto.request.UserBasicInfoEditDto;
@@ -111,6 +107,8 @@ public class UserServiceImpl implements UserService {
 		metadata.setContentLength(imageFile.getSize());
 		amazonS3Client.putObject(bucket, makeFilename, imageFile.getInputStream(), metadata);
 
+		findUser.setProfile(makeFilename);
+
 		return ProfileSuccessEditDto.builder()
 			.requestLink(newFileUrl)
 			.build();
@@ -120,12 +118,9 @@ public class UserServiceImpl implements UserService {
 	public void removeUserProfileImage(Long id) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-		try {
-			Files.delete(Path.of(findUser.getProfile()));
-		} catch (Exception e) {
-			log.warn("파일이 존재하지 않습니다: {}", e.getMessage());
+		if (findUser.getProfile().isEmpty()) {
+			findUser.setProfile(null);
 		}
-		findUser.setProfile(null);
 	}
 
 	@Override
@@ -136,15 +131,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public File readImageFile(Long userId) {
-		UserEntity editedUSer =
-			userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-
-		if (editedUSer.getProfile() == null) {
-			return null;
+	public ProfileImageLinkDto getProfileImageUrl(Long id) {
+		UserEntity user = userRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		if (user.getProfile() == null) {
+			return ProfileImageLinkDto.builder()
+				.imageUrl(awsBucket.makeFileUrl("profile/DefaultProfile.png"))
+				.build();
 		}
 
-		return new File(editedUSer.getProfile());
+		return ProfileImageLinkDto.builder()
+			.imageUrl(awsBucket.makeFileUrl(user.getProfile()))
+			.build();
 	}
 
 	//내부 사용 매서드
@@ -158,19 +156,5 @@ public class UserServiceImpl implements UserService {
 		if (isPresent) {
 			throw new IllegalArgumentException(EMAIL_ALREADY_EXIST);
 		}
-	}
-
-	private String makeProfileFileName(String username) {
-		StringBuilder sb = new StringBuilder();
-		Date now = new Date();
-		SimpleDateFormat savedDataFormat = new SimpleDateFormat("yyyy_MM");
-		sb.append(username);
-		sb.append(savedDataFormat.format(now));
-		return sb.toString();
-	}
-
-	private String getSavedDirectory(MultipartFile multipartFile, String systemPath, String fileName) {
-		return
-			systemPath + "\\" + fileName + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 	}
 }
