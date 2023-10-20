@@ -9,13 +9,17 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.f12.notionlinkedblog.common.Endpoint;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+
+import io.f12.notionlinkedblog.common.domain.AwsBucket;
 import io.f12.notionlinkedblog.user.api.port.UserService;
 import io.f12.notionlinkedblog.user.api.response.ProfileSuccessEditDto;
 import io.f12.notionlinkedblog.user.api.response.UserSearchDto;
@@ -36,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final AmazonS3Client amazonS3Client;
+	private final AwsBucket awsBucket;
+	@Value("${application.bucket.name}")
+	private String bucket;
 
 	@Override
 	public Long signupByEmail(UserSignupRequestDto requestDto) {
@@ -95,27 +103,16 @@ public class UserServiceImpl implements UserService {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
 
-		String systemPath = System.getProperty("user.dir");
-		String imageName = findUser.getUsername();
-		String profileFileName = makeProfileFileName(findUser.getUsername());
+		String makeFilename = makeProfileName(imageFile, findUser);
+		String newFileUrl = awsBucket.makeFileUrl(makeFilename);
 
-		//기존 프로파일 제거
-		if (findUser.getProfile() != null) {
-			try {
-				Files.delete(Path.of(findUser.getProfile()));
-			} catch (Exception e) {
-				log.warn("파일이 존재하지 않습니다: {}", e.getMessage());
-			}
-			findUser.setProfile(null);
-		}
-		//새로운 프로파일 등록
-		String fullPath = getSavedDirectory(imageFile, systemPath, profileFileName);
-		imageFile.transferTo(new File(fullPath));
-		String newName = profileFileName + "." + StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentType(imageFile.getContentType());
+		metadata.setContentLength(imageFile.getSize());
+		amazonS3Client.putObject(bucket, makeFilename, imageFile.getInputStream(), metadata);
 
-		findUser.setProfile(systemPath + "/" + newName);
 		return ProfileSuccessEditDto.builder()
-			.requestLink(Endpoint.Api.REQUEST_PROFILE_IMAGE + id)
+			.requestLink(newFileUrl)
 			.build();
 	}
 
@@ -151,6 +148,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	//내부 사용 매서드
+
+	private static String makeProfileName(MultipartFile imageFile, UserEntity findUser) {
+		return "profile/" + findUser.getId() + "." + StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
+	}
+
 	private void checkEmailIsDuplicated(final String email) {
 		boolean isPresent = userRepository.findByEmail(email).isPresent();
 		if (isPresent) {
