@@ -88,6 +88,8 @@ public class PostServiceImpl implements PostService {
 			amazonS3Client.putObject(bucket, fileName, multipartFile.getInputStream(), metadata);
 
 			savedPost.editThumbnailName(fileName);
+		} else {
+			url = getDefaultThumbnail();
 		}
 
 		return PostSearchDto.builder()
@@ -143,6 +145,8 @@ public class PostServiceImpl implements PostService {
 
 		if (post.getThumbnailName() != null) {
 			thumbnailLink = awsBucket.makeFileUrl(post.getThumbnailName());
+		} else {
+			thumbnailLink = getDefaultThumbnail();
 		}
 		if (post.getLikes() != null) {
 			likeSize = post.getLikes().size();
@@ -314,16 +318,6 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	// public PostThumbnailDto getThumbnail(String imageName)  {
-	// 	String thumbnailName = postRepository.findThumbnailWithName(imageName);
-	// 	if (thumbnailName == null) {
-	// 		throw new IllegalArgumentException(ExceptionMessages.UserExceptionsMessages.IMAGE_NOT_EXIST);
-	// 	}
-	// 	return PostThumbnailDto.builder()
-	// 		.url(awsBucket.makeFileUrl(thumbnailName))
-	// 		.build();
-	// }
-
 	// 내부 사용 매서드
 	private List<String> getHashtagsFromPost(PostEntity savedPost) {
 		List<HashtagEntity> hashtags = savedPost.getHashtag();
@@ -343,11 +337,13 @@ public class PostServiceImpl implements PostService {
 
 			if (p.getThumbnailName() != null) {
 				thumbnailLink = awsBucket.makeFileUrl(p.getThumbnailName());
+			} else {
+				thumbnailLink = getDefaultThumbnail();
 			}
+
 			if (p.getLikes() != null) {
 				likeSize = p.getLikes().size();
 			}
-
 			if (p.getComments() != null) {
 				commentsSize = p.getComments().size();
 			}
@@ -384,7 +380,11 @@ public class PostServiceImpl implements PostService {
 		return !idA.equals(idB);
 	}
 
-	private static String makeThumbnailName(MultipartFile imageFile, PostEntity post) {
+	private String makeThumbnailName(MultipartFile imageFile, PostEntity post) {
 		return "thumbnail/" + post.getId() + "." + StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
+	}
+
+	private String getDefaultThumbnail() {
+		return awsBucket.makeFileUrl("thumbnail/DefaultThumbnail.jpg");
 	}
 }
