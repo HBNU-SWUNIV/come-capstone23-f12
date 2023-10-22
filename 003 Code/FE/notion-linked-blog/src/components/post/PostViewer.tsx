@@ -11,7 +11,7 @@ import {useSelector} from "react-redux";
 import Link from "next/link";
 import {RootState} from "@/redux/store";
 import {UserState} from "@/redux/userSlice";
-import CommentContainer from "@/components/post/comment/CommentContainer";
+import CommentContainer from "./comment/CommentContainer";
 
 const MDPreview = dynamic(
 	() => import("@uiw/react-markdown-preview").then(mod => mod.default),
@@ -21,6 +21,7 @@ const MDPreview = dynamic(
 const StyledMDPreview = styled(MDPreview)`
   background-color: transparent !important;
   margin-top: 80px;
+  width: 100%;
   height: 100%;
 `;
 
@@ -106,7 +107,7 @@ export default function PostViewer({post}) {
 					</StyledButtonDiv>
 				}
 			</StyledContainer>
-			<CommentContainer postId={post.postId}/>
-		</Space>
+			<CommentContainer postId={post.postId} />
+		</Space >
 	);
 }
