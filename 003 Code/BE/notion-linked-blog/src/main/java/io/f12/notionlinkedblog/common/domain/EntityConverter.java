@@ -9,12 +9,23 @@ import org.springframework.stereotype.Component;
 import io.f12.notionlinkedblog.hashtag.infrastructure.HashtagEntity;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
+import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
+import io.f12.notionlinkedblog.user.domain.dto.UserSeriesInfoDto;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class EntityConverter {
 	private final AwsBucket awsBucket;
+
+	public List<UserSeriesInfoDto> convertSeriesToSeriesDto(List<SeriesEntity> series) {
+		return series.stream().map(s -> {
+			return UserSeriesInfoDto.builder()
+				.seriesId(s.getId())
+				.title(s.getTitle())
+				.build();
+		}).collect(Collectors.toList());
+	}
 
 	public List<PostSearchDto> convertPostToPostDto(List<PostEntity> posts) {
 		return posts.stream().map(p -> {
