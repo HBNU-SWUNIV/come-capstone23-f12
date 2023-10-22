@@ -29,6 +29,7 @@ public class SeriesQuerydslRepository implements UserSeriesQuerydslRepository {
 	@Override
 	public List<SeriesEntity> findByUserIds(List<Long> ids) {
 		return queryFactory.selectFrom(seriesEntity)
+			.where(seriesEntity.id.in(ids))
 			.fetch();
 	}
 
