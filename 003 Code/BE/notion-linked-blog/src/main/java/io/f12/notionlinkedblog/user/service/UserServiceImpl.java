@@ -118,9 +118,7 @@ public class UserServiceImpl implements UserService {
 	public void removeUserProfileImage(Long id) {
 		UserEntity findUser = userRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
-		if (findUser.getProfile().isEmpty()) {
-			findUser.setProfile(null);
-		}
+		findUser.setProfile(null);
 	}
 
 	@Override
