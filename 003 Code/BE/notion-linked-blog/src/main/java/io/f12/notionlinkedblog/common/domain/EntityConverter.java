@@ -24,6 +24,7 @@ public class EntityConverter {
 				.seriesId(s.getId())
 				.title(s.getTitle())
 				.author(s.getUser().getUsername())
+				.authorId(s.getUser().getId())
 				.build();
 		}).collect(Collectors.toList());
 	}
