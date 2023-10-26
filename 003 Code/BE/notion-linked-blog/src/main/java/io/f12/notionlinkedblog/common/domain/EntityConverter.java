@@ -23,6 +23,7 @@ public class EntityConverter {
 			return UserSeriesInfoDto.builder()
 				.seriesId(s.getId())
 				.title(s.getTitle())
+				.author(s.getUser().getUsername())
 				.build();
 		}).collect(Collectors.toList());
 	}
