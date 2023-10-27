@@ -19,6 +19,7 @@ import io.f12.notionlinkedblog.common.domain.CommonErrorResponse;
 import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationException;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.dto.CreateNotionPageToBlogDto;
+import io.f12.notionlinkedblog.notion.exception.NoTitleException;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,7 +53,8 @@ public class NotionApiController {
 	})
 	public PostSearchDto getSingleNotionPageToBlog(
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
+		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto)
+		throws NotionAuthenticationException, NoTitleException {
 		notionAccessAvailable(loginUser);
 		return notionService.saveSingleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
 	}
@@ -72,7 +74,8 @@ public class NotionApiController {
 	})
 	public void getMultipleNotionPageToBlog(
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto) throws NotionAuthenticationException {
+		@RequestBody @Validated CreateNotionPageToBlogDto notionToBlogDto)
+		throws NotionAuthenticationException, NoTitleException {
 		notionAccessAvailable(loginUser);
 		notionService.saveMultipleNotionPage(notionToBlogDto.getPath(), loginUser.getUser().getId());
 	}
@@ -88,7 +91,7 @@ public class NotionApiController {
 				schema = @Schema(implementation = CommonErrorResponse.class)))
 	})
 	public void requestUpdatePost(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser,
-		@PathVariable Long postId) throws NotionAuthenticationException {
+		@PathVariable Long postId) throws NotionAuthenticationException, NoTitleException {
 		notionService.updatePostRequest(loginUser.getUser().getId(), postId);
 	}
 
