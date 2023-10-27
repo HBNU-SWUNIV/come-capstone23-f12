@@ -63,6 +63,7 @@ export default function WritingWithNotion() {
 					* 단일 페이지는 페이지 하나를 불러옵니다. <br />
 					* 다중 페이지는 해당 페이지 및 하위 페이지를 모두 불러옵니다.
 					상위 페이지는 시리즈로, 하위 페이지들은 포스트로 추가됩니다. 부모 페이지에 존재하는 데이터는 page 블록과 제목만 등록처리 됩니다.
+					* 다중 페이지의 하위 페이지 그 이하의 페이지들은 무시됩니다.
 				</Typography.Paragraph>
 				<Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
 					<Space>
