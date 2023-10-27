@@ -289,7 +289,7 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	private String convertPathToId(String path) {
-		String[] splitDomain = path.split("/");
+    String[] splitDomain = path.split("/");
 		String exceptDomain = splitDomain[splitDomain.length - 1];
 		String[] splitQueryParameter = exceptDomain.split("\\?");
 		String splitQuery = splitQueryParameter[0];
