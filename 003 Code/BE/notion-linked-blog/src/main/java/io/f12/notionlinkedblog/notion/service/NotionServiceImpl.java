@@ -22,6 +22,7 @@ import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
 import io.f12.notionlinkedblog.notion.exception.NoContentException;
+import io.f12.notionlinkedblog.notion.exception.NoTitleException;
 import io.f12.notionlinkedblog.notion.infrastructure.multi.SyncedSeriesEntity;
 import io.f12.notionlinkedblog.notion.infrastructure.single.SyncedPagesEntity;
 import io.f12.notionlinkedblog.notion.service.port.SyncedPagesRepository;
@@ -56,7 +57,8 @@ public class NotionServiceImpl implements NotionService {
 	private final SyncedSeriesRepository syncedSeriesRepository;
 
 	@Override
-	public PostSearchDto saveSingleNotionPage(String path, Long userId) throws NotionAuthenticationException {
+	public PostSearchDto saveSingleNotionPage(String path, Long userId)
+		throws NotionAuthenticationException, NoTitleException {
 
 		String convertPath = convertPathToId(path);
 
@@ -90,7 +92,8 @@ public class NotionServiceImpl implements NotionService {
 
 	@Override
 	@Transactional
-	public void saveMultipleNotionPage(String path, Long userId) throws NotionAuthenticationException {
+	public void saveMultipleNotionPage(String path, Long userId)
+		throws NotionAuthenticationException, NoTitleException {
 		String convertPath = convertPathToId(path);
 
 		if (syncedSeriesRepository.findByPageId(convertPath).isPresent()) {
@@ -131,7 +134,8 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	@Override
-	public void editNotionPageToBlog(Long userId, PostEntity post) throws NotionAuthenticationException {
+	public void editNotionPageToBlog(Long userId, PostEntity post) throws
+		NotionAuthenticationException, NoTitleException {
 		Long postUserId = post.getUser().getId();
 		checkSameUser(postUserId, userId);
 
@@ -159,7 +163,8 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	@Override
-	public void updateSeriesRequest(Long userId, String seriesId) throws NotionAuthenticationException {
+	public void updateSeriesRequest(Long userId, String seriesId) throws NotionAuthenticationException,
+		NoTitleException {
 		SyncedSeriesEntity existSeries = syncedSeriesRepository.findByPageId(seriesId)
 			.orElseThrow(() -> new IllegalArgumentException(SERIES_NOT_EXIST));
 		checkSameUser(userId, existSeries.getUser().getId());
@@ -169,7 +174,7 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	@Override
-	public void updatePostRequest(Long userId, Long postId) throws NotionAuthenticationException {
+	public void updatePostRequest(Long userId, Long postId) throws NotionAuthenticationException, NoTitleException {
 		PostEntity existPost = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException(POST_NOT_EXIST));
 		checkSameUser(userId, existPost.getUser().getId());
@@ -179,7 +184,7 @@ public class NotionServiceImpl implements NotionService {
 	}
 
 	// private 매소드
-	private PostEntity createPost(String path, Long userId) throws NotionAuthenticationException {
+	private PostEntity createPost(String path, Long userId) throws NotionAuthenticationException, NoTitleException {
 		String title = getTitle(path, userId);
 		String content = getContent(path, userId);
 
@@ -196,15 +201,18 @@ public class NotionServiceImpl implements NotionService {
 			.build();
 	}
 
-	private String getTitle(String fullPath, Long userId) throws NotionAuthenticationException {
+	private String getTitle(String fullPath, Long userId) throws NotionAuthenticationException, NoTitleException {
 		Block block;
 		NotionClient client = createClient(userId);
 		RetrieveBlockRequest retrieveBlockRequest = new RetrieveBlockRequest(fullPath);
 		try (client) {
 			block = client.retrieveBlock(retrieveBlockRequest);
 		}
-
-		return block.asChildPage().getChildPage().getTitle();
+		String title = block.asChildPage().getChildPage().getTitle();
+		if (title.isBlank()) {
+			throw new NoTitleException();
+		}
+		return title;
 	}
 
 	private String getContent(String fullPath, Long userId) throws NotionAuthenticationException {

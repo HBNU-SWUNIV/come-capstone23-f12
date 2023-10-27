@@ -19,6 +19,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
 import io.f12.notionlinkedblog.notion.exception.NoContentException;
+import io.f12.notionlinkedblog.notion.exception.NoTitleException;
 import io.f12.notionlinkedblog.series.exception.SeriesNotExistException;
 import io.f12.notionlinkedblog.user.api.response.NoUserProfileDto;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -142,6 +143,14 @@ public class DefaultRestControllerAdvice {
 	@ExceptionHandler(SeriesNotExistException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CommonErrorResponse handleSeriesNotExistException(SeriesNotExistException ex) {
+		return CommonErrorResponse.builder()
+			.errorMassage(ex.getMessage())
+			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
+	}
+
+	@ExceptionHandler(NoTitleException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public CommonErrorResponse handleNoTitleException(NoTitleException ex) {
 		return CommonErrorResponse.builder()
 			.errorMassage(ex.getMessage())
 			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
