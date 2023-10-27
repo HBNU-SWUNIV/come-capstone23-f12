@@ -18,6 +18,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.AlreadyExistException
 import io.f12.notionlinkedblog.common.exceptions.exception.AuthFailureException;
 import io.f12.notionlinkedblog.common.exceptions.exception.NoProfileImageException;
 import io.f12.notionlinkedblog.common.exceptions.runtimeexception.IllegalDatabaseStateException;
+import io.f12.notionlinkedblog.notion.exception.NoAccessTokenException;
 import io.f12.notionlinkedblog.notion.exception.NoContentException;
 import io.f12.notionlinkedblog.notion.exception.NoTitleException;
 import io.f12.notionlinkedblog.series.exception.SeriesNotExistException;
@@ -154,5 +155,13 @@ public class DefaultRestControllerAdvice {
 		return CommonErrorResponse.builder()
 			.errorMassage(ex.getMessage())
 			.errorCode(HttpStatus.BAD_REQUEST.value()).build();
+	}
+
+	@ExceptionHandler(NoAccessTokenException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public CommonErrorResponse handleNoAccessTokenException(NoAccessTokenException ex) {
+		return CommonErrorResponse.builder()
+			.errorMassage(ex.getMessage())
+			.errorCode(1000).build();
 	}
 }

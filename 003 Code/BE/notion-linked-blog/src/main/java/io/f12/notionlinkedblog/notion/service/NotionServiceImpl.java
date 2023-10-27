@@ -21,6 +21,7 @@ import io.f12.notionlinkedblog.common.exceptions.exception.NotionAuthenticationE
 import io.f12.notionlinkedblog.component.oauth.NotionOAuthComponent;
 import io.f12.notionlinkedblog.notion.api.port.NotionService;
 import io.f12.notionlinkedblog.notion.domain.converter.NotionBlockConverter;
+import io.f12.notionlinkedblog.notion.exception.NoAccessTokenException;
 import io.f12.notionlinkedblog.notion.exception.NoContentException;
 import io.f12.notionlinkedblog.notion.exception.NoTitleException;
 import io.f12.notionlinkedblog.notion.infrastructure.multi.SyncedSeriesEntity;
@@ -30,6 +31,7 @@ import io.f12.notionlinkedblog.notion.service.port.SyncedSeriesRepository;
 import io.f12.notionlinkedblog.post.api.response.PostSearchDto;
 import io.f12.notionlinkedblog.post.infrastructure.PostEntity;
 import io.f12.notionlinkedblog.post.service.port.PostRepository;
+import io.f12.notionlinkedblog.security.login.ajax.dto.LoginUser;
 import io.f12.notionlinkedblog.series.infrastructure.SeriesEntity;
 import io.f12.notionlinkedblog.series.service.port.SeriesRepository;
 import io.f12.notionlinkedblog.user.infrastructure.UserEntity;
@@ -181,6 +183,15 @@ public class NotionServiceImpl implements NotionService {
 
 		PostEntity newPost = createPost(existPost.getSyncedPages().getPageId(), userId);
 		existPost.editPost(newPost);
+	}
+
+	@Override
+	public void notionAccessAvailable(LoginUser loginUser) throws NoAccessTokenException {
+		UserEntity user = userRepository.findById(loginUser.getUser().getId())
+			.orElseThrow(() -> new IllegalArgumentException(USER_NOT_EXIST));
+		if (user.getNotionOauth() == null) {
+			throw new NoAccessTokenException();
+		}
 	}
 
 	// private 매소드
